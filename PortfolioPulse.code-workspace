@@ -1,0 +1,67 @@
+{
+	"folders": [
+		{
+			"path": "."
+		}
+	],
+	"settings": {
+		// 基本编辑器设置
+		"editor.formatOnSave": true,
+		"editor.codeActionsOnSave": {
+			"source.fixAll.eslint": "explicit"
+		},
+
+		// TypeScript 优化
+		"typescript.preferences.includePackageJsonAutoImports": "auto",
+		"typescript.suggest.autoImports": false,
+		"typescript.disableAutomaticTypeAcquisition": true,
+
+		// Tailwind CSS 设置
+		"tailwindCSS.includeLanguages": {
+			"typescript": "javascript",
+			"typescriptreact": "javascript"
+		},
+		"files.associations": {
+			"*.css": "tailwindcss"
+		},
+
+		// Rust Analyzer 性能优化
+		"rust-analyzer.cargo.buildScripts.enable": false,
+		"rust-analyzer.check.command": "check",
+		"rust-analyzer.cargo.features": "all",
+		"rust-analyzer.checkOnSave.enable": true,
+		"rust-analyzer.checkOnSave.allTargets": false,
+		"rust-analyzer.procMacro.enable": false,
+		"rust-analyzer.completion.limit": 50,
+
+		// 文件监听优化
+		"files.watcherExclude": {
+			"**/target/**": true,
+			"**/node_modules/**": true,
+			"**/.git/**": true,
+			"**/dist/**": true,
+			"**/.next/**": true
+		},
+
+		// 搜索优化
+		"search.exclude": {
+			"**/target": true,
+			"**/node_modules": true,
+			"**/dist": true,
+			"**/.next": true
+		}
+	},
+	"extensions": {
+		"recommendations": [
+			"bradlc.vscode-tailwindcss",
+			"esbenp.prettier-vscode",
+			"dbaeumer.vscode-eslint",
+			"ms-vscode.vscode-typescript-next",
+			"rust-lang.rust-analyzer",
+			"vadimcn.vscode-lldb",
+			"serayuzgur.crates",
+			"github.copilot",
+			"github.copilot-chat"
+		]
+	}
+}
