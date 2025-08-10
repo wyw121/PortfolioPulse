@@ -10,7 +10,7 @@ Write-Host "🔍 检查开发工具..." -ForegroundColor Yellow
 
 $tools = @{
     'node' = 'Node.js'
-    'npm' = 'npm' 
+    'npm' = 'npm'
     'cargo' = 'Rust'
     'mysql' = 'MySQL Client'
 }

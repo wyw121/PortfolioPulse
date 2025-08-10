@@ -116,7 +116,7 @@ INSERT INTO learning_records (id, title, content, tags, category, status) VALUES
 -- 显示初始化结果
 SELECT 'Projects' as Table_Name, COUNT(*) as Record_Count FROM projects
 UNION ALL
-SELECT 'Git Activities', COUNT(*) FROM git_activities  
+SELECT 'Git Activities', COUNT(*) FROM git_activities
 UNION ALL
 SELECT 'Commits', COUNT(*) FROM commits
 UNION ALL

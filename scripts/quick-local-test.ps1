@@ -4,7 +4,7 @@
 param(
     [Parameter(Mandatory=$false)]
     [switch]$SkipBuild,
-    
+
     [Parameter(Mandatory=$false)]
     [switch]$SkipDatabase
 )
@@ -57,14 +57,14 @@ Write-Host "✅ 环境变量已设置" -ForegroundColor Green
 if (-not $SkipDatabase) {
     Write-Host ""
     Write-Host "🗄️ 快速数据库设置..." -ForegroundColor Yellow
-    
+
     $quickDbSetup = @"
 CREATE DATABASE IF NOT EXISTS portfolio_pulse_dev;
 CREATE USER IF NOT EXISTS 'portfoliopulse'@'localhost' IDENTIFIED BY 'testpass123';
 GRANT ALL PRIVILEGES ON portfolio_pulse_dev.* TO 'portfoliopulse'@'localhost';
 FLUSH PRIVILEGES;
 "@
-    
+
     $quickDbSetup | Out-File -FilePath "quick-db-setup.sql" -Encoding UTF8
     Write-Host "📄 生成了快速数据库设置文件: quick-db-setup.sql" -ForegroundColor Cyan
     Write-Host "💡 如果需要，请运行: mysql -u root -p < quick-db-setup.sql" -ForegroundColor Blue
@@ -92,7 +92,7 @@ Set-Location ..
 if (-not $SkipBuild) {
     Write-Host ""
     Write-Host "🦀 检查后端构建..." -ForegroundColor Yellow
-    
+
     Set-Location backend
     if (-not (Test-Path "target/debug/portfolio_pulse.exe")) {
         Write-Host "🔨 构建后端..." -ForegroundColor Cyan
@@ -159,7 +159,7 @@ Start-Process powershell -ArgumentList "-NoExit", "-WindowStyle", "Normal", "-Co
 Write-Host "⏳ 等待后端启动..." -ForegroundColor Yellow
 Start-Sleep -Seconds 3
 
-Write-Host "⚛️ 启动前端服务..." -ForegroundColor Cyan  
+Write-Host "⚛️ 启动前端服务..." -ForegroundColor Cyan
 Start-Process powershell -ArgumentList "-NoExit", "-WindowStyle", "Normal", "-Command", "Write-Host '⚛️ PortfolioPulse 前端服务' -ForegroundColor Green; Set-Location frontend; npm run dev"
 
 Write-Host ""
@@ -190,7 +190,7 @@ Write-Host "   mysql -u root -p < quick-db-setup.sql" -ForegroundColor White
 Write-Host ""
 Write-Host "🧪 测试步骤建议：" -ForegroundColor Blue
 Write-Host "1. 确保 MySQL 服务运行" -ForegroundColor White
-Write-Host "2. 运行数据库设置（如果是首次）" -ForegroundColor White  
+Write-Host "2. 运行数据库设置（如果是首次）" -ForegroundColor White
 Write-Host "3. 启动服务进行测试" -ForegroundColor White
 Write-Host "4. 测试成功后运行生产构建" -ForegroundColor White
 Write-Host ""

@@ -50,7 +50,7 @@ cargo run
 
 **终端2 - 启动前端：**
 ```bash
-cd frontend  
+cd frontend
 $env:NEXT_PUBLIC_API_URL="http://localhost:8000"
 npm run dev
 ```
@@ -114,7 +114,7 @@ cd backend
 cargo clean
 cargo build
 
-# 清理前端缓存  
+# 清理前端缓存
 cd frontend
 rm -rf node_modules .next
 npm install

@@ -21,10 +21,10 @@ export function Header() {
         </div>
 
         <nav className="flex items-center space-x-6">
-          <a href="#projects" className="text-sm font-medium hover:text-primary transition-colors">
+          <a href="/projects" className="text-sm font-medium hover:text-primary transition-colors">
             项目
           </a>
-          <a href="#activity" className="text-sm font-medium hover:text-primary transition-colors">
+          <a href="/activity" className="text-sm font-medium hover:text-primary transition-colors">
             动态
           </a>
           <a href="/about" className="text-sm font-medium hover:text-primary transition-colors">
