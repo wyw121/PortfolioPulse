@@ -1,7 +1,8 @@
 "use client"
 
 import { Button } from '@/components/ui/button'
-import { Github, ExternalLink } from 'lucide-react'
+import { siteConfig } from '@/lib/config'
+import { ExternalLink, Github } from 'lucide-react'
 
 export function Hero() {
   return (
@@ -10,13 +11,13 @@ export function Hero() {
         <div className="hero-gradient rounded-2xl p-1 mb-8">
           <div className="bg-background rounded-xl p-8">
             <h1 className="text-4xl sm:text-6xl font-bold text-foreground mb-6">
-              欢迎来到
+              欢迎来到{" "}
               <span className="bg-gradient-to-r from-purple-600 to-blue-600 bg-clip-text text-transparent">
-                {" "}PortfolioPulse
+                {siteConfig.name}
               </span>
             </h1>
             <p className="text-xl text-muted-foreground mb-8 max-w-2xl mx-auto">
-              现代化的个人项目展示和动态追踪平台，让您的开发历程一目了然
+              {siteConfig.description}
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
               <Button size="lg" className="gap-2">

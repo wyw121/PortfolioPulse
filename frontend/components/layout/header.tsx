@@ -1,6 +1,7 @@
 "use client"
 
 import { Button } from '@/components/ui/button'
+import { siteConfig } from '@/lib/config'
 import { Github, Moon, Sun } from 'lucide-react'
 import { useTheme } from 'next-themes'
 
@@ -13,9 +14,9 @@ export function Header() {
         <div className="flex items-center space-x-4">
           <a href="/" className="flex items-center space-x-2">
             <div className="h-8 w-8 bg-gradient-to-r from-purple-600 to-blue-600 rounded-lg flex items-center justify-center">
-              <span className="text-white font-bold text-sm">PP</span>
+              <span className="text-white font-bold text-sm">{siteConfig.shortName}</span>
             </div>
-            <span className="font-bold text-xl">PortfolioPulse</span>
+            <span className="font-bold text-xl">{siteConfig.name}</span>
           </a>
         </div>
 
@@ -26,7 +27,7 @@ export function Header() {
           <a href="#activity" className="text-sm font-medium hover:text-primary transition-colors">
             动态
           </a>
-          <a href="#about" className="text-sm font-medium hover:text-primary transition-colors">
+          <a href="/about" className="text-sm font-medium hover:text-primary transition-colors">
             关于
           </a>
         </nav>
@@ -43,7 +44,7 @@ export function Header() {
           </Button>
 
           <Button variant="outline" size="sm" asChild>
-            <a href="https://github.com/user/PortfolioPulse" target="_blank" rel="noopener noreferrer">
+            <a href={siteConfig.social.github} target="_blank" rel="noopener noreferrer">
               <Github className="h-4 w-4 mr-2" />
               GitHub
             </a>

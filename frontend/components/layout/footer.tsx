@@ -1,3 +1,5 @@
+import { siteConfig } from '@/lib/config'
+
 export function Footer() {
   const currentYear = new Date().getFullYear()
 
@@ -8,12 +10,12 @@ export function Footer() {
           <div>
             <div className="flex items-center space-x-2 mb-4">
               <div className="h-6 w-6 bg-gradient-to-r from-purple-600 to-blue-600 rounded flex items-center justify-center">
-                <span className="text-white font-bold text-xs">PP</span>
+                <span className="text-white font-bold text-xs">{siteConfig.shortName}</span>
               </div>
-              <span className="font-semibold">PortfolioPulse</span>
+              <span className="font-semibold">{siteConfig.name}</span>
             </div>
             <p className="text-sm text-muted-foreground">
-              现代化的个人项目展示和动态追踪平台
+              {siteConfig.description}
             </p>
           </div>
 
@@ -31,8 +33,8 @@ export function Footer() {
                 </a>
               </li>
               <li>
-                <a href="#about" className="text-muted-foreground hover:text-primary transition-colors">
-                  关于我们
+                <a href="/about" className="text-muted-foreground hover:text-primary transition-colors">
+                  关于 {siteConfig.name}
                 </a>
               </li>
             </ul>
@@ -51,7 +53,7 @@ export function Footer() {
 
         <div className="border-t mt-8 pt-8 flex flex-col sm:flex-row justify-between items-center">
           <p className="text-sm text-muted-foreground">
-            © {currentYear} PortfolioPulse. 保留所有权利。
+            © {currentYear} {siteConfig.name}. 保留所有权利。
           </p>
           <p className="text-sm text-muted-foreground">
             基于 sindresorhus.com 设计理念

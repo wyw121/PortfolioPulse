@@ -1,9 +1,4 @@
-use axum::{
-    http::StatusCode,
-    response::Json,
-    routing::{get, post},
-    Router,
-};
+use axum::{response::Json, routing::get, Router};
 use serde::{Deserialize, Serialize};
 use std::collections::HashMap;
 use tower_http::cors::{Any, CorsLayer};
@@ -24,7 +19,7 @@ pub struct AppState {
 #[tokio::main]
 async fn main() -> Result<(), anyhow::Error> {
     // 初始化日志
-    tracing_subscriber::init();
+    tracing_subscriber::fmt::init();
 
     // 加载环境变量
     dotenvy::dotenv().ok();

@@ -50,35 +50,35 @@ if ($DeployType -eq 'binary') {
 
 } else {
     Write-Host ''
-    Write-Host '🐳 Docker 部署方式' -ForegroundColor Cyan
+    Write-Host '⚙️ 二进制部署方式' -ForegroundColor Cyan
     Write-Host '=================='
 
     Write-Host '✅ 优势:' -ForegroundColor Green
-    Write-Host '   • 环境完全一致'
-    Write-Host '   • 一键部署'
-    Write-Host '   • 易于扩展'
-    Write-Host '   • 便于管理'
+    Write-Host '   • 启动速度快'
+    Write-Host '   • 资源占用少'
+    Write-Host '   • 不依赖容器环境'
+    Write-Host '   • 简单直接'
 
     Write-Host ''
     Write-Host '❌ 劣势:' -ForegroundColor Red
-    Write-Host '   • 资源开销稍大'
-    Write-Host '   • 学习成本'
-    Write-Host '   • 需要 Docker 环境'
+    Write-Host '   • 需要手动配置环境'
+    Write-Host '   • 跨平台部署复杂'
+    Write-Host '   • 依赖管理需要注意'
 
     Write-Host ''
     Write-Host '🚀 构建步骤:' -ForegroundColor Yellow
-    Write-Host '   1. 构建: docker-compose build'
-    Write-Host '   2. 启动: docker-compose up -d'
-    Write-Host '   3. 管理: docker-compose ps/logs/restart'
+    Write-Host '   1. 构建: .\scripts\build-production.ps1'
+    Write-Host '   2. 部署: 上传构建产物'
+    Write-Host '   3. 启动: ./start.sh 或 start.bat'
 
     Write-Host ''
-    Write-Host '📁 Docker 容器架构:' -ForegroundColor Magenta
+    Write-Host '📁 二进制部署架构:' -ForegroundColor Magenta
     Write-Host @'
-   Docker 网络:
-   ├── frontend 容器 (端口 3000)
-   ├── backend 容器 (端口 8000)
-   ├── mysql 容器 (端口 3306)
-   └── nginx 容器 (端口 80/443)
+   服务器架构:
+   ├── portfolio_pulse.exe (后端服务 - 端口 8000)
+   ├── 前端静态文件 (Nginx 托管)
+   ├── MySQL 数据库 (端口 3306)
+   └── Nginx 反向代理 (端口 80/443)
 '@
 }
 
@@ -116,7 +116,7 @@ Write-Host '=================='
 if ($DeployType -eq 'binary') {
     Write-Host '第一阶段 (现在开始):'
     Write-Host '  1. 运行本地开发环境: .\scripts\setup-dev-environment.ps1'
-    Write-Host '  2. 构建生产文件: .\scripts\build-production.ps1 -Binary'
+    Write-Host '  2. 构建生产文件: .\scripts\build-production.ps1'
     Write-Host '  3. 部署到服务器: 按照 BINARY_DEPLOYMENT_GUIDE.md'
     Write-Host ''
     Write-Host '第二阶段 (熟练后):'
@@ -126,12 +126,12 @@ if ($DeployType -eq 'binary') {
 } else {
     Write-Host '第一阶段 (现在开始):'
     Write-Host '  1. 运行本地开发环境: .\scripts\setup-dev-environment.ps1'
-    Write-Host '  2. 构建Docker镜像: .\scripts\build-production.ps1 -Docker'
-    Write-Host '  3. 服务器部署: docker-compose up -d'
+    Write-Host '  2. 构建二进制文件: .\scripts\build-production.ps1'
+    Write-Host '  3. 服务器部署: 按照构建产物中的说明'
     Write-Host ''
     Write-Host '第二阶段 (扩展期):'
-    Write-Host '  1. 多项目容器编排'
-    Write-Host '  2. CI/CD 自动化'
+    Write-Host '  1. 多项目管理'
+    Write-Host '  2. 自动化部署脚本'
     Write-Host '  3. 监控和日志系统'
 }
 
