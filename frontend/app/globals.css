@@ -80,3 +80,10 @@
   box-shadow: 0 20px 25px -5px rgb(0 0 0 / 0.1),
     0 10px 10px -5px rgb(0 0 0 / 0.04);
 }
+
+/* 处理 VS Code 扩展添加的类名，避免水合问题 */
+.vsc-domain-localhost,
+.vsc-initialized {
+  /* 这些类名由 VS Code 扩展添加，确保它们不影响布局 */
+  display: contents;
+}

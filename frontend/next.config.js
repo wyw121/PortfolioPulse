@@ -1,8 +1,5 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  experimental: {
-    appDir: true,
-  },
   images: {
     domains: [
       'avatars.githubusercontent.com',
@@ -18,7 +15,6 @@ const nextConfig = {
   },
   // 改进水合处理
   reactStrictMode: true,
-  swcMinify: true,
 }
 
 module.exports = nextConfig
