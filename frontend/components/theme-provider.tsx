@@ -1,9 +1,8 @@
 "use client"
 
-import * as React from "react"
+import { useHydrationSafe } from "@/hooks/use-hydration"
 import { ThemeProvider as NextThemesProvider } from "next-themes"
 import { type ThemeProviderProps } from "next-themes/dist/types"
-import { useHydrationSafe } from "@/hooks/use-hydration"
 
 export function ThemeProvider({ children, ...props }: ThemeProviderProps) {
   const { canRender } = useHydrationSafe()

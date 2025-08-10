@@ -1,9 +1,9 @@
 "use client"
 
+import { NoSSR } from "@/components/no-ssr"
+import { Button } from "@/components/ui/button"
 import { Moon, Sun } from "lucide-react"
 import { useTheme } from "next-themes"
-import { Button } from "@/components/ui/button"
-import { NoSSR } from "@/components/no-ssr"
 
 export function ThemeToggle() {
   const { theme, setTheme } = useTheme()

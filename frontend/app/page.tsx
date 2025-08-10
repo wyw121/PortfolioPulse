@@ -4,9 +4,9 @@ import { Hero } from '@/components/sections/hero'
 
 export default function HomePage() {
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-50 to-slate-100 dark:from-slate-900 dark:to-slate-800">
+    <div className="min-h-screen bg-gradient-to-br from-slate-50 to-slate-100 dark:from-slate-900 dark:to-slate-800 flex flex-col">
       <Header />
-      <main>
+      <main className="flex-1">
         <Hero />
       </main>
       <Footer />

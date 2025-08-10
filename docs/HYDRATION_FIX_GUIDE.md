@@ -37,7 +37,7 @@ A tree hydrated but some attributes of the server rendered HTML didn't match the
 ```tsx
 export function useHydrationSafe() {
   const isClient = useIsClient()
-  
+
   return {
     isClient,
     canRender: isClient,
