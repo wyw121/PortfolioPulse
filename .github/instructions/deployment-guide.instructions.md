@@ -1,21 +1,21 @@
 ---
-applyTo: "**/deploy/**/*,**/scripts/**/*,Dockerfile,docker-compose.yml,.github/workflows/**/*"
+applyTo: "**/deploy/**/*,**/scripts/**/*,Dockerfile*,docker-compose*.yml,.github/workflows/**/*,backend/target/**/*,frontend/.next/**/*"
 ---
 
 # 部署和 DevOps 指引
 
 ## 部署架构
 
-### 前端部署 - Vercel
+### 主要部署方式 - 二进制部署
 
-- 自动 CI/CD 集成
-- 分支预览功能
-- 环境变量管理
-- 域名配置和 SSL
+- **前端**: Next.js Standalone 输出 + Node.js 二进制运行 (端口 3000)
+- **后端**: Rust 编译的原生二进制文件 (端口 8000)
+- **反向代理**: Nginx 负责路由分发和静态文件服务
+- **数据库**: 独立 MySQL 服务 (端口 3306)
 
-### 后端部署
+### 备选方案 - 容器化部署
 
-- Docker 容器化部署
+- Docker 容器化部署 (开发和测试环境)
 - 数据库迁移自动化
 - 负载均衡配置
 - 监控和日志记录

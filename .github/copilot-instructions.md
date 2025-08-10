@@ -23,9 +23,13 @@ PortfolioPulse 是一个现代化的个人项目展示和动态追踪平台，�
 - **Rust**: 系统级编程语言，用于 API 服务
 - **MySQL**: 关系型数据库
 
-### 部署平台
+### 部署策略
 
-- **Vercel**: 前端部署和托管
+- **二进制部署**: 采用原生二进制文件部署，无 Docker 依赖
+- **前端**: Next.js Standalone 输出 + Node.js 二进制运行 (端口 3000)
+- **后端**: Rust 编译的原生二进制文件 (端口 8000)
+- **反向代理**: Nginx 负责路由分发和静态文件服务
+- **数据库**: 独立 MySQL 服务 (端口 3306)
 
 ## 项目结构
 
@@ -77,24 +81,61 @@ PortfolioPulse/
 ### 初始化项目
 
 ```bash
-# 安装前端依赖
-cd frontend && npm install
+# 前端依赖安装 (Windows PowerShell)
+cd frontend
+npm install
 
-# 设置 Rust 工具链
+# Rust 工具链设置
 rustup update stable
+rustup target add x86_64-pc-windows-msvc
 
-# 安装数据库工具
+# 数据库工具安装
 cargo install diesel_cli --no-default-features --features mysql
+```
+
+### 二进制构建流程
+
+```bash
+# 后端二进制构建 (生产版本)
+cd backend
+cargo build --release
+# 输出: target/release/portfolio_pulse.exe (Windows)
+
+# 前端 Standalone 构建
+cd frontend
+npm run build
+# 输出: .next/standalone/ 目录 (可直接运行的 Node.js 应用)
 ```
 
 ### 开发服务器
 
 ```bash
-# 启动前端开发服务器 (端口 3000)
+# 前端开发服务器 (端口 3000)
 cd frontend && npm run dev
 
-# 启动 Rust 后端服务器 (端口 8000)
+# 后端开发服务器 (端口 8000)
 cd backend && cargo run --release
+```
+
+### 生产部署流程
+
+```bash
+# 1. 构建二进制文件
+cd backend && cargo build --release
+cd frontend && npm run build
+
+# 2. 服务器部署目录结构
+/opt/portfoliopulse/
+├── portfolio_pulse          # Rust 二进制文件
+├── frontend/
+│   ├── .next/standalone/    # Next.js 应用
+│   └── .next/static/       # 静态资源
+├── start.sh                # 启动脚本
+└── .env                    # 环境变量
+
+# 3. 启动服务 (Linux 服务器)
+chmod +x start.sh
+./start.sh
 ```
 
 ### 构建和测试

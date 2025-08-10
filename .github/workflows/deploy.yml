@@ -1,0 +1,353 @@
+name: 🚀 Build and Deploy PortfolioPulse
+
+on:
+  push:
+    branches: [main, develop]
+  pull_request:
+    branches: [main]
+
+env:
+  NODE_VERSION: "18"
+  RUST_VERSION: "1.75"
+
+jobs:
+  test:
+    name: 🧪 Run Tests
+    runs-on: ubuntu-latest
+
+    services:
+      mysql:
+        image: mysql:8.0
+        env:
+          MYSQL_ROOT_PASSWORD: password
+          MYSQL_DATABASE: portfolio_pulse_test
+        ports:
+          - 3306:3306
+        options: --health-cmd="mysqladmin ping" --health-interval=10s --health-timeout=5s --health-retries=3
+
+    steps:
+      - name: 📥 Checkout Code
+        uses: actions/checkout@v4
+
+      - name: 🟢 Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: "npm"
+          cache-dependency-path: frontend/package-lock.json
+
+      - name: 🦀 Setup Rust
+        uses: dtolnay/rust-toolchain@stable
+        with:
+          toolchain: ${{ env.RUST_VERSION }}
+
+      - name: 📦 Install Frontend Dependencies
+        working-directory: ./frontend
+        run: npm ci
+
+      - name: 🔍 Frontend Lint & Type Check
+        working-directory: ./frontend
+        run: |
+          npm run lint
+          npm run type-check
+
+      - name: 🏗️ Frontend Build
+        working-directory: ./frontend
+        run: npm run build
+        env:
+          NEXT_PUBLIC_API_URL: http://localhost:8000
+
+      - name: 🧪 Frontend Tests
+        working-directory: ./frontend
+        run: npm run test
+
+      - name: 🦀 Backend Build
+        working-directory: ./backend
+        run: cargo build --verbose
+
+      - name: 🧪 Backend Tests
+        working-directory: ./backend
+        run: cargo test --verbose
+        env:
+          DATABASE_URL: mysql://root:password@localhost:3306/portfolio_pulse_test
+
+      - name: 🔍 Backend Lint (Clippy)
+        working-directory: ./backend
+        run: cargo clippy -- -D warnings
+
+  build-docker:
+    name: 🐳 Build Docker Images
+    runs-on: ubuntu-latest
+    needs: test
+    if: github.ref == 'refs/heads/main'
+
+    outputs:
+      frontend-image: ${{ steps.meta.outputs.frontend-image }}
+      backend-image: ${{ steps.meta.outputs.backend-image }}
+
+    steps:
+      - name: 📥 Checkout Code
+        uses: actions/checkout@v4
+
+      - name: 🐳 Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: 🏷️ Extract Metadata
+        id: meta
+        run: |
+          echo "frontend-image=portfoliopulse-frontend:$(git rev-parse --short HEAD)" >> $GITHUB_OUTPUT
+          echo "backend-image=portfoliopulse-backend:$(git rev-parse --short HEAD)" >> $GITHUB_OUTPUT
+
+      - name: 🏗️ Build Frontend Image
+        uses: docker/build-push-action@v5
+        with:
+          context: .
+          file: ./Dockerfile.frontend
+          tags: ${{ steps.meta.outputs.frontend-image }}
+          outputs: type=docker,dest=/tmp/frontend-image.tar
+
+      - name: 🏗️ Build Backend Image
+        uses: docker/build-push-action@v5
+        with:
+          context: .
+          file: ./Dockerfile.backend
+          tags: ${{ steps.meta.outputs.backend-image }}
+          outputs: type=docker,dest=/tmp/backend-image.tar
+
+      - name: 📤 Upload Frontend Image
+        uses: actions/upload-artifact@v4
+        with:
+          name: frontend-image
+          path: /tmp/frontend-image.tar
+
+      - name: 📤 Upload Backend Image
+        uses: actions/upload-artifact@v4
+        with:
+          name: backend-image
+          path: /tmp/backend-image.tar
+
+  build-binary:
+    name: ⚙️ Build Binary Files
+    runs-on: ubuntu-latest
+    needs: test
+    if: github.ref == 'refs/heads/main'
+
+    steps:
+      - name: 📥 Checkout Code
+        uses: actions/checkout@v4
+
+      - name: 🟢 Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: "npm"
+          cache-dependency-path: frontend/package-lock.json
+
+      - name: 🦀 Setup Rust
+        uses: dtolnay/rust-toolchain@stable
+        with:
+          toolchain: ${{ env.RUST_VERSION }}
+
+      - name: 🏗️ Build Frontend Static Files
+        working-directory: ./frontend
+        run: |
+          npm ci
+          npm run build
+        env:
+          NODE_ENV: production
+          NEXT_PUBLIC_API_URL: http://localhost:8000
+
+      - name: 🏗️ Build Backend Binary
+        working-directory: ./backend
+        run: |
+          cargo build --release
+          strip target/release/portfolio_pulse
+
+      - name: 📦 Create Deployment Package
+        run: |
+          mkdir -p deploy/
+
+          # 复制前端构建产物
+          cp -r frontend/.next/static deploy/frontend-static/
+          cp -r frontend/public deploy/frontend-public/
+
+          # 复制后端二进制文件
+          cp backend/target/release/portfolio_pulse deploy/
+          cp backend/Cargo.toml deploy/
+          cp -r backend/migrations deploy/ 2>/dev/null || true
+
+          # 复制配置文件
+          cp .env.example deploy/.env
+          cp README.md deploy/
+
+          # 创建启动脚本
+          cat > deploy/start.sh << 'EOF'
+          #!/bin/bash
+          set -e
+
+          echo "🚀 Starting PortfolioPulse..."
+
+          # Set environment variables
+          export NODE_ENV=production
+          export DATABASE_URL="${DATABASE_URL:-mysql://portfoliopulse:password@localhost:3306/portfolio_pulse}"
+
+          # Run database migrations if available
+          if [ -d "migrations" ]; then
+            echo "🔄 Running database migrations..."
+            # Note: You need diesel CLI installed on the server
+            # diesel migration run
+          fi
+
+          # Start backend service
+          echo "🦀 Starting backend service..."
+          ./portfolio_pulse
+          EOF
+
+          chmod +x deploy/start.sh
+
+          # 创建部署说明
+          cat > deploy/DEPLOY.md << 'EOF'
+          # 部署说明
+
+          ## 快速部署
+          1. 上传此目录到服务器
+          2. 安装 MySQL 8.0+
+          3. 配置 .env 文件
+          4. 运行 ./start.sh
+
+          ## 前端部署
+          - 使用 Nginx 或其他 Web 服务器托管 frontend-static/ 和 frontend-public/
+          - 配置反向代理到后端服务 (端口 8000)
+
+          ## 健康检查
+          - 后端: http://localhost:8000/api/health
+          EOF
+
+      - name: 📤 Upload Binary Package
+        uses: actions/upload-artifact@v4
+        with:
+          name: binary-package
+          path: deploy/
+
+  deploy-staging:
+    name: 🚀 Deploy to Staging
+    runs-on: ubuntu-latest
+    needs: [build-docker, build-binary]
+    if: github.ref == 'refs/heads/develop'
+    environment: staging
+
+    steps:
+      - name: 📥 Download Artifacts
+        uses: actions/download-artifact@v4
+        with:
+          name: frontend-image
+          path: /tmp/
+
+      - name: 📥 Download Backend Image
+        uses: actions/download-artifact@v4
+        with:
+          name: backend-image
+          path: /tmp/
+
+      - name: 🚀 Deploy to Staging Server
+        uses: appleboy/ssh-action@v1.0.0
+        with:
+          host: ${{ secrets.STAGING_HOST }}
+          username: ${{ secrets.STAGING_USERNAME }}
+          key: ${{ secrets.STAGING_SSH_KEY }}
+          script: |
+            cd /opt/portfoliopulse-staging
+
+            # 停止现有服务
+            docker-compose down || true
+
+            # 清理旧镜像
+            docker system prune -f
+
+            # 等待文件上传完成
+            echo "准备部署到 Staging 环境..."
+
+  deploy-production:
+    name: 🎯 Deploy to Production
+    runs-on: ubuntu-latest
+    needs: [build-docker, build-binary]
+    if: github.ref == 'refs/heads/main'
+    environment: production
+
+    steps:
+      - name: 📥 Download Binary Package
+        uses: actions/download-artifact@v4
+        with:
+          name: binary-package
+          path: ./deploy
+
+      - name: 🎯 Deploy to Production Server
+        uses: appleboy/ssh-action@v1.0.0
+        with:
+          host: ${{ secrets.PRODUCTION_HOST }}
+          username: ${{ secrets.PRODUCTION_USERNAME }}
+          key: ${{ secrets.PRODUCTION_SSH_KEY }}
+          script: |
+            # 创建备份
+            if [ -d "/opt/portfoliopulse/current" ]; then
+              cp -r /opt/portfoliopulse/current /opt/portfoliopulse/backup-$(date +%Y%m%d-%H%M%S)
+            fi
+
+            # 创建目录
+            mkdir -p /opt/portfoliopulse/current
+
+            echo "✅ Production deployment completed!"
+            echo "🌐 Backend API: http://${{ secrets.PRODUCTION_HOST }}:8000"
+
+      - name: 📤 Upload Deployment Package
+        uses: appleboy/scp-action@v0.1.4
+        with:
+          host: ${{ secrets.PRODUCTION_HOST }}
+          username: ${{ secrets.PRODUCTION_USERNAME }}
+          key: ${{ secrets.PRODUCTION_SSH_KEY }}
+          source: "deploy/*"
+          target: "/opt/portfoliopulse/current/"
+          strip_components: 1
+
+      - name: 🔄 Restart Production Service
+        uses: appleboy/ssh-action@v1.0.0
+        with:
+          host: ${{ secrets.PRODUCTION_HOST }}
+          username: ${{ secrets.PRODUCTION_USERNAME }}
+          key: ${{ secrets.PRODUCTION_SSH_KEY }}
+          script: |
+            cd /opt/portfoliopulse/current
+
+            # 停止旧服务
+            pkill -f portfolio_pulse || true
+
+            # 启动新服务
+            nohup ./start.sh > service.log 2>&1 &
+
+            # 验证服务启动
+            sleep 10
+            if curl -f http://localhost:8000/api/health; then
+              echo "✅ Service started successfully!"
+            else
+              echo "❌ Service failed to start"
+              exit 1
+            fi
+
+  notification:
+    name: 📢 Send Notifications
+    runs-on: ubuntu-latest
+    needs: [deploy-production]
+    if: always()
+
+    steps:
+      - name: 📧 Notify Success
+        if: needs.deploy-production.result == 'success'
+        run: |
+          echo "🎉 PortfolioPulse deployed successfully!"
+          # 这里可以集成 Slack, Discord, 邮件等通知服务
+
+      - name: 🚨 Notify Failure
+        if: needs.deploy-production.result == 'failure'
+        run: |
+          echo "❌ PortfolioPulse deployment failed!"
+          # 发送失败通知
