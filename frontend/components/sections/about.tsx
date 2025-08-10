@@ -2,8 +2,28 @@
 
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { siteConfig } from '@/lib/config'
+import { useEffect, useState } from 'react'
 
 export function About() {
+  const [showSecretText, setShowSecretText] = useState(false)
+  const [fadeIn, setFadeIn] = useState(false)
+
+  // 5秒后自动切换到秘密文字
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setShowSecretText(true)
+      setFadeIn(true)
+    }, 5000)
+
+    return () => clearTimeout(timer)
+  }, [])
+
+  const handleTextClick = () => {
+    setShowSecretText(prev => !prev)
+    if (!showSecretText) {
+      setFadeIn(true)
+    }
+  }
   return (
     <section className="py-20 px-4 sm:px-6 lg:px-8">
       <div className="max-w-4xl mx-auto">
@@ -11,8 +31,19 @@ export function About() {
           <h1 className="text-4xl sm:text-5xl font-bold text-foreground mb-6">
             关于 {siteConfig.name}
           </h1>
-          <p className="text-xl text-muted-foreground max-w-3xl mx-auto">
-            {siteConfig.description}
+          <p
+            className={`text-xl max-w-3xl mx-auto cursor-pointer transition-all duration-700 ${
+              showSecretText
+                ? `bg-gradient-to-r from-red-500 via-purple-600 to-pink-600 bg-clip-text text-transparent font-semibold ${fadeIn ? 'opacity-100 scale-100' : 'opacity-0 scale-95'}`
+                : 'text-muted-foreground hover:text-foreground opacity-100 scale-100'
+            }`}
+            onClick={handleTextClick}
+            title="点击切换内容"
+          >
+            {showSecretText
+              ? "好吧，其实这就是我跟AI聊天随便找来的一个比较酷的名字哈哈，只是读着顺口罢了"
+              : siteConfig.description
+            }
           </p>
         </div>
 

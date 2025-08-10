@@ -1,6 +1,21 @@
 
+'use client'
+
+import { useState } from 'react'
+
 export function Footer() {
-  const currentYear = new Date().getFullYear()
+  const [isJapanese, setIsJapanese] = useState(true)
+
+  const toggleLanguage = () => {
+    setIsJapanese(!isJapanese)
+  }
+
+  const handleKeyDown = (event: React.KeyboardEvent) => {
+    if (event.key === 'Enter' || event.key === ' ') {
+      event.preventDefault()
+      toggleLanguage()
+    }
+  }
 
   return (
     <footer className="border-t bg-background">
@@ -8,9 +23,29 @@ export function Footer() {
         <div className="flex flex-col sm:flex-row justify-between items-center gap-4">
           {/* 左侧 - 格言 */}
           <div>
-            <p className="text-sm text-muted-foreground italic">
-              何も捨てることができない人には何も変えることはできないだろう。
-            </p>
+            <button
+              className="text-sm text-muted-foreground italic cursor-pointer hover:opacity-80 transition-opacity select-none bg-transparent border-none p-0 font-normal"
+              onClick={toggleLanguage}
+              onKeyDown={handleKeyDown}
+              title="点击切换语言"
+              type="button"
+            >
+              {isJapanese ? (
+                '何も捨てることができない人には何も変えることはできないだろう。'
+              ) : (
+                <>
+                  什么都无法
+                  <span className="bg-gradient-to-r from-cyan-400 to-purple-500 bg-clip-text text-transparent font-semibold">
+                    舍弃
+                  </span>
+                  的人，什么都无法
+                  <span className="bg-gradient-to-r from-cyan-400 to-blue-500 bg-clip-text text-transparent font-semibold">
+                    改变
+                  </span>
+                  。
+                </>
+              )}
+            </button>
           </div>
 
           {/* 右侧 - 社交媒体图标 */}

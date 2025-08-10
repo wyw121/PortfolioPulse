@@ -134,3 +134,100 @@ pub struct GitHubCommitStats {
     pub deletions: i32,
     pub total: i32,
 }
+
+// 博客相关模型
+#[derive(Debug, Serialize, Deserialize, FromRow)]
+pub struct BlogPost {
+    pub id: Uuid,
+    pub title: String,
+    pub slug: String,
+    pub content: String,
+    pub excerpt: Option<String>,
+    pub cover_image: Option<String>,
+    pub category: Option<String>,
+    pub tags: Option<String>, // JSON字符串
+    pub status: String,
+    pub view_count: i32,
+    pub is_featured: bool,
+    pub created_at: DateTime<Utc>,
+    pub updated_at: DateTime<Utc>,
+    pub published_at: Option<DateTime<Utc>>,
+}
+
+#[derive(Debug, Serialize, Deserialize, FromRow)]
+pub struct BlogCategory {
+    pub id: Uuid,
+    pub name: String,
+    pub slug: String,
+    pub description: Option<String>,
+    pub color: String,
+    pub post_count: i32,
+    pub created_at: DateTime<Utc>,
+    pub updated_at: DateTime<Utc>,
+}
+
+#[derive(Debug, Serialize, Deserialize, FromRow)]
+pub struct AdminSession {
+    pub id: Uuid,
+    pub session_token: String,
+    pub user_id: String,
+    pub user_name: String,
+    pub expires_at: DateTime<Utc>,
+    pub created_at: DateTime<Utc>,
+}
+
+#[derive(Debug, Serialize, Deserialize, FromRow)]
+pub struct BlogUpload {
+    pub id: Uuid,
+    pub original_name: String,
+    pub file_name: String,
+    pub file_path: String,
+    pub file_size: i64,
+    pub mime_type: String,
+    pub upload_type: String,
+    pub post_id: Option<Uuid>,
+    pub created_at: DateTime<Utc>,
+}
+
+// API请求模型
+#[derive(Debug, Deserialize)]
+pub struct CreateBlogPostRequest {
+    pub title: String,
+    pub content: String,
+    pub excerpt: Option<String>,
+    pub category: Option<String>,
+    pub tags: Option<Vec<String>>,
+    pub status: Option<String>,
+    pub is_featured: Option<bool>,
+    pub cover_image: Option<String>,
+}
+
+#[derive(Debug, Deserialize)]
+pub struct UpdateBlogPostRequest {
+    pub title: Option<String>,
+    pub content: Option<String>,
+    pub excerpt: Option<String>,
+    pub category: Option<String>,
+    pub tags: Option<Vec<String>>,
+    pub status: Option<String>,
+    pub is_featured: Option<bool>,
+    pub cover_image: Option<String>,
+}
+
+#[derive(Debug, Serialize, Deserialize)]
+pub struct BlogPostResponse {
+    pub id: String,
+    pub title: String,
+    pub slug: String,
+    pub content: String,
+    pub excerpt: Option<String>,
+    pub cover_image: Option<String>,
+    pub category: Option<String>,
+    pub tags: Vec<String>,
+    pub status: String,
+    pub view_count: i32,
+    pub is_featured: bool,
+    pub created_at: String,
+    pub updated_at: String,
+    pub published_at: Option<String>,
+}

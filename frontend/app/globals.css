@@ -2,6 +2,41 @@
 @tailwind components;
 @tailwind utilities;
 
+/* 防止主题切换时的闪烁 */
+html {
+  /* 设置初始背景色，在 CSS 变量加载前提供默认样式 */
+  background-color: #ffffff;
+  color: #0f0f23;
+  color-scheme: light dark;
+}
+
+html.dark {
+  background-color: #0f0f23;
+  color: #fafafa;
+}
+
+/* 确保主题过渡平滑 */
+*,
+*::before,
+*::after {
+  /* 禁用过渡效果防止初始加载时的闪烁 */
+  transition: none !important;
+  animation: none !important;
+}
+
+/* 页面加载完成后重新启用过渡 */
+.transitions-enabled *,
+.transitions-enabled *::before,
+.transitions-enabled *::after {
+  transition: background-color 0.2s ease-in-out, border-color 0.2s ease-in-out,
+    color 0.2s ease-in-out !important;
+}
+
+/* 主题切换按钮的特殊过渡 */
+.transitions-enabled .theme-toggle * {
+  transition: all 0.2s ease-in-out !important;
+}
+
 @layer base {
   :root {
     --background: 0 0% 100%;

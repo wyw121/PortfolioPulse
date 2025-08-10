@@ -34,6 +34,63 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="zh" suppressHydrationWarning>
+      <head>
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `
+              (function() {
+                function setTheme() {
+                  try {
+                    const theme = localStorage.getItem('theme') || 'system';
+                    const systemDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+                    const prefersDark = theme === 'dark' || (theme === 'system' && systemDark);
+
+                    const root = document.documentElement;
+                    if (prefersDark) {
+                      root.classList.add('dark');
+                      root.style.colorScheme = 'dark';
+                    } else {
+                      root.classList.remove('dark');
+                      root.style.colorScheme = 'light';
+                    }
+                  } catch (e) {
+                    // 如果出现错误，回退到系统偏好
+                    const systemDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+                    if (systemDark) {
+                      document.documentElement.classList.add('dark');
+                    }
+                  }
+                }
+
+                // 立即设置主题
+                setTheme();
+
+                // 监听系统主题变化
+                const mediaQuery = window.matchMedia('(prefers-color-scheme: dark)');
+                mediaQuery.addListener(function() {
+                  const theme = localStorage.getItem('theme') || 'system';
+                  if (theme === 'system') {
+                    setTheme();
+                  }
+                });
+
+                // 页面加载完成后启用过渡效果
+                function enableTransitions() {
+                  document.documentElement.classList.add('transitions-enabled');
+                }
+
+                if (document.readyState === 'loading') {
+                  window.addEventListener('DOMContentLoaded', function() {
+                    setTimeout(enableTransitions, 50);
+                  });
+                } else {
+                  setTimeout(enableTransitions, 50);
+                }
+              })();
+            `,
+          }}
+        />
+      </head>
       <body className={inter.className} suppressHydrationWarning>
         <ThemeProvider
           attribute="class"

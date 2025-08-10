@@ -1,9 +1,7 @@
 "use client"
 
 import { ThemeToggle } from '@/components/theme-toggle'
-import { Button } from '@/components/ui/button'
 import { siteConfig } from '@/lib/config'
-import { Github } from 'lucide-react'
 
 export function Header() {
   return (
@@ -22,6 +20,9 @@ export function Header() {
           <a href="/projects" className="text-sm font-medium hover:text-primary transition-colors">
             项目
           </a>
+          <a href="/blog" className="text-sm font-medium hover:text-primary transition-colors">
+            博客
+          </a>
           <a href="/activity" className="text-sm font-medium hover:text-primary transition-colors">
             动态
           </a>
@@ -32,13 +33,6 @@ export function Header() {
 
         <div className="flex items-center space-x-4">
           <ThemeToggle />
-
-          <Button variant="outline" size="sm" asChild>
-            <a href={siteConfig.social.github} target="_blank" rel="noopener noreferrer">
-              <Github className="h-4 w-4 mr-2" />
-              GitHub
-            </a>
-          </Button>
         </div>
       </div>
     </header>
