@@ -205,7 +205,21 @@ const ComponentsDemo = () => {
           >
             Experience the future of web interactions
           </motion.p>
-          <MagneticButton>Explore Effects</MagneticButton>
+          <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
+            <MagneticButton>Explore Effects</MagneticButton>
+            <a
+              href="/visual-demo"
+              className="px-8 py-4 border-2 border-purple-500 text-purple-400 rounded-xl font-semibold hover:bg-purple-500 hover:text-white transition-all duration-300 hover:scale-105"
+            >
+              🎯 视觉冲击力演示
+            </a>
+            <a
+              href="/core-effects"
+              className="px-8 py-4 bg-gradient-to-r from-green-500 to-emerald-500 text-white rounded-xl font-semibold hover:from-green-600 hover:to-emerald-600 transition-all duration-300 hover:scale-105 shadow-lg"
+            >
+              ⚡ 核心特效演示
+            </a>
+          </div>
         </div>
       </section>
 

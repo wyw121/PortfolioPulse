@@ -1,0 +1,390 @@
+/* ========================================
+   1. 渐变边框动画样式
+======================================== */
+
+/* 旋转渐变边框 */
+.gradient-border-rotating {
+  position: relative;
+  overflow: hidden;
+}
+
+.gradient-border-rotating::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  padding: 3px;
+  background: linear-gradient(
+    0deg,
+    #3b82f6,
+    #8b5cf6,
+    #ec4899,
+    #06b6d4,
+    #10b981,
+    #f59e0b,
+    #ef4444,
+    #3b82f6
+  );
+  border-radius: inherit;
+  mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  mask-composite: xor;
+  -webkit-mask-composite: xor;
+  animation: rotate-border 3s linear infinite;
+}
+
+@keyframes rotate-border {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+/* 脉冲渐变边框 */
+.gradient-border-pulsing {
+  position: relative;
+  overflow: hidden;
+}
+
+.gradient-border-pulsing::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  padding: 3px;
+  background: linear-gradient(
+    135deg,
+    #8b5cf6,
+    #ec4899,
+    #f97316,
+    #ec4899,
+    #8b5cf6
+  );
+  border-radius: inherit;
+  mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  mask-composite: xor;
+  -webkit-mask-composite: xor;
+  animation: pulse-border 2s ease-in-out infinite;
+}
+
+@keyframes pulse-border {
+  0%, 100% {
+    opacity: 0.5;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 1;
+    transform: scale(1.02);
+  }
+}
+
+/* 流动渐变边框 */
+.gradient-border-flowing {
+  position: relative;
+  overflow: hidden;
+}
+
+.gradient-border-flowing::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  padding: 3px;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    transparent,
+    #ec4899,
+    #f97316,
+    #fbbf24,
+    #ec4899,
+    transparent,
+    transparent
+  );
+  background-size: 200% 100%;
+  border-radius: inherit;
+  mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  mask-composite: xor;
+  -webkit-mask-composite: xor;
+  animation: flow-border 3s linear infinite;
+}
+
+@keyframes flow-border {
+  0% {
+    background-position: -200% 0;
+  }
+  100% {
+    background-position: 200% 0;
+  }
+}
+
+/* ========================================
+   2. 全息投影卡片样式
+======================================== */
+
+.holographic-card {
+  perspective: 1000px;
+}
+
+.holographic-card .relative {
+  transform-style: preserve-3d;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.holographic-card:hover .relative {
+  box-shadow:
+    0 25px 50px -12px rgba(139, 92, 246, 0.25),
+    0 0 30px rgba(139, 92, 246, 0.15),
+    inset 0 1px 0 rgba(255, 255, 255, 0.1);
+}
+
+/* 全息光效 */
+.holographic-card::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(
+    45deg,
+    transparent 30%,
+    rgba(255, 255, 255, 0.1) 50%,
+    transparent 70%
+  );
+  transform: translateX(-100%);
+  transition: transform 0.6s ease;
+  border-radius: inherit;
+}
+
+.holographic-card:hover::after {
+  transform: translateX(100%);
+}
+
+/* ========================================
+   3. 液态变形按钮样式
+======================================== */
+
+.morphing-blob-button {
+  position: relative;
+  overflow: hidden;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+}
+
+/* 液态变形形状 */
+.blob-shape {
+  position: absolute;
+  inset: 0;
+  border-radius: 50px;
+  background: inherit;
+  transition: all 0.5s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+  transform-origin: center;
+}
+
+.blob-shape::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  background: inherit;
+  transform: scale(1);
+  transition: all 0.5s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+}
+
+/* 悬停时的液态变形效果 */
+.blob-hover {
+  border-radius: 35% 65% 45% 55% / 60% 40% 60% 40%;
+  transform: rotate(-5deg) scale(1.05);
+  animation: blob-morph 2s ease-in-out infinite;
+}
+
+.blob-hover::before {
+  border-radius: 45% 55% 35% 65% / 40% 60% 40% 60%;
+  transform: rotate(5deg) scale(0.95);
+  animation: blob-morph-reverse 2s ease-in-out infinite;
+}
+
+@keyframes blob-morph {
+  0%, 100% {
+    border-radius: 35% 65% 45% 55% / 60% 40% 60% 40%;
+    transform: rotate(-5deg) scale(1.05);
+  }
+  25% {
+    border-radius: 55% 45% 65% 35% / 40% 60% 40% 60%;
+    transform: rotate(-8deg) scale(1.08);
+  }
+  50% {
+    border-radius: 45% 55% 35% 65% / 50% 50% 50% 50%;
+    transform: rotate(-3deg) scale(1.02);
+  }
+  75% {
+    border-radius: 65% 35% 55% 45% / 60% 40% 60% 40%;
+    transform: rotate(-7deg) scale(1.06);
+  }
+}
+
+@keyframes blob-morph-reverse {
+  0%, 100% {
+    border-radius: 45% 55% 35% 65% / 40% 60% 40% 60%;
+    transform: rotate(5deg) scale(0.95);
+  }
+  25% {
+    border-radius: 35% 65% 45% 55% / 60% 40% 60% 40%;
+    transform: rotate(8deg) scale(0.92);
+  }
+  50% {
+    border-radius: 55% 45% 65% 35% / 50% 50% 50% 50%;
+    transform: rotate(3deg) scale(0.98);
+  }
+  75% {
+    border-radius: 25% 75% 45% 55% / 40% 60% 40% 60%;
+    transform: rotate(7deg) scale(0.94);
+  }
+}
+
+/* 按钮光泽效果增强 */
+.morphing-blob-button:hover {
+  box-shadow:
+    0 15px 35px rgba(139, 92, 246, 0.3),
+    0 5px 15px rgba(139, 92, 246, 0.2),
+    inset 0 1px 0 rgba(255, 255, 255, 0.2);
+}
+
+/* 按钮按下效果 */
+.morphing-blob-button:active {
+  transform: scale(0.98);
+}
+
+/* ========================================
+   4. 数字雨背景增强样式
+======================================== */
+
+/* 为数字雨添加额外的视觉效果 */
+canvas {
+  background: radial-gradient(
+    ellipse at center,
+    rgba(0, 20, 0, 0.1) 0%,
+    rgba(0, 0, 0, 0.3) 100%
+  );
+}
+
+/* 数字雨区域的特殊装饰 */
+#matrix {
+  position: relative;
+}
+
+#matrix::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(circle at 20% 20%, rgba(0, 255, 68, 0.1) 0%, transparent 50%),
+    radial-gradient(circle at 80% 80%, rgba(0, 255, 68, 0.08) 0%, transparent 50%),
+    radial-gradient(circle at 40% 60%, rgba(0, 255, 68, 0.06) 0%, transparent 50%);
+  pointer-events: none;
+}
+
+/* ========================================
+   通用优化样式
+======================================== */
+
+/* 性能优化 */
+.gpu-accelerated {
+  will-change: transform;
+  transform: translateZ(0);
+  backface-visibility: hidden;
+}
+
+/* 滚动动画优化 */
+.scroll-trigger {
+  will-change: transform, opacity;
+}
+
+/* 透明度过渡优化 */
+.fade-in {
+  animation: fadeIn 0.6s ease-out forwards;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* ========================================
+   响应式设计
+======================================== */
+
+@media (max-width: 768px) {
+  /* 移动端优化渐变边框 */
+  .gradient-border-rotating::before,
+  .gradient-border-pulsing::before,
+  .gradient-border-flowing::before {
+    padding: 2px;
+  }
+
+  /* 移动端液态按钮优化 */
+  .morphing-blob-button {
+    transform: none !important;
+  }
+
+  .blob-shape {
+    border-radius: 25px !important;
+    animation: none !important;
+  }
+
+  /* 移动端全息卡片优化 */
+  .holographic-card .relative {
+    transform: none !important;
+  }
+}
+
+@media (max-width: 480px) {
+  /* 小屏幕进一步优化 */
+  .gradient-border-rotating::before,
+  .gradient-border-pulsing::before,
+  .gradient-border-flowing::before {
+    padding: 1px;
+  }
+}
+
+/* ========================================
+   可访问性优化
+======================================== */
+
+/* 减少动画设置 */
+@media (prefers-reduced-motion: reduce) {
+  .gradient-border-rotating::before,
+  .gradient-border-pulsing::before,
+  .gradient-border-flowing::before,
+  .blob-shape,
+  .holographic-card .relative {
+    animation: none !important;
+    transition: none !important;
+  }
+}
+
+/* 高对比度模式 */
+@media (prefers-contrast: high) {
+  .gradient-border-rotating::before,
+  .gradient-border-pulsing::before,
+  .gradient-border-flowing::before {
+    background: linear-gradient(45deg, #ffffff, #000000);
+  }
+}
+
+/* 暗色模式优化 */
+@media (prefers-color-scheme: dark) {
+  canvas {
+    background: radial-gradient(
+      ellipse at center,
+      rgba(0, 30, 0, 0.2) 0%,
+      rgba(0, 0, 0, 0.8) 100%
+    );
+  }
+}
