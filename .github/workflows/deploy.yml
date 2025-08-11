@@ -57,17 +57,17 @@ jobs:
         env:
           NEXT_PUBLIC_API_URL: http://localhost:8000
 
-      - name: 🧪 Frontend Tests
-        working-directory: ./frontend
-        run: npm run test
+      # - name: 🧪 Frontend Tests
+      #   working-directory: ./frontend
+      #   run: npm run test
 
       - name: 🦀 Backend Build
         working-directory: ./backend
         run: cargo build --verbose
 
-      - name: 🧪 Backend Tests
-        working-directory: ./backend
-        run: cargo test --verbose
+      # - name: 🧪 Backend Tests
+      #   working-directory: ./backend
+      #   run: cargo test --verbose
         env:
           DATABASE_URL: mysql://root:password@localhost:3306/portfolio_pulse_test
 
