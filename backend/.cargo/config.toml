@@ -1,7 +1,3 @@
-[build]
-# 使用较新的索引协议
-index-sync = true
-
 [net]
 # 使用稀疏索引加速下载
 git-fetch-with-cli = false

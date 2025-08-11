@@ -55,6 +55,7 @@ pub async fn get_project_by_id(_pool: &MySqlPool, id: Uuid) -> Result<Option<Pro
     Ok(projects.into_iter().find(|p| p.id == id.to_string()))
 }
 
+#[allow(dead_code)]
 pub async fn create_or_update_project(
     _pool: &MySqlPool,
     github_repo: &GitHubRepo

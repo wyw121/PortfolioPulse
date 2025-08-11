@@ -9,6 +9,7 @@ pub async fn get_recent_commits(_pool: &MySqlPool, _limit: i32) -> Result<Vec<Co
 }
 
 // 存储提交记录到数据库
+#[allow(dead_code)]
 pub async fn save_commit(
     _pool: &MySqlPool,
     _project_id: uuid::Uuid,

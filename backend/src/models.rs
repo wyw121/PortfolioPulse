@@ -93,6 +93,7 @@ pub struct LanguageStat {
 }
 
 // GitHub API 模型
+#[allow(dead_code)]
 #[derive(Debug, Deserialize)]
 pub struct GitHubRepo {
     pub id: i64,
@@ -108,6 +109,7 @@ pub struct GitHubRepo {
     pub updated_at: String,
 }
 
+#[allow(dead_code)]
 #[derive(Debug, Deserialize)]
 pub struct GitHubCommit {
     pub sha: String,
@@ -115,12 +117,14 @@ pub struct GitHubCommit {
     pub stats: Option<GitHubCommitStats>,
 }
 
+#[allow(dead_code)]
 #[derive(Debug, Deserialize)]
 pub struct GitHubCommitData {
     pub message: String,
     pub author: GitHubCommitAuthor,
 }
 
+#[allow(dead_code)]
 #[derive(Debug, Deserialize)]
 pub struct GitHubCommitAuthor {
     pub name: String,
@@ -128,6 +132,7 @@ pub struct GitHubCommitAuthor {
     pub date: String,
 }
 
+#[allow(dead_code)]
 #[derive(Debug, Deserialize)]
 pub struct GitHubCommitStats {
     pub additions: i32,
@@ -190,6 +195,7 @@ pub struct BlogUpload {
 }
 
 // API请求模型
+#[allow(dead_code)]
 #[derive(Debug, Deserialize)]
 pub struct CreateBlogPostRequest {
     pub title: String,
@@ -202,6 +208,7 @@ pub struct CreateBlogPostRequest {
     pub cover_image: Option<String>,
 }
 
+#[allow(dead_code)]
 #[derive(Debug, Deserialize)]
 pub struct UpdateBlogPostRequest {
     pub title: Option<String>,

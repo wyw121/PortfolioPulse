@@ -44,6 +44,7 @@ pub async fn get_overall_stats(_pool: &MySqlPool) -> Result<StatsResponse> {
     Ok(stats)
 }
 
+#[allow(dead_code)]
 pub async fn get_project_stats(_pool: &MySqlPool, _project_id: uuid::Uuid) -> Result<StatsResponse> {
     // 实际实现应该查询特定项目的统计信息
     /*

@@ -2,19 +2,19 @@ name: 🦀 Ubuntu 交叉编译构建
 
 on:
   push:
-    branches: [ main, dev ]
+    branches: [main, dev]
   pull_request:
-    branches: [ main ]
+    branches: [main]
   workflow_dispatch:
     inputs:
       deploy_type:
-        description: '部署类型'
+        description: "部署类型"
         required: true
-        default: 'build-only'
+        default: "build-only"
         type: choice
         options:
-        - build-only
-        - build-and-package
+          - build-only
+          - build-and-package
 
 jobs:
   cross-compile:
@@ -32,319 +32,319 @@ jobs:
         options: --health-cmd="mysqladmin ping" --health-interval=10s --health-timeout=5s --health-retries=3
 
     steps:
-    - name: 📥 检出代码
-      uses: actions/checkout@v4
+      - name: 📥 检出代码
+        uses: actions/checkout@v4
 
-    - name: 🦀 安装 Rust
-      uses: dtolnay/rust-toolchain@stable
-      with:
-        targets: x86_64-unknown-linux-gnu
-        components: rustfmt, clippy
+      - name: 🦀 安装 Rust
+        uses: dtolnay/rust-toolchain@stable
+        with:
+          targets: x86_64-unknown-linux-gnu
+          components: rustfmt, clippy
 
-    - name: 📦 安装 Node.js 18
-      uses: actions/setup-node@v4
-      with:
-        node-version: '18'
-        cache: 'npm'
-        cache-dependency-path: frontend/package-lock.json
+      - name: 📦 安装 Node.js 18
+        uses: actions/setup-node@v4
+        with:
+          node-version: "18"
+          cache: "npm"
+          cache-dependency-path: frontend/package-lock.json
 
-    - name: 🔧 设置 Rust 缓存
-      uses: Swatinem/rust-cache@v2
-      with:
-        workspaces: "backend -> target"
+      - name: 🔧 设置 Rust 缓存
+        uses: Swatinem/rust-cache@v2
+        with:
+          workspaces: "backend -> target"
 
-    - name: 🗄️ 设置数据库
-      run: |
-        chmod +x scripts/init-database.sh
-        scripts/init-database.sh
-      env:
-        DB_HOST: 127.0.0.1
-        DB_PORT: 3306
-        DB_USER: root
-        DB_PASS: password
-        DB_NAME: portfolio_pulse
+      - name: 🗄️ 设置数据库
+        run: |
+          chmod +x scripts/init-database.sh
+          scripts/init-database.sh
+        env:
+          DB_HOST: 127.0.0.1
+          DB_PORT: 3306
+          DB_USER: root
+          DB_PASS: password
+          DB_NAME: portfolio_pulse
 
-    - name: 🦀 编译后端
-      working-directory: backend
-      env:
-        CARGO_NET_GIT_FETCH_WITH_CLI: true
-        DATABASE_URL: mysql://root:password@127.0.0.1:3306/portfolio_pulse
-      run: |
-        echo "🔍 检查 Rust 环境..."
-        rustc --version
-        rustup show
+      - name: 🦀 编译后端
+        working-directory: backend
+        env:
+          CARGO_NET_GIT_FETCH_WITH_CLI: true
+          DATABASE_URL: mysql://root:password@127.0.0.1:3306/portfolio_pulse
+        run: |
+          echo "🔍 检查 Rust 环境..."
+          rustc --version
+          rustup show
 
-        echo "🗄️ 验证数据库连接..."
-        echo "DATABASE_URL: mysql://root:password@127.0.0.1:3306/portfolio_pulse"
+          echo "🗄️ 验证数据库连接..."
+          echo "DATABASE_URL: mysql://root:password@127.0.0.1:3306/portfolio_pulse"
 
-        echo "📋 安装 SQLx CLI..."
-        cargo install sqlx-cli --no-default-features --features native-tls,mysql
+          echo "📋 安装 SQLx CLI..."
+          cargo install sqlx-cli --no-default-features --features native-tls,mysql
 
-        echo "📋 生成 SQLx 查询缓存..."
-        cargo sqlx prepare --check || cargo sqlx prepare
+          echo "📋 生成 SQLx 查询缓存..."
+          cargo sqlx prepare --check || cargo sqlx prepare
 
-        echo "📦 构建依赖..."
-        cargo build --release --target x86_64-unknown-linux-gnu
+          echo "📦 构建依赖..."
+          cargo build --release --target x86_64-unknown-linux-gnu
 
-        echo "✅ 编译完成"
-        ls -la target/x86_64-unknown-linux-gnu/release/
+          echo "✅ 编译完成"
+          ls -la target/x86_64-unknown-linux-gnu/release/
 
-    - name: 🟢 编译前端
-      working-directory: frontend
-      run: |
-        echo "📦 安装依赖..."
-        npm ci
+      - name: 🟢 编译前端
+        working-directory: frontend
+        run: |
+          echo "📦 安装依赖..."
+          npm ci
 
-        echo "🏗️  构建应用..."
-        npm run build
+          echo "🏗️  构建应用..."
+          npm run build
 
-        echo "📁 检查构建输出..."
-        ls -la .next/
+          echo "📁 检查构建输出..."
+          ls -la .next/
 
-        if [ -d ".next/standalone" ]; then
-          echo "✅ Standalone 构建成功"
-          ls -la .next/standalone/
-        else
-          echo "❌ Standalone 输出不存在"
-          echo "检查 next.config.js 配置："
-          cat next.config.js
-          exit 1
-        fi
-
-    - name: 📦 打包部署文件
-      run: |
-        echo "🗂️  创建部署目录..."
-        mkdir -p deploy
-
-        echo "🦀 复制后端二进制..."
-        # 查找后端可执行文件
-        find backend/target/x86_64-unknown-linux-gnu/release -maxdepth 1 -type f -executable -size +100k | head -1 | xargs -I {} cp {} deploy/portfolio_pulse_backend
-
-        # 验证后端文件
-        if [ -f "deploy/portfolio_pulse_backend" ]; then
-          echo "✅ 后端文件复制成功"
-          file deploy/portfolio_pulse_backend
-          ls -lh deploy/portfolio_pulse_backend
-        else
-          echo "❌ 后端文件复制失败"
-          echo "可用文件："
-          find backend/target/x86_64-unknown-linux-gnu/release -type f -size +10k -exec ls -lh {} \;
-          exit 1
-        fi
-
-        echo "🟢 复制前端文件..."
-        # 复制 standalone 应用
-        cp -r frontend/.next/standalone/* deploy/
-
-        # 复制静态资源
-        if [ -d "frontend/.next/static" ]; then
-          mkdir -p deploy/.next/static
-          cp -r frontend/.next/static/* deploy/.next/static/
-        fi
-
-        # 复制 public 目录
-        if [ -d "frontend/public" ]; then
-          cp -r frontend/public deploy/
-        fi
-
-        echo "📋 创建启动脚本..."
-        cat > deploy/start.sh << 'EOF'
-        #!/bin/bash
-        # PortfolioPulse 启动脚本
-
-        set -e
-
-        echo "🚀 启动 PortfolioPulse..."
-
-        # 检查必要文件
-        if [ ! -f "portfolio_pulse_backend" ]; then
-          echo "❌ 后端文件不存在"
-          exit 1
-        fi
-
-        if [ ! -f "server.js" ]; then
-          echo "❌ 前端服务文件不存在"
-          exit 1
-        fi
-
-        # 设置权限
-        chmod +x portfolio_pulse_backend
-
-        # 环境变量
-        export NODE_ENV=production
-        export PORT=3000
-
-        # 启动后端
-        echo "🦀 启动后端服务 (端口 8000)..."
-        nohup ./portfolio_pulse_backend > backend.log 2>&1 &
-        BACKEND_PID=$!
-        echo $BACKEND_PID > backend.pid
-        echo "后端 PID: $BACKEND_PID"
-
-        # 等待后端启动
-        sleep 5
-
-        # 检查后端是否正常
-        if ! kill -0 $BACKEND_PID 2>/dev/null; then
-          echo "❌ 后端启动失败"
-          cat backend.log
-          exit 1
-        fi
-
-        # 启动前端
-        echo "🟢 启动前端服务 (端口 3000)..."
-        nohup node server.js > frontend.log 2>&1 &
-        FRONTEND_PID=$!
-        echo $FRONTEND_PID > frontend.pid
-        echo "前端 PID: $FRONTEND_PID"
-
-        echo "✅ 服务启动完成！"
-        echo "🌐 访问地址: http://localhost:3000"
-        echo "📋 管理命令:"
-        echo "  ./status.sh  - 查看服务状态"
-        echo "  ./stop.sh    - 停止所有服务"
-        EOF
-
-        cat > deploy/stop.sh << 'EOF'
-        #!/bin/bash
-        echo "🛑 停止 PortfolioPulse 服务..."
-
-        if [ -f "backend.pid" ]; then
-          PID=$(cat backend.pid)
-          if kill -0 "$PID" 2>/dev/null; then
-            kill "$PID"
-            echo "✅ 后端已停止 (PID: $PID)"
+          if [ -d ".next/standalone" ]; then
+            echo "✅ Standalone 构建成功"
+            ls -la .next/standalone/
+          else
+            echo "❌ Standalone 输出不存在"
+            echo "检查 next.config.js 配置："
+            cat next.config.js
+            exit 1
           fi
-          rm -f backend.pid
-        fi
 
-        if [ -f "frontend.pid" ]; then
-          PID=$(cat frontend.pid)
-          if kill -0 "$PID" 2>/dev/null; then
-            kill "$PID"
-            echo "✅ 前端已停止 (PID: $PID)"
+      - name: 📦 打包部署文件
+        run: |
+          echo "🗂️  创建部署目录..."
+          mkdir -p deploy
+
+          echo "🦀 复制后端二进制..."
+          # 查找后端可执行文件
+          find backend/target/x86_64-unknown-linux-gnu/release -maxdepth 1 -type f -executable -size +100k | head -1 | xargs -I {} cp {} deploy/portfolio_pulse_backend
+
+          # 验证后端文件
+          if [ -f "deploy/portfolio_pulse_backend" ]; then
+            echo "✅ 后端文件复制成功"
+            file deploy/portfolio_pulse_backend
+            ls -lh deploy/portfolio_pulse_backend
+          else
+            echo "❌ 后端文件复制失败"
+            echo "可用文件："
+            find backend/target/x86_64-unknown-linux-gnu/release -type f -size +10k -exec ls -lh {} \;
+            exit 1
           fi
-          rm -f frontend.pid
-        fi
 
-        echo "✅ 所有服务已停止"
-        EOF
+          echo "🟢 复制前端文件..."
+          # 复制 standalone 应用
+          cp -r frontend/.next/standalone/* deploy/
 
-        cat > deploy/status.sh << 'EOF'
-        #!/bin/bash
-        echo "📊 PortfolioPulse 状态检查"
-        echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+          # 复制静态资源
+          if [ -d "frontend/.next/static" ]; then
+            mkdir -p deploy/.next/static
+            cp -r frontend/.next/static/* deploy/.next/static/
+          fi
 
-        echo "🦀 后端服务:"
-        if [ -f "backend.pid" ] && kill -0 "$(cat backend.pid)" 2>/dev/null; then
-          echo "  ✅ 运行中 (PID: $(cat backend.pid))"
-        else
-          echo "  ❌ 未运行"
-        fi
+          # 复制 public 目录
+          if [ -d "frontend/public" ]; then
+            cp -r frontend/public deploy/
+          fi
 
-        echo "🟢 前端服务:"
-        if [ -f "frontend.pid" ] && kill -0 "$(cat frontend.pid)" 2>/dev/null; then
-          echo "  ✅ 运行中 (PID: $(cat frontend.pid))"
-        else
-          echo "  ❌ 未运行"
-        fi
+          echo "📋 创建启动脚本..."
+          cat > deploy/start.sh << 'EOF'
+          #!/bin/bash
+          # PortfolioPulse 启动脚本
 
-        echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
-        EOF
+          set -e
 
-        # 设置脚本执行权限
-        chmod +x deploy/*.sh
+          echo "🚀 启动 PortfolioPulse..."
 
-        echo "📋 创建环境变量模板..."
-        cat > deploy/.env.example << 'EOF'
-        # PortfolioPulse 环境变量配置
+          # 检查必要文件
+          if [ ! -f "portfolio_pulse_backend" ]; then
+            echo "❌ 后端文件不存在"
+            exit 1
+          fi
 
-        # 数据库配置
-        DATABASE_URL=mysql://username:password@localhost:3306/portfolio_pulse
+          if [ ! -f "server.js" ]; then
+            echo "❌ 前端服务文件不存在"
+            exit 1
+          fi
 
-        # 应用配置
-        NODE_ENV=production
-        PORT=3000
+          # 设置权限
+          chmod +x portfolio_pulse_backend
 
-        # GitHub 集成 (可选)
-        GITHUB_TOKEN=your_token_here
-        GITHUB_USERNAME=your_username
+          # 环境变量
+          export NODE_ENV=production
+          export PORT=3000
 
-        # 认证 (如果使用)
-        NEXTAUTH_SECRET=your_secret_here
-        NEXTAUTH_URL=http://your-domain.com
+          # 启动后端
+          echo "🦀 启动后端服务 (端口 8000)..."
+          nohup ./portfolio_pulse_backend > backend.log 2>&1 &
+          BACKEND_PID=$!
+          echo $BACKEND_PID > backend.pid
+          echo "后端 PID: $BACKEND_PID"
 
-        # 日志级别
-        RUST_LOG=info
-        EOF
+          # 等待后端启动
+          sleep 5
 
-        echo "📄 创建部署说明..."
-        cat > deploy/README.md << 'EOF'
-        # PortfolioPulse Ubuntu 22.04 部署包
+          # 检查后端是否正常
+          if ! kill -0 $BACKEND_PID 2>/dev/null; then
+            echo "❌ 后端启动失败"
+            cat backend.log
+            exit 1
+          fi
 
-        这是从 Windows 交叉编译生成的 Ubuntu 22.04 部署包。
+          # 启动前端
+          echo "🟢 启动前端服务 (端口 3000)..."
+          nohup node server.js > frontend.log 2>&1 &
+          FRONTEND_PID=$!
+          echo $FRONTEND_PID > frontend.pid
+          echo "前端 PID: $FRONTEND_PID"
 
-        ## 🚀 快速部署
+          echo "✅ 服务启动完成！"
+          echo "🌐 访问地址: http://localhost:3000"
+          echo "📋 管理命令:"
+          echo "  ./status.sh  - 查看服务状态"
+          echo "  ./stop.sh    - 停止所有服务"
+          EOF
 
-        1. **上传文件到服务器**
-           ```bash
-           scp -r deploy/ user@your-server:/opt/portfoliopulse/
-           ```
+          cat > deploy/stop.sh << 'EOF'
+          #!/bin/bash
+          echo "🛑 停止 PortfolioPulse 服务..."
 
-        2. **设置权限**
-           ```bash
-           cd /opt/portfoliopulse/
-           chmod +x *.sh portfolio_pulse_backend
-           ```
+          if [ -f "backend.pid" ]; then
+            PID=$(cat backend.pid)
+            if kill -0 "$PID" 2>/dev/null; then
+              kill "$PID"
+              echo "✅ 后端已停止 (PID: $PID)"
+            fi
+            rm -f backend.pid
+          fi
 
-        3. **配置环境变量**
-           ```bash
-           cp .env.example .env
-           nano .env  # 编辑配置
-           ```
+          if [ -f "frontend.pid" ]; then
+            PID=$(cat frontend.pid)
+            if kill -0 "$PID" 2>/dev/null; then
+              kill "$PID"
+              echo "✅ 前端已停止 (PID: $PID)"
+            fi
+            rm -f frontend.pid
+          fi
 
-        4. **启动服务**
-           ```bash
-           ./start.sh
-           ```
+          echo "✅ 所有服务已停止"
+          EOF
 
-        ## 📋 管理命令
+          cat > deploy/status.sh << 'EOF'
+          #!/bin/bash
+          echo "📊 PortfolioPulse 状态检查"
+          echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
 
-        - `./start.sh` - 启动服务
-        - `./stop.sh` - 停止服务
-        - `./status.sh` - 查看状态
+          echo "🦀 后端服务:"
+          if [ -f "backend.pid" ] && kill -0 "$(cat backend.pid)" 2>/dev/null; then
+            echo "  ✅ 运行中 (PID: $(cat backend.pid))"
+          else
+            echo "  ❌ 未运行"
+          fi
 
-        ## 🔍 故障排查
+          echo "🟢 前端服务:"
+          if [ -f "frontend.pid" ] && kill -0 "$(cat frontend.pid)" 2>/dev/null; then
+            echo "  ✅ 运行中 (PID: $(cat frontend.pid))"
+          else
+            echo "  ❌ 未运行"
+          fi
 
-        - 查看后端日志: `tail -f backend.log`
-        - 查看前端日志: `tail -f frontend.log`
-        - 检查端口占用: `netstat -tlnp | grep ':3000\|:8000'`
+          echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+          EOF
 
-        ## 📊 系统要求
+          # 设置脚本执行权限
+          chmod +x deploy/*.sh
 
-        - Ubuntu 22.04 LTS
-        - Node.js 18+
-        - MySQL 8.0+ (如果使用数据库)
-        EOF
+          echo "📋 创建环境变量模板..."
+          cat > deploy/.env.example << 'EOF'
+          # PortfolioPulse 环境变量配置
 
-        echo "✅ 部署包创建完成"
+          # 数据库配置
+          DATABASE_URL=mysql://username:password@localhost:3306/portfolio_pulse
 
-        echo "📁 部署包内容："
-        find deploy -type f -exec ls -lh {} \; | head -20
+          # 应用配置
+          NODE_ENV=production
+          PORT=3000
 
-    - name: 📤 上传构建产物
-      uses: actions/upload-artifact@v4
-      with:
-        name: portfoliopulse-ubuntu-22.04-${{ github.sha }}
-        path: deploy/
-        retention-days: 30
+          # GitHub 集成 (可选)
+          GITHUB_TOKEN=your_token_here
+          GITHUB_USERNAME=your_username
 
-    - name: 🎉 构建完成通知
-      run: |
-        echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
-        echo "🎉 PortfolioPulse Ubuntu 22.04 交叉编译完成！"
-        echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
-        echo "📦 构建产物已上传为 GitHub Artifacts"
-        echo "📥 下载地址: 在 Actions 页面找到本次运行"
-        echo "🚀 部署方式: 解压后运行 ./start.sh"
-        echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+          # 认证 (如果使用)
+          NEXTAUTH_SECRET=your_secret_here
+          NEXTAUTH_URL=http://your-domain.com
+
+          # 日志级别
+          RUST_LOG=info
+          EOF
+
+          echo "📄 创建部署说明..."
+          cat > deploy/README.md << 'EOF'
+          # PortfolioPulse Ubuntu 22.04 部署包
+
+          这是从 Windows 交叉编译生成的 Ubuntu 22.04 部署包。
+
+          ## 🚀 快速部署
+
+          1. **上传文件到服务器**
+             ```bash
+             scp -r deploy/ user@your-server:/opt/portfoliopulse/
+             ```
+
+          2. **设置权限**
+             ```bash
+             cd /opt/portfoliopulse/
+             chmod +x *.sh portfolio_pulse_backend
+             ```
+
+          3. **配置环境变量**
+             ```bash
+             cp .env.example .env
+             nano .env  # 编辑配置
+             ```
+
+          4. **启动服务**
+             ```bash
+             ./start.sh
+             ```
+
+          ## 📋 管理命令
+
+          - `./start.sh` - 启动服务
+          - `./stop.sh` - 停止服务
+          - `./status.sh` - 查看状态
+
+          ## 🔍 故障排查
+
+          - 查看后端日志: `tail -f backend.log`
+          - 查看前端日志: `tail -f frontend.log`
+          - 检查端口占用: `netstat -tlnp | grep ':3000\|:8000'`
+
+          ## 📊 系统要求
+
+          - Ubuntu 22.04 LTS
+          - Node.js 18+
+          - MySQL 8.0+ (如果使用数据库)
+          EOF
+
+          echo "✅ 部署包创建完成"
+
+          echo "📁 部署包内容："
+          find deploy -type f -exec ls -lh {} \; | head -20
+
+      - name: 📤 上传构建产物
+        uses: actions/upload-artifact@v4
+        with:
+          name: portfoliopulse-ubuntu-22.04-${{ github.sha }}
+          path: deploy/
+          retention-days: 30
+
+      - name: 🎉 构建完成通知
+        run: |
+          echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+          echo "🎉 PortfolioPulse Ubuntu 22.04 交叉编译完成！"
+          echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+          echo "📦 构建产物已上传为 GitHub Artifacts"
+          echo "📥 下载地址: 在 Actions 页面找到本次运行"
+          echo "🚀 部署方式: 解压后运行 ./start.sh"
+          echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"

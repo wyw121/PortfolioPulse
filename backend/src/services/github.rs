@@ -3,11 +3,13 @@ use anyhow::{Result, anyhow};
 
 use crate::models::{GitHubRepo, GitHubCommit};
 
+#[allow(dead_code)]
 pub struct GitHubClient {
     client: Client,
     token: String,
 }
 
+#[allow(dead_code)]
 impl GitHubClient {
     pub fn new(token: String) -> Self {
         Self {
@@ -78,6 +80,7 @@ impl GitHubClient {
 }
 
 // 同步 GitHub 数据到本地数据库
+#[allow(dead_code)]
 pub async fn sync_github_data(
     pool: &sqlx::MySqlPool,
     github_client: &GitHubClient,

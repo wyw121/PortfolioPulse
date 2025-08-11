@@ -30,8 +30,7 @@ pub async fn admin_auth_middleware(
     // 检查Authorization头
     if let Some(auth_header) = headers.get("authorization") {
         if let Ok(auth_str) = auth_header.to_str() {
-            if auth_str.starts_with("Bearer ") {
-                let token = &auth_str[7..];
+            if let Some(token) = auth_str.strip_prefix("Bearer ") {
                 if token == admin_token {
                     // Token验证成功，继续处理请求
                     return Ok(next.run(request).await);
@@ -43,8 +42,7 @@ pub async fn admin_auth_middleware(
     // 检查简单的Basic Auth
     if let Some(auth_header) = headers.get("authorization") {
         if let Ok(auth_str) = auth_header.to_str() {
-            if auth_str.starts_with("Basic ") {
-                let credentials = &auth_str[6..];
+            if let Some(credentials) = auth_str.strip_prefix("Basic ") {
                 if let Ok(decoded) = base64::engine::general_purpose::STANDARD.decode(credentials) {
                     if let Ok(decoded_str) = String::from_utf8(decoded) {
                         let parts: Vec<&str> = decoded_str.split(':').collect();
@@ -68,12 +66,14 @@ pub async fn admin_auth_middleware(
 }
 
 // 检查用户是否为管理员的辅助函数
+#[allow(dead_code)]
 pub fn is_admin_user(username: &str) -> bool {
     let admin_user = std::env::var("BLOG_ADMIN_USER").unwrap_or_default();
     !admin_user.is_empty() && username == admin_user
 }
 
 // GitHub OAuth 认证辅助（待实现）
+#[allow(dead_code)]
 pub async fn verify_github_token(token: &str) -> Result<String, anyhow::Error> {
     let client = reqwest::Client::new();
     let response = client

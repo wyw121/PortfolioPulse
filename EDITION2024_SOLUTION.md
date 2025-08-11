@@ -12,7 +12,7 @@
 uses: dtolnay/rust-toolchain@stable
 ```
 
-### 2. **降级依赖版本** 
+### 2. **降级依赖版本**
 ```toml
 # Cargo.toml 中使用兼容版本
 base64 = "0.21"  # 而不是 "0.22"
@@ -24,7 +24,7 @@ base64 = "0.21"  # 而不是 "0.22"
 [build]
 index-sync = true
 
-[net]  
+[net]
 git-fetch-with-cli = false
 ```
 
@@ -55,7 +55,7 @@ cargo check
 
 ## 📊 预期结果
 
-- ✅ GitHub Actions 构建成功  
+- ✅ GitHub Actions 构建成功
 - ✅ 交叉编译到 Ubuntu 22.04
 - ✅ 生成可部署的二进制文件
 - ✅ 前后端都能正常构建

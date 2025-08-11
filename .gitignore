@@ -66,6 +66,9 @@ Cargo.lock
 **/debug/
 **/release/
 
+# Local build artifacts
+local-artifacts/
+
 # Database
 *.db
 *.sqlite

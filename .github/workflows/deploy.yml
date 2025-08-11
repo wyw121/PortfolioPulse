@@ -79,13 +79,13 @@ jobs:
         run: |
           echo "🗄️ 验证数据库连接..."
           echo $DATABASE_URL
-          
+
           echo "📋 安装 SQLx CLI..."
           cargo install sqlx-cli --no-default-features --features native-tls,mysql
-          
+
           echo "📋 生成/验证 SQLx 查询缓存..."
           cargo sqlx prepare --check || cargo sqlx prepare
-          
+
           echo "🦀 构建后端..."
           cargo build --verbose
 
@@ -252,7 +252,6 @@ jobs:
     runs-on: ubuntu-latest
     needs: [build-docker, build-binary]
     if: github.ref == 'refs/heads/develop'
-    environment: staging
 
     steps:
       - name: 📥 Download Artifacts
@@ -290,7 +289,6 @@ jobs:
     runs-on: ubuntu-latest
     needs: [build-docker, build-binary]
     if: github.ref == 'refs/heads/main'
-    environment: production
 
     steps:
       - name: 📥 Download Binary Package

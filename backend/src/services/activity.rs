@@ -10,6 +10,7 @@ pub async fn get_recent_activity(_pool: &MySqlPool, _days: i32) -> Result<Vec<Ac
 }
 
 // 同步项目活动数据 (从 GitHub API)
+#[allow(dead_code)]
 pub async fn sync_project_activity(
     _pool: &MySqlPool,
     _project_id: uuid::Uuid,

@@ -54,10 +54,10 @@ services:
   run: |
     # 安装 SQLx CLI
     cargo install sqlx-cli --no-default-features --features native-tls,mysql
-    
+
     # 生成查询缓存 (如果需要)
     cargo sqlx prepare --check || cargo sqlx prepare
-    
+
     # 编译
     cargo build --release --target x86_64-unknown-linux-gnu
 ```
@@ -79,7 +79,7 @@ MySQL 服务启动 → 代码检出 → Rust 环境 → 数据库初始化 → S
 ## 🎯 修复效果
 
 - ✅ SQLx 编译时验证通过
-- ✅ 消除 "set DATABASE_URL" 错误  
+- ✅ 消除 "set DATABASE_URL" 错误
 - ✅ 生成查询缓存 (离线模式兼容)
 - ✅ GitHub Actions 构建成功
 - ✅ 交叉编译到 Ubuntu 22.04 成功
@@ -122,7 +122,7 @@ cargo build
 
 **选择在线模式的原因**:
 - 🔒 更强的类型安全
-- 🗄️ 确保查询与实际表结构匹配  
+- 🗄️ 确保查询与实际表结构匹配
 - 🚀 CI 环境更接近生产环境
 - 🔄 自动检测数据库结构变化
 
