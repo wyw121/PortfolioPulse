@@ -76,7 +76,18 @@ jobs:
         working-directory: ./backend
         env:
           DATABASE_URL: mysql://root:password@127.0.0.1:3306/portfolio_pulse_test
-        run: cargo build --verbose
+        run: |
+          echo "🗄️ 验证数据库连接..."
+          echo $DATABASE_URL
+          
+          echo "📋 安装 SQLx CLI..."
+          cargo install sqlx-cli --no-default-features --features native-tls,mysql
+          
+          echo "📋 生成/验证 SQLx 查询缓存..."
+          cargo sqlx prepare --check || cargo sqlx prepare
+          
+          echo "🦀 构建后端..."
+          cargo build --verbose
 
       - name: 🔍 Backend Lint (Clippy)
         working-directory: ./backend

@@ -74,6 +74,15 @@ jobs:
         rustc --version
         rustup show
 
+        echo "🗄️ 验证数据库连接..."
+        echo "DATABASE_URL: mysql://root:password@127.0.0.1:3306/portfolio_pulse"
+
+        echo "📋 安装 SQLx CLI..."
+        cargo install sqlx-cli --no-default-features --features native-tls,mysql
+
+        echo "📋 生成 SQLx 查询缓存..."
+        cargo sqlx prepare --check || cargo sqlx prepare
+
         echo "📦 构建依赖..."
         cargo build --release --target x86_64-unknown-linux-gnu
 
