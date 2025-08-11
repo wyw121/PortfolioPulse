@@ -1,12 +1,8 @@
 {
   // GitHub Copilot 配置
   "chat.promptFiles": true,
-  "chat.instructionsFilesLocations": [
-    ".github/instructions"
-  ],
-  "chat.promptFilesLocations": [
-    ".github/prompts"
-  ],
+  "chat.instructionsFilesLocations": [".github/instructions"],
+  "chat.promptFilesLocations": [".github/prompts"],
   "github.copilot.chat.codeGeneration.useInstructionFiles": true,
   "github.copilot.chat.reviewSelection.instructions": [
     { "file": ".github/instructions/backend-development.instructions.md" },

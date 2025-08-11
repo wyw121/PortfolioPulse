@@ -9,7 +9,7 @@ echo.
 :menu
 echo 请选择要启动的服务:
 echo 1. 前端开发服务器 (Next.js)
-echo 2. 后端开发服务器 (Rust)  
+echo 2. 后端开发服务器 (Rust)
 echo 3. 同时启动前后端
 echo 4. 退出
 echo.

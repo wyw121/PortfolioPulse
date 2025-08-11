@@ -1,13 +1,30 @@
 "use client";
 
-import { AnimatedContainer } from "@/components/animations/animated-container";
-import { useState } from "react";
+import { motion } from "framer-motion";
+import Link from "next/link";
 
-export function Footer() {
-  const [isJapanese, setIsJapanese] = useState(true);
+const footerLinks = {
+  项目: [
+    { name: "全部项目", href: "/projects" },
+    { name: "Web 应用", href: "/projects?category=web" },
+    { name: "开源库", href: "/projects?category=library" },
+    { name: "工具脚本", href: "/projects?category=tools" },
+  ],
+  内容: [
+    { name: "技术博客", href: "/blog" },
+    { name: "学习笔记", href: "/blog?category=notes" },
+    { name: "项目总结", href: "/blog?category=projects" },
+    { name: "技术分享", href: "/blog?category=tech" },
+  ],
+  联系: [
+    { name: "GitHub", href: "https://github.com" },
+    { name: "Email", href: "mailto:contact@portfoliopulse.dev" },
+    { name: "Twitter", href: "https://twitter.com" },
+    { name: "LinkedIn", href: "https://linkedin.com" },
+  ],
+};
 
-  const toggleLanguage = () => {
-    setIsJapanese(!isJapanese);
+export const Footer = () => {
   };
 
   const handleKeyDown = (event: React.KeyboardEvent) => {
