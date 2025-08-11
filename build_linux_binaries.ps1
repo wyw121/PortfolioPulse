@@ -55,15 +55,15 @@ if (-not (Get-Command "x86_64-linux-gnu-gcc" -ErrorAction SilentlyContinue)) {
 # 1. 构建后端 Rust 二进制文件
 if ($Linux -or $Both -or (-not $Windows -and -not $Both)) {
     Write-Host "🐧 构建 Linux 后端二进制文件..." -ForegroundColor Blue
-    
+
     # 设置交叉编译环境变量
     $env:CC_x86_64_unknown_linux_gnu = "x86_64-linux-gnu-gcc"
     $env:CXX_x86_64_unknown_linux_gnu = "x86_64-linux-gnu-g++"
     $env:AR_x86_64_unknown_linux_gnu = "x86_64-linux-gnu-ar"
-    
+
     # 构建 Linux 版本
     cargo build --release --target $LinuxTarget
-    
+
     if ($LASTEXITCODE -eq 0) {
         $LinuxBinary = ".\target\$LinuxTarget\release\portfolio-pulse-backend"
         if (Test-Path $LinuxBinary) {
@@ -85,7 +85,7 @@ if ($Linux -or $Both -or (-not $Windows -and -not $Both)) {
     } else {
         Write-Host "❌ Linux 后端构建失败" -ForegroundColor Red
         Write-Host "💡 建议: 考虑使用 Docker 或 GitHub Actions 进行交叉编译" -ForegroundColor Yellow
-        
+
         # 提供备选方案
         Write-Host "`n🔄 备选方案:" -ForegroundColor Cyan
         Write-Host "1. 使用 WSL2 进行编译" -ForegroundColor White
@@ -97,7 +97,7 @@ if ($Linux -or $Both -or (-not $Windows -and -not $Both)) {
 
 if ($Windows -or $Both) {
     Write-Host "🪟 构建 Windows 后端二进制文件..." -ForegroundColor Blue
-    
+
     cargo build --release
     if ($LASTEXITCODE -ne 0) {
         Write-Error "Windows 后端构建失败"

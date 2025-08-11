@@ -21,7 +21,7 @@ function Write-Step {
 }
 
 function Write-Success {
-    param([string]$Message)  
+    param([string]$Message)
     Write-Host "✅ $Message" -ForegroundColor Green
 }
 
@@ -49,37 +49,37 @@ function Test-Command {
 # 方案1: Musl 静态编译 (修复版)
 function Use-MuslCompile {
     Write-Step "使用 Musl 静态编译"
-    
+
     if (-not (Test-Command "rustc")) {
         Write-Error "Rust 未安装，请先运行: .\install_dev_environment.ps1"
         return $false
     }
-    
+
     if (-not (Test-Command "node")) {
         Write-Error "Node.js 未安装，请先运行: .\install_dev_environment.ps1"
         return $false
     }
-    
+
     # 确保目标已安装
     Write-Host "📦 确认编译目标..." -ForegroundColor Blue
     rustup target add x86_64-unknown-linux-musl
     rustup target add x86_64-unknown-linux-gnu
-    
+
     # 创建构建目录
     New-Item -ItemType Directory -Path ".\build\musl-output" -Force | Out-Null
-    
+
     # 编译后端
     Write-Host "🦀 编译后端..." -ForegroundColor Blue
     Push-Location backend
-    
+
     try {
         # 清理之前的构建
         cargo clean
-        
+
         # 优先尝试 GNU 目标
         $targetTriple = "x86_64-unknown-linux-gnu"
         Write-Host "🎯 使用目标: $targetTriple" -ForegroundColor Yellow
-        
+
         # 配置链接器
         if (-not (Test-Command "x86_64-linux-gnu-gcc")) {
             Write-Host "⚠️  使用 Rust 内置链接器..." -ForegroundColor Yellow
@@ -88,42 +88,42 @@ function Use-MuslCompile {
         else {
             $env:CARGO_TARGET_X86_64_UNKNOWN_LINUX_GNU_LINKER = "x86_64-linux-gnu-gcc"
         }
-        
+
         # 开始编译
         cargo build --release --target $targetTriple
-        
+
         if ($LASTEXITCODE -ne 0) {
             Write-Warning "GNU 目标编译失败，尝试 musl 目标..."
-            
+
             # 切换到 musl 目标
             $targetTriple = "x86_64-unknown-linux-musl"
             $env:RUSTFLAGS = "-C target-feature=+crt-static -C link-self-contained=yes -C linker=rust-lld"
-            
+
             cargo build --release --target $targetTriple
-            
+
             if ($LASTEXITCODE -ne 0) {
                 Write-Error "所有目标编译失败"
                 return $false
             }
         }
-        
+
         # 查找编译产物
         $targetDir = "target\$targetTriple\release"
         if (-not (Test-Path $targetDir)) {
             Write-Error "编译产物目录不存在: $targetDir"
             return $false
         }
-        
+
         # 查找可执行文件
         $possibleNames = @(
             "portfolio-pulse-backend",
-            "portfolio_pulse_backend", 
-            "portfolio-pulse", 
+            "portfolio_pulse_backend",
+            "portfolio-pulse",
             "portfolio_pulse",
-            "backend", 
+            "backend",
             "main"
         )
-        
+
         $foundBinary = $null
         foreach ($name in $possibleNames) {
             $binaryPath = "$targetDir\$name"
@@ -133,14 +133,14 @@ function Use-MuslCompile {
                 break
             }
         }
-        
+
         if (-not $foundBinary) {
             # 列出所有文件找到可执行文件
             Write-Host "🔍 搜索可执行文件..." -ForegroundColor Yellow
-            $executables = Get-ChildItem $targetDir -File | Where-Object { 
-                $_.Name -notmatch '\.(d|pdb|rlib|rmeta)$' -and $_.Length -gt 100KB 
+            $executables = Get-ChildItem $targetDir -File | Where-Object {
+                $_.Name -notmatch '\.(d|pdb|rlib|rmeta)$' -and $_.Length -gt 100KB
             }
-            
+
             if ($executables) {
                 $foundBinary = $executables[0].FullName
                 Write-Host "✅ 找到可执行文件: $($executables[0].Name)" -ForegroundColor Green
@@ -152,15 +152,15 @@ function Use-MuslCompile {
                 return $false
             }
         }
-        
+
         # 复制后端二进制文件
         $outputBinary = "..\build\musl-output\portfolio_pulse_backend"
         Copy-Item $foundBinary $outputBinary -Force
-        
+
         Write-Success "后端编译成功"
         Write-Host "  📦 源文件: $foundBinary" -ForegroundColor Gray
         Write-Host "  📦 输出: $outputBinary" -ForegroundColor Gray
-        
+
         # 显示文件信息
         $fileInfo = Get-Item $outputBinary
         Write-Host "  📊 文件大小: $([math]::Round($fileInfo.Length / 1MB, 2)) MB" -ForegroundColor Gray
@@ -172,48 +172,48 @@ function Use-MuslCompile {
     finally {
         Pop-Location
     }
-    
+
     # 编译前端
     Write-Host "🟢 编译前端..." -ForegroundColor Blue
     Push-Location frontend
-    
+
     try {
         # 安装依赖
         Write-Host "📦 安装依赖..." -ForegroundColor Gray
         npm ci
-        
+
         if ($LASTEXITCODE -ne 0) {
             Write-Error "npm install 失败"
             return $false
         }
-        
+
         # 构建前端
         Write-Host "🏗️  构建应用..." -ForegroundColor Gray
         npm run build
-        
+
         if ($LASTEXITCODE -ne 0) {
             Write-Error "前端构建失败"
             return $false
         }
-        
+
         # 复制前端文件
         if (Test-Path ".next\standalone") {
             Write-Host "📁 复制前端文件..." -ForegroundColor Gray
-            
+
             # 复制 standalone 应用
             Copy-Item -Path ".next\standalone\*" -Destination "..\build\musl-output\" -Recurse -Force
-            
+
             # 复制静态资源
             if (Test-Path ".next\static") {
                 New-Item -ItemType Directory -Path "..\build\musl-output\.next\static" -Force | Out-Null
                 Copy-Item -Path ".next\static\*" -Destination "..\build\musl-output\.next\static\" -Recurse -Force
             }
-            
+
             # 复制 public 文件
             if (Test-Path "public") {
                 Copy-Item -Path "public\*" -Destination "..\build\musl-output\public\" -Recurse -Force
             }
-            
+
             Write-Success "前端编译成功"
         }
         else {
@@ -229,29 +229,29 @@ function Use-MuslCompile {
     finally {
         Pop-Location
     }
-    
+
     # 创建部署脚本
     Create-LinuxDeploymentScripts ".\build\musl-output"
-    
+
     Write-Success "Musl 静态编译完成！"
     Write-Host "📁 输出目录: .\build\musl-output" -ForegroundColor Gray
     Show-DeploymentGuide ".\build\musl-output"
-    
+
     return $true
 }
 
 # 方案2: Docker 编译
 function Use-DockerCompile {
     Write-Step "使用 Docker 进行交叉编译"
-    
+
     if (-not (Test-Command "docker")) {
         Write-Error "Docker 未安装"
         Write-Host "请安装 Docker Desktop: https://www.docker.com/products/docker-desktop" -ForegroundColor Yellow
         return $false
     }
-    
+
     Write-Host "🐳 使用 Docker 容器进行编译..." -ForegroundColor Blue
-    
+
     # 创建 Dockerfile
     $dockerfile = @'
 FROM ubuntu:22.04
@@ -302,35 +302,35 @@ CMD ["ls", "-la", "/output"]
 '@
 
     $dockerfile | Out-File -FilePath ".\Dockerfile.cross-compile" -Encoding utf8 -NoNewline
-    
+
     try {
         # 构建 Docker 镜像
         Write-Host "🔨 构建 Docker 镜像..." -ForegroundColor Yellow
         docker build -f Dockerfile.cross-compile -t portfoliopulse-builder .
-        
+
         if ($LASTEXITCODE -ne 0) {
             Write-Error "Docker 镜像构建失败"
             return $false
         }
-        
+
         # 创建容器并提取文件
         Write-Host "📦 提取编译产物..." -ForegroundColor Yellow
         $containerId = docker create portfoliopulse-builder
-        
+
         # 创建输出目录
         New-Item -ItemType Directory -Path ".\build\docker-output" -Force | Out-Null
-        
+
         # 复制文件
         docker cp "${containerId}:/output/." ".\build\docker-output\"
         docker rm $containerId
-        
+
         # 创建部署脚本
         Create-LinuxDeploymentScripts ".\build\docker-output"
-        
+
         Write-Success "Docker 编译完成！"
         Write-Host "📁 输出目录: .\build\docker-output" -ForegroundColor Gray
         Show-DeploymentGuide ".\build\docker-output"
-        
+
         return $true
     }
     catch {
@@ -342,9 +342,9 @@ CMD ["ls", "-la", "/output"]
 # 创建 Linux 部署脚本
 function Create-LinuxDeploymentScripts {
     param([string]$OutputDir)
-    
+
     Write-Host "📝 创建部署脚本..." -ForegroundColor Blue
-    
+
     # 创建启动脚本
     $startScript = @'
 #!/bin/bash
@@ -446,9 +446,9 @@ done
 
     # 保存脚本
     $startScript | Out-File -FilePath "$OutputDir\start.sh" -Encoding utf8 -NoNewline
-    $stopScript | Out-File -FilePath "$OutputDir\stop.sh" -Encoding utf8 -NoNewline  
+    $stopScript | Out-File -FilePath "$OutputDir\stop.sh" -Encoding utf8 -NoNewline
     $statusScript | Out-File -FilePath "$OutputDir\status.sh" -Encoding utf8 -NoNewline
-    
+
     # 创建环境变量模板
     $envTemplate = @'
 # PortfolioPulse 环境变量配置
@@ -470,13 +470,13 @@ RUST_LOG=info
 # 显示部署指南
 function Show-DeploymentGuide {
     param([string]$OutputDir)
-    
+
     Write-Host "`n🎉 编译完成！" -ForegroundColor Green
     Write-Host "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━" -ForegroundColor Gray
-    
+
     Write-Host "📁 部署包位置: " -NoNewline -ForegroundColor Yellow
     Write-Host (Resolve-Path $OutputDir) -ForegroundColor White
-    
+
     Write-Host "`n📦 包含文件:" -ForegroundColor Yellow
     Get-ChildItem $OutputDir | ForEach-Object {
         if ($_.PSIsContainer) {
@@ -487,17 +487,17 @@ function Show-DeploymentGuide {
             Write-Host "  📄 $($_.Name) ($size)" -ForegroundColor White
         }
     }
-    
+
     Write-Host "`n🚀 Ubuntu 22.04 部署步骤:" -ForegroundColor Cyan
     Write-Host "1. 上传到服务器:" -ForegroundColor White
     Write-Host "   scp -r $(Split-Path $OutputDir -Leaf) user@server:/opt/portfoliopulse/" -ForegroundColor Gray
-    Write-Host "2. 设置权限:" -ForegroundColor White  
+    Write-Host "2. 设置权限:" -ForegroundColor White
     Write-Host "   chmod +x /opt/portfoliopulse/*.sh /opt/portfoliopulse/portfolio_pulse_backend" -ForegroundColor Gray
     Write-Host "3. 配置环境:" -ForegroundColor White
     Write-Host "   cp .env.example .env && nano .env" -ForegroundColor Gray
     Write-Host "4. 启动服务:" -ForegroundColor White
     Write-Host "   ./start.sh" -ForegroundColor Gray
-    
+
     Write-Host "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━" -ForegroundColor Gray
 }
 
@@ -510,7 +510,7 @@ function Main {
         Write-Host "需要存在: backend/Cargo.toml 和 frontend/package.json" -ForegroundColor Yellow
         return
     }
-    
+
     if ($UseMusl) {
         Use-MuslCompile
     }
@@ -534,9 +534,9 @@ function Main {
 
 选择方案 (1-2):
 "@ -ForegroundColor Cyan
-        
+
         $choice = Read-Host
-        
+
         switch ($choice) {
             "1" { Use-MuslCompile }
             "2" { Use-DockerCompile }

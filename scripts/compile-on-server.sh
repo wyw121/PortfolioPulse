@@ -49,59 +49,59 @@ check_command() {
 # 安装依赖
 install_dependencies() {
     log_step "📦 安装系统依赖"
-    
+
     # 检测系统类型
     if [ -f /etc/debian_version ]; then
         # Debian/Ubuntu
         log_info "检测到 Debian/Ubuntu 系统"
-        
+
         sudo apt update
-        
+
         # 安装基础依赖
         sudo apt install -y curl wget git build-essential pkg-config libssl-dev
-        
+
         # 安装 Node.js
         if ! check_command "node"; then
             log_info "安装 Node.js..."
             curl -fsSL https://deb.nodesource.com/setup_lts.x | sudo -E bash -
             sudo apt-get install -y nodejs
         fi
-        
+
         # 安装 Rust
         if ! check_command "cargo"; then
             log_info "安装 Rust..."
             curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y
             source ~/.cargo/env
         fi
-        
+
     elif [ -f /etc/redhat-release ]; then
         # RHEL/CentOS/Fedora
         log_info "检测到 RHEL/CentOS/Fedora 系统"
-        
+
         # 检测包管理器
         if command -v dnf >/dev/null 2>&1; then
             PKG_MGR="dnf"
         elif command -v yum >/dev/null 2>&1; then
             PKG_MGR="yum"
         fi
-        
+
         sudo $PKG_MGR update -y
         sudo $PKG_MGR install -y curl wget git gcc gcc-c++ make pkgconfig openssl-devel
-        
+
         # 安装 Node.js
         if ! check_command "node"; then
             log_info "安装 Node.js..."
             curl -fsSL https://rpm.nodesource.com/setup_lts.x | sudo bash -
             sudo $PKG_MGR install -y nodejs
         fi
-        
+
         # 安装 Rust
         if ! check_command "cargo"; then
             log_info "安装 Rust..."
             curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y
             source ~/.cargo/env
         fi
-        
+
     else
         log_warning "⚠️  未识别的系统类型，请手动安装依赖"
         log_info "需要安装的依赖: curl, git, build-essential, nodejs, cargo"
@@ -111,9 +111,9 @@ install_dependencies() {
 # 验证依赖
 verify_dependencies() {
     log_step "🔍 验证依赖"
-    
+
     local deps_ok=true
-    
+
     # 检查 Node.js
     if check_command "node"; then
         echo "Node.js 版本: $(node --version)"
@@ -121,7 +121,7 @@ verify_dependencies() {
     else
         deps_ok=false
     fi
-    
+
     # 检查 Rust
     if check_command "cargo"; then
         echo "Rust 版本: $(rustc --version)"
@@ -129,19 +129,19 @@ verify_dependencies() {
     else
         deps_ok=false
     fi
-    
+
     # 检查编译工具
     if check_command "gcc"; then
         echo "GCC 版本: $(gcc --version | head -1)"
     else
         deps_ok=false
     fi
-    
+
     if [ "$deps_ok" = false ]; then
         log_error "❌ 依赖检查失败，请先安装缺失的依赖"
         return 1
     fi
-    
+
     log_success "✅ 所有依赖已就绪"
     return 0
 }
@@ -149,21 +149,21 @@ verify_dependencies() {
 # 编译后端
 compile_backend() {
     log_step "🦀 编译 Rust 后端"
-    
+
     if [ ! -d "backend" ]; then
         log_error "❌ backend 目录不存在"
         return 1
     fi
-    
+
     cd backend
-    
+
     log_info "清理之前的构建..."
     cargo clean
-    
+
     log_info "编译 Release 版本..."
     if cargo build --release; then
         log_success "✅ 后端编译成功"
-        
+
         # 查找编译后的二进制文件
         local binary_path=""
         for name in "portfolio-pulse-backend" "portfolio_pulse_backend" "portfolio_pulse" "backend" "main"; do
@@ -172,13 +172,13 @@ compile_backend() {
                 break
             fi
         done
-        
+
         if [ -n "$binary_path" ]; then
             # 复制到根目录
             cp "$binary_path" "../portfolio_pulse_backend"
             chmod +x "../portfolio_pulse_backend"
             log_success "✅ 后端二进制文件已复制到根目录"
-            
+
             # 显示文件信息
             echo "文件信息:"
             file "../portfolio_pulse_backend"
@@ -193,46 +193,46 @@ compile_backend() {
         log_error "❌ 后端编译失败"
         return 1
     fi
-    
+
     cd ..
 }
 
 # 编译前端
 compile_frontend() {
     log_step "🟢 编译 Next.js 前端"
-    
+
     if [ ! -d "frontend" ]; then
         log_error "❌ frontend 目录不存在"
         return 1
     fi
-    
+
     cd frontend
-    
+
     log_info "安装依赖..."
     npm ci
-    
+
     log_info "编译前端应用..."
     if npm run build; then
         log_success "✅ 前端编译成功"
-        
+
         # 检查 standalone 输出
         if [ -d ".next/standalone" ]; then
             log_success "✅ Standalone 构建已生成"
-            
+
             # 复制文件到根目录
             cp -r .next/standalone/* ../
-            
+
             # 复制静态文件
             if [ -d ".next/static" ]; then
                 mkdir -p ../.next/static
                 cp -r .next/static/* ../.next/static/
             fi
-            
+
             # 复制 public 文件
             if [ -d "public" ]; then
                 cp -r public ../
             fi
-            
+
             log_success "✅ 前端文件已复制到根目录"
         else
             log_error "❌ 未找到 Standalone 输出"
@@ -243,14 +243,14 @@ compile_frontend() {
         log_error "❌ 前端编译失败"
         return 1
     fi
-    
+
     cd ..
 }
 
 # 创建启动脚本
 create_startup_scripts() {
     log_step "📜 创建启动脚本"
-    
+
     # 增强版启动脚本
     cat > start.sh << 'EOF'
 #!/bin/bash
@@ -429,7 +429,7 @@ for service in frontend backend; do
             echo "停止 $service (PID: $pid)..."
             kill "$pid" 2>/dev/null || true
             sleep 2
-            
+
             # 强制停止
             if kill -0 "$pid" 2>/dev/null; then
                 kill -9 "$pid" 2>/dev/null || true
@@ -453,25 +453,25 @@ echo "📅 时间: $(date '+%Y-%m-%d %H:%M:%S')"
 for service in backend frontend; do
     echo ""
     echo "🔍 $service 服务:"
-    
+
     if [ -f "${service}.pid" ]; then
         pid=$(cat "${service}.pid")
         if kill -0 "$pid" 2>/dev/null; then
             echo "  ✅ 运行中 (PID: $pid)"
-            
+
             # 资源使用
             cpu_mem=$(ps -p "$pid" -o %cpu,%mem --no-headers 2>/dev/null)
             if [ -n "$cpu_mem" ]; then
                 echo "  📊 资源: CPU ${cpu_mem%% *}%, 内存 ${cpu_mem##* }%"
             fi
-            
+
             # HTTP 检查
             port=""
             case $service in
                 backend) port=8000;;
                 frontend) port=3000;;
             esac
-            
+
             if [ -n "$port" ]; then
                 if curl -s -f "http://localhost:$port" >/dev/null 2>&1; then
                     echo "  🌐 HTTP 响应正常 (端口 $port)"
@@ -500,14 +500,14 @@ EOF
 
     # 添加执行权限
     chmod +x start.sh stop.sh status.sh
-    
+
     log_success "✅ 启动脚本已创建"
 }
 
 # 测试编译结果
 test_compilation() {
     log_step "🧪 测试编译结果"
-    
+
     # 测试后端二进制
     if [ -f "portfolio_pulse_backend" ]; then
         log_info "测试后端二进制文件..."
@@ -517,7 +517,7 @@ test_compilation() {
             log_warning "⚠️  后端二进制文件可能有问题，但已编译成功"
         fi
     fi
-    
+
     # 测试前端
     if [ -f "server.js" ]; then
         log_info "测试前端文件..."
@@ -536,7 +536,7 @@ main() {
     echo "📅 编译时间: $(date '+%Y-%m-%d %H:%M:%S')"
     echo "🖥️  系统信息: $(uname -a)"
     echo -e "${NC}"
-    
+
     # 检查是否在正确目录
     if [ ! -f "backend/Cargo.toml" ] || [ ! -f "frontend/package.json" ]; then
         log_error "❌ 请在项目根目录运行此脚本"
@@ -544,39 +544,39 @@ main() {
         echo "需要包含: backend/Cargo.toml 和 frontend/package.json"
         exit 1
     fi
-    
+
     # 询问是否安装依赖
     echo "是否需要安装系统依赖? (y/n)"
     read -r install_deps
-    
+
     if [[ $install_deps =~ ^[Yy]$ ]]; then
         install_dependencies
     fi
-    
+
     # 验证依赖
     if ! verify_dependencies; then
         log_error "❌ 依赖验证失败"
         exit 1
     fi
-    
+
     # 编译后端
     if ! compile_backend; then
         log_error "❌ 后端编译失败"
         exit 1
     fi
-    
+
     # 编译前端
     if ! compile_frontend; then
         log_error "❌ 前端编译失败"
         exit 1
     fi
-    
+
     # 创建启动脚本
     create_startup_scripts
-    
+
     # 测试编译结果
     test_compilation
-    
+
     # 完成
     echo ""
     echo -e "${GREEN}🎉 编译完成!${NC}"

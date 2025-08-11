@@ -110,71 +110,71 @@ try {
 
     Write-Host "执行交叉编译测试..." -ForegroundColor Gray
     Write-Host "命令: cargo build --target x86_64-unknown-linux-gnu --release" -ForegroundColor Gray
-    
+
     # 使用 PowerShell 的作业机制来捕获输出
     $job = Start-Job -ScriptBlock {
         Set-Location $args[0]
         $env:RUSTFLAGS = $args[1]
         cargo build --target x86_64-unknown-linux-gnu --release 2>&1
     } -ArgumentList (Get-Location), $env:RUSTFLAGS
-    
+
     # 等待作业完成（最多 10 分钟）
     $timeout = 600
     $elapsed = 0
-    
+
     while ($job.State -eq "Running" -and $elapsed -lt $timeout) {
         Write-Host "." -NoNewline -ForegroundColor Blue
         Start-Sleep 5
         $elapsed += 5
     }
-    
+
     Write-Host ""
-    
+
     $result = Receive-Job $job
     Remove-Job $job
-    
+
     if ($result -match "error.*can't find crate for.*core") {
         Write-Host "❌ 仍然存在 'core' crate 错误" -ForegroundColor Red
         Write-Host "错误详情:" -ForegroundColor Red
         $result | Where-Object { $_ -match "error|can't find" } | ForEach-Object {
             Write-Host "  $_" -ForegroundColor Yellow
         }
-        
+
         Write-Host "`n💡 建议的替代方案:" -ForegroundColor Cyan
         Write-Host "1. 使用 GitHub Actions 云编译 (已创建工作流)" -ForegroundColor White
         Write-Host "2. 在 Linux 虚拟机中编译" -ForegroundColor White
         Write-Host "3. 使用 Windows Subsystem for Linux (WSL)" -ForegroundColor White
-        
+
     } elseif ($result -match "error") {
         Write-Host "❌ 编译失败，但不是 core crate 问题" -ForegroundColor Red
         Write-Host "错误详情:" -ForegroundColor Red
         $result | Where-Object { $_ -match "error" } | Select-Object -First 10 | ForEach-Object {
             Write-Host "  $_" -ForegroundColor Yellow
         }
-        
+
     } else {
         Write-Host "✅ 交叉编译测试成功！" -ForegroundColor Green
-        
+
         # 检查输出文件
         $targetDir = "target\x86_64-unknown-linux-gnu\release"
         if (Test-Path $targetDir) {
-            $binaries = Get-ChildItem $targetDir -File | Where-Object { 
+            $binaries = Get-ChildItem $targetDir -File | Where-Object {
                 $_.Length -gt 100KB -and $_.Name -notmatch '\.(d|pdb|rlib)$'
             }
-            
+
             if ($binaries) {
                 Write-Host "找到编译产物:" -ForegroundColor Green
                 foreach ($bin in $binaries) {
                     $sizeMB = [math]::Round($bin.Length / 1MB, 2)
                     Write-Host "  📦 $($bin.Name) ($sizeMB MB)" -ForegroundColor White
                 }
-                
+
                 Write-Host "`n🎉 现在可以运行完整编译:" -ForegroundColor Cyan
                 Write-Host ".\complete_cross_compile.ps1" -ForegroundColor White
             }
         }
     }
-    
+
 } catch {
     Write-Host "❌ 编译过程异常: $($_.Exception.Message)" -ForegroundColor Red
 } finally {

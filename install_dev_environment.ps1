@@ -49,13 +49,13 @@ function Test-Command {
 
 function Install-Rust {
     Write-Step "安装 Rust 开发环境"
-    
+
     if (Test-Command "rustc") {
         $rustVersion = rustc --version
         Write-Success "Rust 已存在: $rustVersion"
         return $true
     }
-    
+
     if (-not $AutoInstall) {
         Write-Warning "Rust 未安装"
         $choice = Read-Host "是否自动安装 Rust? (y/N)"
@@ -64,21 +64,21 @@ function Install-Rust {
             return $false
         }
     }
-    
+
     try {
         Write-Host "📥 正在下载和安装 Rust..." -ForegroundColor Yellow
-        
+
         # 下载 rustup 安装器
         $rustupPath = "$env:TEMP\rustup-init.exe"
         Invoke-WebRequest -Uri "https://win.rustup.rs/x86_64" -OutFile $rustupPath
-        
+
         # 静默安装 Rust
         Write-Host "🔧 执行 Rust 安装..." -ForegroundColor Blue
         & $rustupPath -y --default-toolchain stable --profile default
-        
+
         # 刷新环境变量
         $env:PATH = "$env:USERPROFILE\.cargo\bin;$env:PATH"
-        
+
         # 验证安装
         if (Test-Command "rustc") {
             $rustVersion = rustc --version
@@ -101,7 +101,7 @@ function Install-Rust {
 
 function Install-NodeJS {
     Write-Step "安装 Node.js 开发环境"
-    
+
     if (Test-Command "node") {
         $nodeVersion = node --version
         $npmVersion = npm --version
@@ -109,7 +109,7 @@ function Install-NodeJS {
         Write-Host "  📦 npm: $npmVersion" -ForegroundColor Gray
         return $true
     }
-    
+
     if (-not $AutoInstall) {
         Write-Warning "Node.js 未安装"
         $choice = Read-Host "是否自动安装 Node.js? (y/N)"
@@ -118,10 +118,10 @@ function Install-NodeJS {
             return $false
         }
     }
-    
+
     try {
         Write-Host "📥 正在下载和安装 Node.js LTS..." -ForegroundColor Yellow
-        
+
         # 使用 winget 安装 (Windows 10/11)
         if (Test-Command "winget") {
             Write-Host "🔧 使用 winget 安装 Node.js..." -ForegroundColor Blue
@@ -137,20 +137,20 @@ function Install-NodeJS {
             Write-Host "🔧 手动下载安装 Node.js..." -ForegroundColor Blue
             $nodeUrl = "https://nodejs.org/dist/v18.19.0/node-v18.19.0-x64.msi"
             $nodePath = "$env:TEMP\nodejs-installer.msi"
-            
+
             Invoke-WebRequest -Uri $nodeUrl -OutFile $nodePath
             Start-Process -FilePath "msiexec.exe" -ArgumentList "/i", $nodePath, "/quiet" -Wait
         }
-        
+
         # 刷新环境变量
         $env:PATH = "$env:ProgramFiles\nodejs;$env:PATH"
         refreshenv | Out-Null
-        
+
         # 验证安装
         Start-Sleep -Seconds 5
-        
+
         if (Test-Command "node") {
-            $nodeVersion = node --version  
+            $nodeVersion = node --version
             $npmVersion = npm --version
             Write-Success "Node.js 安装成功!"
             Write-Host "  🟢 Node.js: $nodeVersion" -ForegroundColor Gray
@@ -170,12 +170,12 @@ function Install-NodeJS {
 
 function Install-CrossCompileTools {
     Write-Step "安装交叉编译工具链"
-    
+
     # 检查 MSYS2 是否已安装
     $msys2Path = "C:\msys64"
     if (Test-Path $msys2Path) {
         Write-Success "MSYS2 已安装"
-        
+
         # 检查是否有交叉编译工具
         $crossGcc = "$msys2Path\usr\bin\x86_64-linux-gnu-gcc.exe"
         if (Test-Path $crossGcc) {
@@ -183,7 +183,7 @@ function Install-CrossCompileTools {
             return $true
         }
     }
-    
+
     if (-not $AutoInstall) {
         Write-Warning "交叉编译工具链未完整安装"
         $choice = Read-Host "是否安装 MSYS2 和交叉编译工具? (y/N)"
@@ -192,11 +192,11 @@ function Install-CrossCompileTools {
             return $false
         }
     }
-    
+
     try {
         if (-not (Test-Path $msys2Path)) {
             Write-Host "📥 正在安装 MSYS2..." -ForegroundColor Yellow
-            
+
             if (Test-Command "winget") {
                 winget install MSYS2.MSYS2 --accept-package-agreements --accept-source-agreements
             }
@@ -207,21 +207,21 @@ function Install-CrossCompileTools {
                 # 手动下载安装
                 $msysUrl = "https://github.com/msys2/msys2-installer/releases/latest/download/msys2-x86_64-latest.exe"
                 $msysPath = "$env:TEMP\msys2-installer.exe"
-                
+
                 Invoke-WebRequest -Uri $msysUrl -OutFile $msysPath
                 Start-Process -FilePath $msysPath -ArgumentList "install", "--root", "C:\msys64", "--confirm-command" -Wait
             }
         }
-        
+
         if (Test-Path $msys2Path) {
             Write-Host "🔧 配置交叉编译工具..." -ForegroundColor Blue
-            
+
             # 更新 MSYS2 并安装工具
             $msys2Shell = "$msys2Path\usr\bin\bash.exe"
             & $msys2Shell -lc "pacman -Syu --noconfirm"
             & $msys2Shell -lc "pacman -S --noconfirm mingw-w64-x86_64-toolchain"
             & $msys2Shell -lc "pacman -S --noconfirm mingw-w64-x86_64-gcc"
-            
+
             Write-Success "MSYS2 和交叉编译工具安装完成"
             return $true
         }
@@ -239,21 +239,21 @@ function Install-CrossCompileTools {
 
 function Install-RustTargets {
     Write-Step "安装 Rust 交叉编译目标"
-    
+
     if (-not (Test-Command "rustup")) {
         Write-Error "rustup 不可用，请先安装 Rust"
         return $false
     }
-    
+
     $targets = @(
         "x86_64-unknown-linux-gnu",
         "x86_64-unknown-linux-musl"
     )
-    
+
     foreach ($target in $targets) {
         Write-Host "📦 安装目标: $target" -ForegroundColor Yellow
         rustup target add $target
-        
+
         if ($LASTEXITCODE -eq 0) {
             Write-Success "已安装: $target"
         }
@@ -261,15 +261,15 @@ function Install-RustTargets {
             Write-Warning "安装失败: $target"
         }
     }
-    
+
     return $true
 }
 
 function Test-Installation {
     Write-Step "验证安装结果"
-    
+
     $allGood = $true
-    
+
     # 检查 Rust
     if (Test-Command "rustc") {
         $rustVersion = rustc --version
@@ -279,8 +279,8 @@ function Test-Installation {
         Write-Error "Rust 未正确安装"
         $allGood = $false
     }
-    
-    # 检查 Node.js  
+
+    # 检查 Node.js
     if (Test-Command "node") {
         $nodeVersion = node --version
         Write-Success "Node.js: $nodeVersion"
@@ -289,18 +289,18 @@ function Test-Installation {
         Write-Error "Node.js 未正确安装"
         $allGood = $false
     }
-    
+
     # 检查 Rust 目标
     $installedTargets = rustup target list --installed
     $linuxTargets = $installedTargets | Where-Object { $_ -match "linux" }
-    
+
     if ($linuxTargets) {
         Write-Success "Linux 编译目标: $($linuxTargets -join ', ')"
     }
     else {
         Write-Warning "未找到 Linux 编译目标"
     }
-    
+
     return $allGood
 }
 
@@ -308,31 +308,31 @@ function Main {
     try {
         Write-Host "🎯 开始安装开发环境组件" -ForegroundColor Cyan
         Write-Host ""
-        
+
         $installSuccess = $true
-        
+
         # 安装 Rust
         if (-not $SkipRust) {
             if (-not (Install-Rust)) {
                 $installSuccess = $false
             }
         }
-        
+
         # 安装 Node.js
         if (-not $SkipNode) {
             if (-not (Install-NodeJS)) {
                 $installSuccess = $false
             }
         }
-        
+
         # 安装交叉编译工具
         Install-CrossCompileTools | Out-Null
-        
+
         # 安装 Rust 目标
         if (Test-Command "rustup") {
             Install-RustTargets | Out-Null
         }
-        
+
         # 验证安装
         Write-Host "`n" -NoNewline
         if (Test-Installation) {

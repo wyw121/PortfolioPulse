@@ -2,14 +2,14 @@
 
 ## 🎯 核心问题
 
-**问题**: Windows 编译的 PE32+ 二进制文件无法在 Linux Ubuntu 22.04 服务器上运行  
+**问题**: Windows 编译的 PE32+ 二进制文件无法在 Linux Ubuntu 22.04 服务器上运行
 **原因**: Windows Rust 交叉编译环境配置复杂，存在工具链冲突
 
 ## 🚀 推荐解决方案
 
 ### 方案1: Docker 编译 (强烈推荐) 🐳
 
-**优点**: 
+**优点**:
 - ✅ 零配置，开箱即用
 - ✅ 完全隔离的 Ubuntu 22.04 环境
 - ✅ 100% 兼容性保证
@@ -140,7 +140,7 @@
 # 使用 scp 上传
 scp -r build/docker-output/ user@server:/opt/portfoliopulse/
 
-# 或使用 rsync (推荐)  
+# 或使用 rsync (推荐)
 rsync -avz --progress build/docker-output/ user@server:/opt/portfoliopulse/
 ```
 
@@ -197,13 +197,13 @@ file portfolio_pulse_backend
 
 通过这套完整的 Windows 交叉编译方案，你现在可以：
 
-✅ **零配置编译**: 使用 Docker 方案无需复杂环境配置  
-✅ **多种选择**: Docker/本地/云端编译，适应不同需求  
-✅ **完整部署包**: 自动生成包含启动脚本的完整部署包  
-✅ **Ubuntu 22.04 兼容**: 确保在目标服务器上正常运行  
+✅ **零配置编译**: 使用 Docker 方案无需复杂环境配置
+✅ **多种选择**: Docker/本地/云端编译，适应不同需求
+✅ **完整部署包**: 自动生成包含启动脚本的完整部署包
+✅ **Ubuntu 22.04 兼容**: 确保在目标服务器上正常运行
 ✅ **详细文档**: 每个步骤都有清晰的说明和故障排除
 
-**最终推荐**: 
+**最终推荐**:
 - 如果有 Docker: `.\windows_cross_compile.ps1 -UseDocker`
 - 如果没有 Docker: `.\fix_cross_compile.ps1` → 修复环境 → 重试
 - 急需解决方案: GitHub Actions 云编译

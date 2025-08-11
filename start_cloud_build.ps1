@@ -16,7 +16,7 @@ if (-not (Test-Path ".git")) {
 try {
     $gitStatus = git status --porcelain
     $hasChanges = $gitStatus.Count -gt 0
-    
+
     if ($hasChanges) {
         Write-Host "📝 发现未提交的更改:" -ForegroundColor Yellow
         git status --short
@@ -41,7 +41,7 @@ Write-Host "✅ GitHub Actions 工作流文件存在" -ForegroundColor Green
 # 显示工作流信息
 Write-Host "`n📋 工作流功能:" -ForegroundColor Blue
 Write-Host "  🦀 自动编译 Rust 后端到 Ubuntu 22.04" -ForegroundColor White
-Write-Host "  🟢 自动构建 Next.js 前端" -ForegroundColor White  
+Write-Host "  🟢 自动构建 Next.js 前端" -ForegroundColor White
 Write-Host "  📦 生成完整部署包" -ForegroundColor White
 Write-Host "  🚀 包含启动/停止脚本" -ForegroundColor White
 
@@ -62,7 +62,7 @@ git add .
 $commitMessage = "feat: 添加 Ubuntu 22.04 交叉编译 GitHub Actions 工作流
 
 - 自动交叉编译 Rust 后端
-- 自动构建 Next.js 前端  
+- 自动构建 Next.js 前端
 - 生成完整 Ubuntu 部署包
 - 包含启动/停止/状态脚本
 - 支持一键部署到服务器"
@@ -98,7 +98,7 @@ try {
         $owner = $Matches[1]
         $repo = $Matches[2] -replace "\.git$", ""
         $actionsUrl = "https://github.com/$owner/$repo/actions"
-        
+
         Write-Host "📊 查看编译状态:" -ForegroundColor Cyan
         Write-Host "🔗 $actionsUrl" -ForegroundColor Blue
     }
@@ -130,7 +130,7 @@ nano .env
 # 4. 启动服务
 ./start.sh
 
-# 5. 检查状态  
+# 5. 检查状态
 ./status.sh
 "@ -ForegroundColor Gray
 
