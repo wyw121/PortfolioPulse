@@ -169,18 +169,59 @@ jobs:
           fi
 
           echo "🟢 复制前端文件..."
-          # 复制 standalone 应用
+          # 复制 standalone 应用的内容到 deploy 根目录
           cp -r frontend/.next/standalone/* deploy/
 
-          # 复制静态资源
+          # 重要：创建 .next 目录并复制必要文件
+          mkdir -p deploy/.next
+          
+          # 复制 standalone 目录中的 .next 内容（如果存在）
+          if [ -d "frontend/.next/standalone/.next" ]; then
+            cp -r frontend/.next/standalone/.next/* deploy/.next/
+          fi
+
+          # 复制静态资源到正确位置
           if [ -d "frontend/.next/static" ]; then
             mkdir -p deploy/.next/static
             cp -r frontend/.next/static/* deploy/.next/static/
           fi
 
+          # 复制服务端文件
+          if [ -d "frontend/.next/server" ]; then
+            mkdir -p deploy/.next/server
+            cp -r frontend/.next/server/* deploy/.next/server/
+          fi
+
+          # 复制 build-id 和其他必要的构建文件
+          for file in BUILD_ID routes-manifest.json prerender-manifest.json; do
+            if [ -f "frontend/.next/$file" ]; then
+              cp "frontend/.next/$file" "deploy/.next/"
+              echo "✅ 复制了 $file"
+            fi
+          done
+
           # 复制 public 目录
           if [ -d "frontend/public" ]; then
             cp -r frontend/public deploy/
+          fi
+
+          # 验证关键文件是否存在
+          echo "📋 验证前端文件结构..."
+          if [ -f "deploy/server.js" ]; then
+            echo "✅ server.js 存在"
+          else
+            echo "❌ server.js 缺失"
+            ls -la deploy/
+            exit 1
+          fi
+
+          if [ -f "deploy/.next/BUILD_ID" ] || [ -d "deploy/.next/server" ]; then
+            echo "✅ Next.js 构建文件存在"
+          else
+            echo "❌ Next.js 构建文件缺失"
+            echo "deploy/.next 内容:"
+            ls -la deploy/.next/ || echo "❌ .next 目录不存在"
+            exit 1
           fi
 
           echo "📋 创建启动脚本..."

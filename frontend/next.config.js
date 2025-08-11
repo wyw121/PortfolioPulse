@@ -19,7 +19,9 @@ const nextConfig = {
     ignoreDuringBuilds: true,
   },
   // 优化生产构建
-  outputFileTracingRoot: process.cwd(),
+  experimental: {
+    outputFileTracingRoot: process.cwd(),
+  },
 };
 
 module.exports = nextConfig;
