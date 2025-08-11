@@ -60,7 +60,8 @@ jobs:
       - name: 🏗️ 构建前端
         run: |
           cd frontend
-          npm ci
+          rm -rf node_modules package-lock.json
+          npm install
           npm run build
 
       - name: 📦 打包构建产物

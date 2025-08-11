@@ -1,8 +1,14 @@
 # 🎉 PortfolioPulse 二进制构建完成！
 
+## ⚠️ 重要提醒
+
+**本文档已过期，请使用 `CROSS_PLATFORM_BUILD_GUIDE.md` 获取最新的跨平台构建指南。**
+
+如果你遇到 Windows 系统生成 .exe 文件但服务器是 Ubuntu 系统的问题，请务必使用 GitHub Actions 云编译或正确配置交叉编译工具链。
+
 ## 📦 构建结果
 
-✅ **后端二进制文件**: `build/deploy/portfolio_pulse_backend` (5MB Rust 可执行文件)
+✅ **后端二进制文件**: `deploy/portfolio_pulse_backend` (Linux x86_64 ELF 可执行文件)
 ✅ **前端 Standalone 应用**: Next.js 独立部署包
 ✅ **部署脚本**: 完整的启动、停止、状态检查脚本
 ✅ **配置文件**: 环境变量模板和详细文档

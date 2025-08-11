@@ -74,10 +74,46 @@ jobs:
           rustc --version
           rustup show
 
+          echo "🎯 验证编译目标..."
+          rustup target list --installed | grep x86_64-unknown-linux-gnu || rustup target add x86_64-unknown-linux-gnu
+
           echo "🗄️ 验证数据库连接..."
           echo "DATABASE_URL: mysql://root:password@127.0.0.1:3306/portfolio_pulse"
 
           echo "📋 安装 SQLx CLI..."
+          cargo install sqlx-cli --no-default-features --features native-tls,mysql
+
+          echo "📋 生成 SQLx 查询缓存..."
+          cargo sqlx prepare --check || cargo sqlx prepare
+
+          echo "📦 构建依赖..."
+          cargo build --release --target x86_64-unknown-linux-gnu
+
+          echo "🔍 验证生成的二进制文件..."
+          BINARY_PATH="target/x86_64-unknown-linux-gnu/release"
+          ls -la "$BINARY_PATH"
+
+          # 找到主要的可执行文件
+          MAIN_BINARY=$(find "$BINARY_PATH" -maxdepth 1 -type f -executable -size +100k | head -1)
+          if [ -n "$MAIN_BINARY" ]; then
+            echo "✅ 找到主二进制文件: $MAIN_BINARY"
+            file "$MAIN_BINARY"
+            ls -lh "$MAIN_BINARY"
+
+            # 验证是否为 Linux ELF 格式
+            if file "$MAIN_BINARY" | grep -q "ELF 64-bit"; then
+              echo "✅ 二进制文件格式正确 (Linux ELF)"
+            else
+              echo "❌ 二进制文件格式错误"
+              file "$MAIN_BINARY"
+              exit 1
+            fi
+          else
+            echo "❌ 未找到可执行的二进制文件"
+            exit 1
+          fi
+
+          echo "✅ 后端编译完成"
           cargo install sqlx-cli --no-default-features --features native-tls,mysql
 
           echo "📋 生成 SQLx 查询缓存..."
