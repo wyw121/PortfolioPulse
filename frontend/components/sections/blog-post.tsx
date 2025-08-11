@@ -11,17 +11,17 @@ export function BlogPost({ post }: BlogPostComponentProps) {
     <div className="prose prose-lg max-w-none dark:prose-invert">
       {/* 如果是HTML内容（如OneNote导出），直接渲染 */}
       {post.content.includes('<html>') || post.content.includes('<!DOCTYPE') ? (
-        <div 
+        <div
           className="blog-html-content"
           dangerouslySetInnerHTML={{ __html: post.content }}
         />
       ) : (
-        <div 
+        <div
           className="blog-markdown-content"
           dangerouslySetInnerHTML={{ __html: post.content }}
         />
       )}
-      
+
       <style jsx global>{`
         .blog-html-content {
           /* OneNote HTML样式处理 */
@@ -29,7 +29,7 @@ export function BlogPost({ post }: BlogPostComponentProps) {
         .blog-html-content table {
           @apply border-collapse border border-gray-300;
         }
-        .blog-html-content td, 
+        .blog-html-content td,
         .blog-html-content th {
           @apply border border-gray-300 px-4 py-2;
         }
@@ -72,7 +72,7 @@ export function BlogPost({ post }: BlogPostComponentProps) {
         .blog-html-content a {
           @apply text-primary hover:underline;
         }
-        
+
         /* 处理OneNote特有的样式 */
         .blog-html-content .onenote-table {
           @apply w-full border-collapse;

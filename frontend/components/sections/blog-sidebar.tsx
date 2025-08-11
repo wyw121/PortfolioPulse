@@ -1,11 +1,11 @@
 'use client'
 
-import { useEffect, useState } from 'react'
-import Link from 'next/link'
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
-import { BlogPost, BlogCategory } from '@/types/blog'
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { BlogService } from '@/lib/blog-service'
+import { BlogCategory, BlogPost } from '@/types/blog'
+import Link from 'next/link'
+import { useEffect, useState } from 'react'
 
 export function BlogSidebar() {
   const [categories, setCategories] = useState<BlogCategory[]>([])
@@ -22,11 +22,65 @@ export function BlogSidebar() {
         BlogService.getCategories(),
         BlogService.getFeaturedPosts()
       ])
-      
+
       setCategories(categoriesData)
       setFeaturedPosts(featuredData)
     } catch (error) {
       console.error('加载侧边栏数据失败:', error)
+
+      // 使用模拟数据
+      const mockCategories: BlogCategory[] = [
+        {
+          id: 'cat-1',
+          name: '金融学习',
+          slug: 'finance',
+          description: '金融相关的学习笔记和心得分享',
+          color: '#10B981',
+          post_count: 5,
+          created_at: '2024-01-01T00:00:00Z',
+          updated_at: '2024-01-01T00:00:00Z'
+        },
+        {
+          id: 'cat-2',
+          name: '技术分享',
+          slug: 'technology',
+          description: '编程和技术相关的文章',
+          color: '#3B82F6',
+          post_count: 8,
+          created_at: '2024-01-01T00:00:00Z',
+          updated_at: '2024-01-01T00:00:00Z'
+        },
+        {
+          id: 'cat-3',
+          name: '学习笔记',
+          slug: 'notes',
+          description: '各种学习笔记和总结',
+          color: '#8B5CF6',
+          post_count: 3,
+          created_at: '2024-01-01T00:00:00Z',
+          updated_at: '2024-01-01T00:00:00Z'
+        }
+      ]
+
+      const mockFeatured: BlogPost[] = [
+        {
+          id: 'featured-1',
+          title: '2024年投资理财策略分析',
+          slug: 'investment-strategy-2024',
+          content: '',
+          category: 'finance',
+          tags: ['投资', '理财'],
+          status: 'published' as const,
+          view_count: 389,
+          is_featured: true,
+          created_at: '2024-11-20T09:00:00Z',
+          updated_at: '2024-11-20T09:00:00Z',
+          published_at: '2024-11-20T09:00:00Z'
+        }
+      ]
+
+      setCategories(mockCategories)
+      setFeaturedPosts(mockFeatured)
     } finally {
       setLoading(false)
     }
@@ -58,7 +112,7 @@ export function BlogSidebar() {
               className="flex items-center justify-between p-2 rounded hover:bg-muted transition-colors"
             >
               <div className="flex items-center space-x-2">
-                <div 
+                <div
                   className="w-3 h-3 rounded-full"
                   style={{ backgroundColor: category.color }}
                 />

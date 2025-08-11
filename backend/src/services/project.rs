@@ -1,11 +1,11 @@
 use sqlx::MySqlPool;
 use uuid::Uuid;
-use chrono::{DateTime, Utc};
+use chrono::Utc;
 use anyhow::Result;
 
 use crate::models::*;
 
-pub async fn get_all_projects(pool: &MySqlPool) -> Result<Vec<ProjectResponse>> {
+pub async fn get_all_projects(_pool: &MySqlPool) -> Result<Vec<ProjectResponse>> {
     // 模拟数据，实际应从数据库查询
     let mock_projects = vec![
         ProjectResponse {
@@ -49,14 +49,14 @@ pub async fn get_all_projects(pool: &MySqlPool) -> Result<Vec<ProjectResponse>> 
     Ok(mock_projects)
 }
 
-pub async fn get_project_by_id(pool: &MySqlPool, id: Uuid) -> Result<Option<ProjectResponse>> {
+pub async fn get_project_by_id(_pool: &MySqlPool, id: Uuid) -> Result<Option<ProjectResponse>> {
     // 模拟数据查询
-    let projects = get_all_projects(pool).await?;
+    let projects = get_all_projects(_pool).await?;
     Ok(projects.into_iter().find(|p| p.id == id.to_string()))
 }
 
 pub async fn create_or_update_project(
-    pool: &MySqlPool,
+    _pool: &MySqlPool,
     github_repo: &GitHubRepo
 ) -> Result<Project> {
     let project_id = Uuid::new_v4();

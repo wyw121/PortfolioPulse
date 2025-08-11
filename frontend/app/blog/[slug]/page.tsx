@@ -1,7 +1,7 @@
-import { notFound } from 'next/navigation'
 import { BlogPost } from '@/components/sections/blog-post'
 import { BlogPostMeta } from '@/components/sections/blog-post-meta'
 import { RelatedPosts } from '@/components/sections/related-posts'
+import { notFound } from 'next/navigation'
 
 interface BlogPostPageProps {
   params: {
@@ -14,11 +14,11 @@ async function getBlogPost(slug: string) {
     const res = await fetch(`${process.env.API_URL || 'http://localhost:8000'}/api/blog/posts/${slug}`, {
       cache: 'no-store' // 确保获取最新内容
     })
-    
+
     if (!res.ok) {
       return null
     }
-    
+
     return await res.json()
   } catch (error) {
     console.error('获取博客文章失败:', error)
@@ -28,7 +28,7 @@ async function getBlogPost(slug: string) {
 
 export default async function BlogPostPage({ params }: BlogPostPageProps) {
   const post = await getBlogPost(params.slug)
-  
+
   if (!post) {
     notFound()
   }
@@ -39,7 +39,7 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
         <BlogPostMeta post={post} />
         <BlogPost post={post} />
       </article>
-      
+
       <div className="border-t pt-8">
         <RelatedPosts currentSlug={params.slug} category={post.category} />
       </div>
@@ -50,7 +50,7 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
 // 动态生成页面标题
 export async function generateMetadata({ params }: BlogPostPageProps) {
   const post = await getBlogPost(params.slug)
-  
+
   if (!post) {
     return {
       title: '文章未找到'

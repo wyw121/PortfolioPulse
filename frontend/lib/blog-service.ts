@@ -1,4 +1,4 @@
-import { BlogPost, BlogCategory, BlogQuery, CreateBlogPostRequest, UpdateBlogPostRequest } from '@/types/blog'
+import { BlogCategory, BlogPost, BlogQuery, CreateBlogPostRequest, UpdateBlogPostRequest } from '@/types/blog'
 
 const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000'
 
@@ -6,7 +6,7 @@ export class BlogService {
   // 获取博客文章列表
   static async getPosts(query: BlogQuery = {}): Promise<BlogPost[]> {
     const params = new URLSearchParams()
-    
+
     if (query.page) params.set('page', query.page.toString())
     if (query.page_size) params.set('page_size', query.page_size.toString())
     if (query.category) params.set('category', query.category)
@@ -69,7 +69,7 @@ export class BlogService {
   // 管理员API - 获取所有文章
   static async getAllPostsAdmin(query: BlogQuery = {}): Promise<BlogPost[]> {
     const params = new URLSearchParams()
-    
+
     if (query.page) params.set('page', query.page.toString())
     if (query.page_size) params.set('page_size', query.page_size.toString())
 

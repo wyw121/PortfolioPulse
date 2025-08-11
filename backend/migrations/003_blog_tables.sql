@@ -72,7 +72,7 @@ CREATE TABLE IF NOT EXISTS blog_uploads (
 );
 
 -- 插入默认的博客分类
-INSERT INTO blog_categories (id, name, slug, description, color) VALUES
+INSERT IGNORE INTO blog_categories (id, name, slug, description, color) VALUES
 (UUID(), '金融学习', 'finance', '金融相关的学习笔记和心得分享', '#10B981'),
 (UUID(), '技术分享', 'technology', '编程和技术相关的文章', '#3B82F6'),
 (UUID(), '生活感悟', 'life', '个人生活和感悟分享', '#F59E0B'),

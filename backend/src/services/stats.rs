@@ -1,10 +1,9 @@
 use sqlx::MySqlPool;
 use anyhow::Result;
-use std::collections::HashMap;
 
 use crate::models::{StatsResponse, LanguageStat};
 
-pub async fn get_overall_stats(pool: &MySqlPool) -> Result<StatsResponse> {
+pub async fn get_overall_stats(_pool: &MySqlPool) -> Result<StatsResponse> {
     // 模拟数据，实际应从数据库聚合查询
     let language_stats = vec![
         LanguageStat {
@@ -45,7 +44,7 @@ pub async fn get_overall_stats(pool: &MySqlPool) -> Result<StatsResponse> {
     Ok(stats)
 }
 
-pub async fn get_project_stats(pool: &MySqlPool, project_id: uuid::Uuid) -> Result<StatsResponse> {
+pub async fn get_project_stats(_pool: &MySqlPool, _project_id: uuid::Uuid) -> Result<StatsResponse> {
     // 实际实现应该查询特定项目的统计信息
     /*
     let project_stats = sqlx::query_as!(

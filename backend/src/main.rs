@@ -1,6 +1,4 @@
 use axum::{response::Json, routing::get, Router};
-use serde::{Deserialize, Serialize};
-use std::collections::HashMap;
 use tower_http::cors::{Any, CorsLayer};
 use tracing::{info, instrument};
 
@@ -27,7 +25,7 @@ async fn main() -> Result<(), anyhow::Error> {
 
     // 数据库连接
     let database_url = std::env::var("DATABASE_URL")
-        .unwrap_or_else(|_| "mysql://root:password@localhost/portfolio_pulse".to_string());
+        .unwrap_or_else(|_| "mysql://root@localhost/portfolio_pulse".to_string());
 
     let pool = sqlx::MySqlPool::connect(&database_url).await?;
 
@@ -56,19 +54,19 @@ async fn main() -> Result<(), anyhow::Error> {
         .route("/api/blog/featured", get(get_featured_blog_posts))
         .route("/api/blog/categories", get(get_blog_categories))
         // 管理员路由（需要认证）
-        .route("/api/admin/blog/posts", 
+        .route("/api/admin/blog/posts",
             axum::routing::post(create_blog_post)
                 .layer(axum::middleware::from_fn_with_state(app_state.clone(), auth::admin_auth_middleware))
         )
-        .route("/api/admin/blog/posts", 
+        .route("/api/admin/blog/posts",
             get(get_all_blog_posts_admin)
                 .layer(axum::middleware::from_fn_with_state(app_state.clone(), auth::admin_auth_middleware))
         )
-        .route("/api/admin/blog/posts/:id", 
+        .route("/api/admin/blog/posts/:id",
             axum::routing::put(update_blog_post)
                 .layer(axum::middleware::from_fn_with_state(app_state.clone(), auth::admin_auth_middleware))
         )
-        .route("/api/admin/blog/posts/:id", 
+        .route("/api/admin/blog/posts/:id",
             axum::routing::delete(delete_blog_post)
                 .layer(axum::middleware::from_fn_with_state(app_state.clone(), auth::admin_auth_middleware))
         )

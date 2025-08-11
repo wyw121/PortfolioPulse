@@ -2,6 +2,7 @@ use crate::models::*;
 use anyhow::Result;
 use chrono::Utc;
 use sqlx::MySqlPool;
+use uuid::Uuid;
 
 pub struct BlogService {
     db: MySqlPool,
@@ -31,25 +32,22 @@ impl BlogService {
         .fetch_all(&self.db)
         .await?;
 
-        let posts = rows
-            .into_iter()
-            .map(|row| BlogPost {
-                id: row.id,
-                title: row.title,
-                slug: row.slug,
-                content: row.content,
-                excerpt: row.excerpt,
-                cover_image: row.cover_image,
-                category: row.category,
-                tags: row.tags.map(|v| v.to_string()),
-                status: row.status.unwrap_or_else(|| "published".to_string()),
-                view_count: row.view_count.unwrap_or(0),
-                is_featured: row.is_featured.unwrap_or(0),
-                created_at: row.created_at.unwrap_or_else(Utc::now),
-                updated_at: row.updated_at.unwrap_or_else(Utc::now),
-                published_at: row.published_at,
-            })
-            .collect();
+        let posts = rows.into_iter().map(|row| BlogPost {
+            id: row.id,
+            title: row.title,
+            slug: row.slug,
+            content: row.content,
+            excerpt: row.excerpt,
+            cover_image: row.cover_image,
+            category: row.category,
+            tags: row.tags,
+            status: row.status,
+            view_count: row.view_count,
+            is_featured: row.is_featured,
+            created_at: row.created_at,
+            updated_at: row.updated_at,
+            published_at: row.published_at,
+        }).collect();
 
         Ok(posts)
     }
@@ -76,12 +74,12 @@ impl BlogService {
             excerpt: row.excerpt,
             cover_image: row.cover_image,
             category: row.category,
-            tags: row.tags.map(|v| v.to_string()),
-            status: row.status.unwrap_or_else(|| "published".to_string()),
-            view_count: row.view_count.unwrap_or(0),
-            is_featured: row.is_featured.unwrap_or(0),
-            created_at: row.created_at.unwrap_or_else(Utc::now),
-            updated_at: row.updated_at.unwrap_or_else(Utc::now),
+            tags: row.tags,
+            status: row.status,
+            view_count: row.view_count,
+            is_featured: row.is_featured,
+            created_at: row.created_at,
+            updated_at: row.updated_at,
             published_at: row.published_at,
         });
 
@@ -104,25 +102,22 @@ impl BlogService {
         .fetch_all(&self.db)
         .await?;
 
-        let posts = rows
-            .into_iter()
-            .map(|row| BlogPost {
-                id: row.id,
-                title: row.title,
-                slug: row.slug,
-                content: row.content,
-                excerpt: row.excerpt,
-                cover_image: row.cover_image,
-                category: row.category,
-                tags: row.tags.map(|v| v.to_string()),
-                status: row.status.unwrap_or_else(|| "published".to_string()),
-                view_count: row.view_count.unwrap_or(0),
-                is_featured: row.is_featured.unwrap_or(0),
-                created_at: row.created_at.unwrap_or_else(Utc::now),
-                updated_at: row.updated_at.unwrap_or_else(Utc::now),
-                published_at: row.published_at,
-            })
-            .collect();
+        let posts = rows.into_iter().map(|row| BlogPost {
+            id: row.id,
+            title: row.title,
+            slug: row.slug,
+            content: row.content,
+            excerpt: row.excerpt,
+            cover_image: row.cover_image,
+            category: row.category,
+            tags: row.tags,
+            status: row.status,
+            view_count: row.view_count,
+            is_featured: row.is_featured,
+            created_at: row.created_at,
+            updated_at: row.updated_at,
+            published_at: row.published_at,
+        }).collect();
 
         Ok(posts)
     }
@@ -134,47 +129,37 @@ impl BlogService {
     }
 
     // 根据分类获取文章
-    pub async fn get_posts_by_category(
-        &self,
-        _category: &str,
-        _page: u32,
-        _page_size: u32,
-    ) -> Result<Vec<BlogPost>> {
+    pub async fn get_posts_by_category(&self, category: &str, page: u32, page_size: u32) -> Result<Vec<BlogPost>> {
         // 返回空列表，先让编译通过
         Ok(vec![])
     }
 
     // 搜索文章
-    pub async fn search_posts(
-        &self,
-        _query: &str,
-        _page: u32,
-        _page_size: u32,
-    ) -> Result<Vec<BlogPost>> {
+    pub async fn search_posts(&self, query: &str, page: u32, page_size: u32) -> Result<Vec<BlogPost>> {
         // 返回空列表，先让编译通过
         Ok(vec![])
     }
 
     // 创建文章 (管理员功能)
-    pub async fn create_post(&self, _req: CreateBlogPostRequest) -> Result<BlogPost> {
+    pub async fn create_post(&self, req: CreateBlogPostRequest) -> Result<BlogPost> {
         // 返回错误，先让编译通过
         anyhow::bail!("功能暂未实现")
     }
 
     // 更新文章 (管理员功能)
-    pub async fn update_post(&self, _id: &str, _req: UpdateBlogPostRequest) -> Result<BlogPost> {
+    pub async fn update_post(&self, id: &str, req: UpdateBlogPostRequest) -> Result<BlogPost> {
         // 返回错误，先让编译通过
         anyhow::bail!("功能暂未实现")
     }
 
     // 删除文章 (管理员功能)
-    pub async fn delete_post(&self, _id: &str) -> Result<()> {
+    pub async fn delete_post(&self, id: &str) -> Result<()> {
         // 返回错误，先让编译通过
         anyhow::bail!("功能暂未实现")
     }
 
     // 管理员获取所有文章
-    pub async fn get_all_posts(&self, _page: u32, _page_size: u32) -> Result<Vec<BlogPost>> {
+    pub async fn get_all_posts(&self, page: u32, page_size: u32) -> Result<Vec<BlogPost>> {
         // 返回空列表，先让编译通过
         Ok(vec![])
     }

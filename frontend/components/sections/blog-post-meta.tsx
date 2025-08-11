@@ -1,8 +1,8 @@
 'use client'
 
 import { Badge } from '@/components/ui/badge'
-import { CalendarIcon, EyeIcon, TagIcon, UserIcon } from 'lucide-react'
 import type { BlogPost } from '@/types/blog'
+import { CalendarIcon, EyeIcon, TagIcon, UserIcon } from 'lucide-react'
 
 interface BlogPostMetaProps {
   post: BlogPost
@@ -29,7 +29,7 @@ export function BlogPostMeta({ post }: BlogPostMetaProps) {
     <div className="mb-8">
       {/* 文章标题 */}
       <h1 className="text-4xl font-bold mb-6 leading-tight">{post.title}</h1>
-      
+
       {/* 文章摘要 */}
       {post.excerpt && (
         <p className="text-lg text-muted-foreground mb-6 leading-relaxed">

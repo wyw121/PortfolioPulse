@@ -1,11 +1,10 @@
-use axum::{
-    extract::{Path, Query, State, Json as ExtractJson},
+﻿use axum::{
+    extract::{Json as ExtractJson, Path, Query, State},
     http::StatusCode,
     response::Json,
 };
-use serde::{Deserialize, Serialize};
-use std::collections::HashMap;
-use tracing::{error, info, instrument};
+use serde::Deserialize;
+use tracing::{error, instrument};
 use uuid::Uuid;
 
 use crate::{models::*, services, AppState};
@@ -143,7 +142,9 @@ pub async fn get_blog_posts(
     let posts = if let Some(search) = params.search {
         blog_service.search_posts(&search, page, page_size).await
     } else if let Some(category) = params.category {
-        blog_service.get_posts_by_category(&category, page, page_size).await
+        blog_service
+            .get_posts_by_category(&category, page, page_size)
+            .await
     } else {
         blog_service.get_published_posts(page, page_size).await
     };
@@ -153,25 +154,26 @@ pub async fn get_blog_posts(
             let responses: Vec<BlogPostResponse> = posts
                 .into_iter()
                 .map(|post| BlogPostResponse {
-                    id: post.id.to_string(),
+                    id: post.id,
                     title: post.title,
                     slug: post.slug,
                     content: post.content,
                     excerpt: post.excerpt,
                     cover_image: post.cover_image,
                     category: post.category,
-                    tags: post.tags
+                    tags: post
+                        .tags
                         .and_then(|t| serde_json::from_str(&t).ok())
                         .unwrap_or_default(),
                     status: post.status,
                     view_count: post.view_count,
-                    is_featured: post.is_featured,
+                    is_featured: post.is_featured != 0,
                     created_at: post.created_at.to_rfc3339(),
                     updated_at: post.updated_at.to_rfc3339(),
                     published_at: post.published_at.map(|dt| dt.to_rfc3339()),
                 })
                 .collect();
-            
+
             Ok(Json(responses))
         }
         Err(e) => {
@@ -195,19 +197,20 @@ pub async fn get_blog_post(
     match blog_service.get_post_by_slug(&slug).await {
         Ok(Some(post)) => {
             let response = BlogPostResponse {
-                id: post.id.to_string(),
+                id: post.id,
                 title: post.title,
                 slug: post.slug,
                 content: post.content,
                 excerpt: post.excerpt,
                 cover_image: post.cover_image,
                 category: post.category,
-                tags: post.tags
+                tags: post
+                    .tags
                     .and_then(|t| serde_json::from_str(&t).ok())
                     .unwrap_or_default(),
                 status: post.status,
                 view_count: post.view_count,
-                is_featured: post.is_featured,
+                is_featured: post.is_featured != 0,
                 created_at: post.created_at.to_rfc3339(),
                 updated_at: post.updated_at.to_rfc3339(),
                 published_at: post.published_at.map(|dt| dt.to_rfc3339()),
@@ -240,25 +243,26 @@ pub async fn get_featured_blog_posts(
             let responses: Vec<BlogPostResponse> = posts
                 .into_iter()
                 .map(|post| BlogPostResponse {
-                    id: post.id.to_string(),
+                    id: post.id,
                     title: post.title,
                     slug: post.slug,
                     content: post.content,
                     excerpt: post.excerpt,
                     cover_image: post.cover_image,
                     category: post.category,
-                    tags: post.tags
+                    tags: post
+                        .tags
                         .and_then(|t| serde_json::from_str(&t).ok())
                         .unwrap_or_default(),
                     status: post.status,
                     view_count: post.view_count,
-                    is_featured: post.is_featured,
+                    is_featured: post.is_featured != 0,
                     created_at: post.created_at.to_rfc3339(),
                     updated_at: post.updated_at.to_rfc3339(),
                     published_at: post.published_at.map(|dt| dt.to_rfc3339()),
                 })
                 .collect();
-            
+
             Ok(Json(responses))
         }
         Err(e) => {
@@ -278,7 +282,7 @@ pub async fn get_blog_categories(
 ) -> Result<Json<Vec<BlogCategory>>, (StatusCode, Json<serde_json::Value>)> {
     let blog_service = services::blog::BlogService::new(state.db.clone());
 
-    match blog_service.get_categories().await {
+    match blog_service.get_all_categories().await {
         Ok(categories) => Ok(Json(categories)),
         Err(e) => {
             error!("获取博客分类失败: {}", e);
@@ -301,19 +305,20 @@ pub async fn create_blog_post(
     match blog_service.create_post(req).await {
         Ok(post) => {
             let response = BlogPostResponse {
-                id: post.id.to_string(),
+                id: post.id,
                 title: post.title,
                 slug: post.slug,
                 content: post.content,
                 excerpt: post.excerpt,
                 cover_image: post.cover_image,
                 category: post.category,
-                tags: post.tags
+                tags: post
+                    .tags
                     .and_then(|t| serde_json::from_str(&t).ok())
                     .unwrap_or_default(),
                 status: post.status,
                 view_count: post.view_count,
-                is_featured: post.is_featured,
+                is_featured: post.is_featured != 0,
                 created_at: post.created_at.to_rfc3339(),
                 updated_at: post.updated_at.to_rfc3339(),
                 published_at: post.published_at.map(|dt| dt.to_rfc3339()),
@@ -338,33 +343,33 @@ pub async fn update_blog_post(
     ExtractJson(req): ExtractJson<UpdateBlogPostRequest>,
 ) -> Result<Json<BlogPostResponse>, (StatusCode, Json<serde_json::Value>)> {
     let blog_service = services::blog::BlogService::new(state.db.clone());
-    
-    let post_id = match Uuid::parse_str(&id) {
-        Ok(id) => id,
-        Err(_) => {
-            return Err((
-                StatusCode::BAD_REQUEST,
-                Json(serde_json::json!({ "error": "无效的文章ID" })),
-            ));
-        }
-    };
 
-    match blog_service.update_post(post_id, req).await {
+    // 验证 ID 格式但直接使用字符串
+    if Uuid::parse_str(&id).is_err() {
+        return Err((
+            StatusCode::BAD_REQUEST,
+            Json(serde_json::json!({ "error": "无效的文章ID" })),
+        ));
+    }
+
+    match blog_service.update_post(&id, req).await {
+        // 直接使用 &id
         Ok(post) => {
             let response = BlogPostResponse {
-                id: post.id.to_string(),
+                id: post.id,
                 title: post.title,
                 slug: post.slug,
                 content: post.content,
                 excerpt: post.excerpt,
                 cover_image: post.cover_image,
                 category: post.category,
-                tags: post.tags
+                tags: post
+                    .tags
                     .and_then(|t| serde_json::from_str(&t).ok())
                     .unwrap_or_default(),
                 status: post.status,
                 view_count: post.view_count,
-                is_featured: post.is_featured,
+                is_featured: post.is_featured != 0,
                 created_at: post.created_at.to_rfc3339(),
                 updated_at: post.updated_at.to_rfc3339(),
                 published_at: post.published_at.map(|dt| dt.to_rfc3339()),
@@ -388,18 +393,17 @@ pub async fn delete_blog_post(
     Path(id): Path<String>,
 ) -> Result<Json<serde_json::Value>, (StatusCode, Json<serde_json::Value>)> {
     let blog_service = services::blog::BlogService::new(state.db.clone());
-    
-    let post_id = match Uuid::parse_str(&id) {
-        Ok(id) => id,
-        Err(_) => {
-            return Err((
-                StatusCode::BAD_REQUEST,
-                Json(serde_json::json!({ "error": "无效的文章ID" })),
-            ));
-        }
-    };
 
-    match blog_service.delete_post(post_id).await {
+    // 验证 ID 格式但直接使用字符串
+    if Uuid::parse_str(&id).is_err() {
+        return Err((
+            StatusCode::BAD_REQUEST,
+            Json(serde_json::json!({ "error": "无效的文章ID" })),
+        ));
+    }
+
+    match blog_service.delete_post(&id).await {
+        // 直接使用 &id
         Ok(_) => Ok(Json(serde_json::json!({ "message": "文章删除成功" }))),
         Err(e) => {
             error!("删除博客文章失败: {}", e);
@@ -426,25 +430,26 @@ pub async fn get_all_blog_posts_admin(
             let responses: Vec<BlogPostResponse> = posts
                 .into_iter()
                 .map(|post| BlogPostResponse {
-                    id: post.id.to_string(),
+                    id: post.id,
                     title: post.title,
                     slug: post.slug,
                     content: post.content,
                     excerpt: post.excerpt,
                     cover_image: post.cover_image,
                     category: post.category,
-                    tags: post.tags
+                    tags: post
+                        .tags
                         .and_then(|t| serde_json::from_str(&t).ok())
                         .unwrap_or_default(),
                     status: post.status,
                     view_count: post.view_count,
-                    is_featured: post.is_featured,
+                    is_featured: post.is_featured != 0,
                     created_at: post.created_at.to_rfc3339(),
                     updated_at: post.updated_at.to_rfc3339(),
                     published_at: post.published_at.map(|dt| dt.to_rfc3339()),
                 })
                 .collect();
-            
+
             Ok(Json(responses))
         }
         Err(e) => {

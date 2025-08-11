@@ -1,16 +1,16 @@
 'use client'
 
-import { useState } from 'react'
-import { useRouter } from 'next/navigation'
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
+import { Checkbox } from '@/components/ui/checkbox'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import { Textarea } from '@/components/ui/textarea'
-import { Checkbox } from '@/components/ui/checkbox'
-import { UploadIcon, FileIcon, CheckIcon } from 'lucide-react'
 import { BlogService } from '@/lib/blog-service'
+import { CheckIcon, FileIcon, UploadIcon } from 'lucide-react'
+import { useRouter } from 'next/navigation'
+import { useState } from 'react'
 
 export default function BlogUploadPage() {
   const [file, setFile] = useState<File | null>(null)
@@ -23,14 +23,14 @@ export default function BlogUploadPage() {
   const [loading, setLoading] = useState(false)
   const [uploadStatus, setUploadStatus] = useState<'idle' | 'uploading' | 'processing' | 'success' | 'error'>('idle')
   const [error, setError] = useState<string | null>(null)
-  
+
   const router = useRouter()
 
   const handleFileSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
     const selectedFile = e.target.files?.[0]
     if (selectedFile) {
       setFile(selectedFile)
-      
+
       // 从文件名提取标题（去掉扩展名）
       const filename = selectedFile.name.replace(/\.(html?|htm)$/i, '')
       if (!title) {
@@ -43,15 +43,15 @@ export default function BlogUploadPage() {
     // 创建一个临时的DOM解析器
     const parser = new DOMParser()
     const doc = parser.parseFromString(htmlContent, 'text/html')
-    
+
     // 提取标题（如果HTML中有title标签）
     const titleElement = doc.querySelector('title')
     const extractedTitle = titleElement?.textContent || ''
-    
+
     // 提取第一段作为摘要
     const firstParagraph = doc.querySelector('p')
     const extractedExcerpt = firstParagraph?.textContent?.slice(0, 200) || ''
-    
+
     return {
       title: extractedTitle,
       excerpt: extractedExcerpt,
@@ -72,12 +72,12 @@ export default function BlogUploadPage() {
     try {
       // 读取文件内容
       const content = await file.text()
-      
+
       setUploadStatus('processing')
-      
+
       // 从HTML提取内容
       const extracted = extractContentFromHTML(content)
-      
+
       // 准备文章数据
       const postData = {
         title: title.trim(),
@@ -91,14 +91,14 @@ export default function BlogUploadPage() {
 
       // 创建文章
       await BlogService.createPost(postData)
-      
+
       setUploadStatus('success')
-      
+
       // 延迟跳转，让用户看到成功状态
       setTimeout(() => {
         router.push('/admin/blog')
       }, 1500)
-      
+
     } catch (err) {
       setError(err instanceof Error ? err.message : '上传失败')
       setUploadStatus('error')
@@ -153,7 +153,7 @@ export default function BlogUploadPage() {
             请选择HTML文件并填写相关信息。支持OneNote、Word等导出的HTML格式。
           </CardDescription>
         </CardHeader>
-        
+
         <CardContent className="space-y-6">
           {/* 文件选择 */}
           <div className="space-y-2">
@@ -272,7 +272,7 @@ export default function BlogUploadPage() {
             {getStatusIcon()}
             <span className="ml-2">{getStatusText()}</span>
           </Button>
-          
+
           {/* 上传提示 */}
           <div className="text-sm text-muted-foreground space-y-2">
             <p><strong>使用说明：</strong></p>

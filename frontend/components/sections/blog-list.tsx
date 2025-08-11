@@ -1,12 +1,12 @@
 'use client'
 
-import { useEffect, useState } from 'react'
-import Link from 'next/link'
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
-import { CalendarIcon, EyeIcon, TagIcon } from 'lucide-react'
-import { BlogPost } from '@/types/blog'
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { BlogService } from '@/lib/blog-service'
+import { BlogPost } from '@/types/blog'
+import { CalendarIcon, EyeIcon, TagIcon } from 'lucide-react'
+import Link from 'next/link'
+import { useEffect, useState } from 'react'
 
 export function BlogList() {
   const [posts, setPosts] = useState<BlogPost[]>([])
@@ -26,16 +26,55 @@ export function BlogList() {
         page: currentPage,
         page_size: 10
       })
-      
+
       if (currentPage === 1) {
         setPosts(newPosts)
       } else {
         setPosts(prev => [...prev, ...newPosts])
       }
-      
+
       setHasMore(newPosts.length === 10)
     } catch (err) {
+      console.error('获取文章失败:', err)
       setError(err instanceof Error ? err.message : '获取文章失败')
+
+      // 如果是第一页加载失败，显示模拟数据以便测试UI
+      if (currentPage === 1) {
+        const mockPosts: BlogPost[] = [
+          {
+            id: 'mock-1',
+            title: '金融市场分析入门指南',
+            slug: 'financial-market-analysis-guide',
+            content: '<p>这是一篇关于金融市场分析的入门指南...</p>',
+            excerpt: '学习如何分析金融市场，掌握基本的技术分析和基本面分析方法。',
+            category: 'finance',
+            tags: ['金融', '投资', '市场分析'],
+            status: 'published' as const,
+            view_count: 128,
+            is_featured: true,
+            created_at: '2024-12-01T10:00:00Z',
+            updated_at: '2024-12-01T10:00:00Z',
+            published_at: '2024-12-01T10:00:00Z'
+          },
+          {
+            id: 'mock-2',
+            title: 'React与TypeScript项目实战',
+            slug: 'react-typescript-project',
+            content: '<p>深入学习React和TypeScript的结合使用...</p>',
+            excerpt: '从零开始构建一个完整的React + TypeScript项目，包含最佳实践和常见问题解决方案。',
+            category: 'technology',
+            tags: ['React', 'TypeScript', 'Web开发'],
+            status: 'published' as const,
+            view_count: 256,
+            is_featured: false,
+            created_at: '2024-11-28T14:30:00Z',
+            updated_at: '2024-11-28T14:30:00Z',
+            published_at: '2024-11-28T14:30:00Z'
+          }
+        ]
+        setPosts(mockPosts)
+        setHasMore(false)
+      }
     } finally {
       setLoading(false)
     }
@@ -61,8 +100,8 @@ export function BlogList() {
     return (
       <div className="text-center py-8">
         <p className="text-muted-foreground">加载失败: {error}</p>
-        <button 
-          onClick={() => window.location.reload()} 
+        <button
+          onClick={() => window.location.reload()}
           className="mt-4 px-4 py-2 bg-primary text-primary-foreground rounded hover:bg-primary/90"
         >
           重试
@@ -79,7 +118,7 @@ export function BlogList() {
             <div className="flex items-start justify-between">
               <div className="space-y-2">
                 <CardTitle className="text-xl">
-                  <Link 
+                  <Link
                     href={`/blog/${post.slug}`}
                     className="hover:text-primary transition-colors"
                   >
@@ -109,14 +148,14 @@ export function BlogList() {
               </div>
             </div>
           </CardHeader>
-          
+
           <CardContent>
             {post.excerpt && (
               <CardDescription className="text-base mb-4 line-clamp-3">
                 {post.excerpt}
               </CardDescription>
             )}
-            
+
             {post.tags.length > 0 && (
               <div className="flex items-center space-x-2">
                 <TagIcon className="w-4 h-4 text-muted-foreground" />

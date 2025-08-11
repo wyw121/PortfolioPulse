@@ -1,11 +1,11 @@
 'use client'
 
-import { useEffect, useState } from 'react'
-import Link from 'next/link'
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
-import type { BlogPost } from '@/types/blog'
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { BlogService } from '@/lib/blog-service'
+import type { BlogPost } from '@/types/blog'
+import Link from 'next/link'
+import { useEffect, useState } from 'react'
 
 interface RelatedPostsProps {
   currentSlug: string
@@ -23,7 +23,7 @@ export function RelatedPosts({ currentSlug, category }: RelatedPostsProps) {
   const loadRelatedPosts = async () => {
     try {
       let posts: BlogPost[] = []
-      
+
       // 先尝试获取同分类的文章
       if (category) {
         posts = await BlogService.getPosts({
@@ -33,7 +33,7 @@ export function RelatedPosts({ currentSlug, category }: RelatedPostsProps) {
         // 过滤掉当前文章
         posts = posts.filter(post => post.slug !== currentSlug)
       }
-      
+
       // 如果同分类文章不够，补充其他文章
       if (posts.length < 3) {
         const allPosts = await BlogService.getPosts({
@@ -42,10 +42,10 @@ export function RelatedPosts({ currentSlug, category }: RelatedPostsProps) {
         const otherPosts = allPosts
           .filter(post => post.slug !== currentSlug && !posts.some(p => p.slug === post.slug))
           .slice(0, 3 - posts.length)
-        
+
         posts = [...posts, ...otherPosts]
       }
-      
+
       setRelatedPosts(posts.slice(0, 3))
     } catch (error) {
       console.error('获取相关文章失败:', error)
@@ -97,7 +97,7 @@ export function RelatedPosts({ currentSlug, category }: RelatedPostsProps) {
           <Card key={post.id} className="hover:shadow-md transition-shadow">
             <CardHeader>
               <CardTitle className="text-base">
-                <Link 
+                <Link
                   href={`/blog/${post.slug}`}
                   className="hover:text-primary transition-colors line-clamp-2"
                 >
@@ -113,7 +113,7 @@ export function RelatedPosts({ currentSlug, category }: RelatedPostsProps) {
                 )}
               </div>
             </CardHeader>
-            
+
             {post.excerpt && (
               <CardContent>
                 <CardDescription className="text-sm line-clamp-2">

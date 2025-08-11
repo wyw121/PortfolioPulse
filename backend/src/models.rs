@@ -138,28 +138,28 @@ pub struct GitHubCommitStats {
 // 博客相关模型
 #[derive(Debug, Serialize, Deserialize, FromRow)]
 pub struct BlogPost {
-    pub id: Uuid,
-    pub title: String,
-    pub slug: String,
-    pub content: String,
-    pub excerpt: Option<String>,
-    pub cover_image: Option<String>,
-    pub category: Option<String>,
-    pub tags: Option<String>, // JSON字符串
-    pub status: String,
-    pub view_count: i32,
-    pub is_featured: bool,
-    pub created_at: DateTime<Utc>,
-    pub updated_at: DateTime<Utc>,
-    pub published_at: Option<DateTime<Utc>>,
+    pub id: String,                          // CHAR(36) -> String
+    pub title: String,                       // NOT NULL
+    pub slug: String,                        // NOT NULL
+    pub content: String,                     // NOT NULL
+    pub excerpt: Option<String>,             // TEXT -> Option<String>
+    pub cover_image: Option<String>,         // VARCHAR -> Option<String>
+    pub category: Option<String>,            // VARCHAR -> Option<String>
+    pub tags: Option<String>,                // JSON -> Option<String> (作为JSON字符串)
+    pub status: String,                      // ENUM NOT NULL
+    pub view_count: i32,                     // NOT NULL DEFAULT 0
+    pub is_featured: i8,                     // BOOLEAN (MySQL TINYINT)
+    pub created_at: DateTime<Utc>,           // NOT NULL
+    pub updated_at: DateTime<Utc>,           // NOT NULL
+    pub published_at: Option<DateTime<Utc>>, // TIMESTAMP NULL -> Option<DateTime<Utc>>
 }
 
 #[derive(Debug, Serialize, Deserialize, FromRow)]
 pub struct BlogCategory {
-    pub id: Uuid,
+    pub id: String, // CHAR(36) -> String
     pub name: String,
     pub slug: String,
-    pub description: Option<String>,
+    pub description: Option<String>, // TEXT -> Option<String>
     pub color: String,
     pub post_count: i32,
     pub created_at: DateTime<Utc>,
@@ -168,7 +168,7 @@ pub struct BlogCategory {
 
 #[derive(Debug, Serialize, Deserialize, FromRow)]
 pub struct AdminSession {
-    pub id: Uuid,
+    pub id: String, // CHAR(36) -> String
     pub session_token: String,
     pub user_id: String,
     pub user_name: String,
@@ -178,14 +178,14 @@ pub struct AdminSession {
 
 #[derive(Debug, Serialize, Deserialize, FromRow)]
 pub struct BlogUpload {
-    pub id: Uuid,
+    pub id: String, // CHAR(36) -> String
     pub original_name: String,
     pub file_name: String,
     pub file_path: String,
     pub file_size: i64,
     pub mime_type: String,
     pub upload_type: String,
-    pub post_id: Option<Uuid>,
+    pub post_id: Option<String>, // CHAR(36) -> Option<String>
     pub created_at: DateTime<Utc>,
 }
 

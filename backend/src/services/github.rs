@@ -1,6 +1,5 @@
 use reqwest::Client;
 use anyhow::{Result, anyhow};
-use serde_json;
 
 use crate::models::{GitHubRepo, GitHubCommit};
 

@@ -29,6 +29,9 @@ chrono = { version = "0.4", features = ["serde"] }
 thiserror = "1.0"
 anyhow = "1.0"
 
+# 编码
+base64 = "0.22"
+
 # HTTP客户端
 reqwest = { version = "0.11", features = ["json"] }
 
