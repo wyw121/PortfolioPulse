@@ -61,15 +61,22 @@ jobs:
       #   working-directory: ./frontend
       #   run: npm run test
 
+      - name: 🗄️ Setup Database
+        run: |
+          chmod +x scripts/init-database.sh
+          scripts/init-database.sh
+        env:
+          DB_HOST: 127.0.0.1
+          DB_PORT: 3306
+          DB_USER: root
+          DB_PASS: password
+          DB_NAME: portfolio_pulse_test
+
       - name: 🦀 Backend Build
         working-directory: ./backend
-        run: cargo build --verbose
-
-      # - name: 🧪 Backend Tests
-      #   working-directory: ./backend
-      #   run: cargo test --verbose
         env:
-          DATABASE_URL: mysql://root:password@localhost:3306/portfolio_pulse_test
+          DATABASE_URL: mysql://root:password@127.0.0.1:3306/portfolio_pulse_test
+        run: cargo build --verbose
 
       - name: 🔍 Backend Lint (Clippy)
         working-directory: ./backend

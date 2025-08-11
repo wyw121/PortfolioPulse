@@ -21,6 +21,16 @@ jobs:
     name: 交叉编译到 Ubuntu 22.04
     runs-on: ubuntu-22.04
 
+    services:
+      mysql:
+        image: mysql:8.0
+        env:
+          MYSQL_ROOT_PASSWORD: password
+          MYSQL_DATABASE: portfolio_pulse
+        ports:
+          - 3306:3306
+        options: --health-cmd="mysqladmin ping" --health-interval=10s --health-timeout=5s --health-retries=3
+
     steps:
     - name: 📥 检出代码
       uses: actions/checkout@v4
@@ -43,10 +53,22 @@ jobs:
       with:
         workspaces: "backend -> target"
 
+    - name: 🗄️ 设置数据库
+      run: |
+        chmod +x scripts/init-database.sh
+        scripts/init-database.sh
+      env:
+        DB_HOST: 127.0.0.1
+        DB_PORT: 3306
+        DB_USER: root
+        DB_PASS: password
+        DB_NAME: portfolio_pulse
+
     - name: 🦀 编译后端
       working-directory: backend
       env:
         CARGO_NET_GIT_FETCH_WITH_CLI: true
+        DATABASE_URL: mysql://root:password@127.0.0.1:3306/portfolio_pulse
       run: |
         echo "🔍 检查 Rust 环境..."
         rustc --version
