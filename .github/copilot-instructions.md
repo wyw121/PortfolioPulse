@@ -364,3 +364,43 @@ diesel migration generate <migration_name>
 - 及时更新依赖包，关注安全更新
 - 保持代码简洁可读，优先选择可维护性而非过度优化
 - **UI 开发**: 严格遵循设计系统，使用 CSS 变量，确保响应式设计
+
+## PowerShell 脚本禁用策略 (2025-08-11)
+
+**问题**: PowerShell 终端频繁出现栈溢出崩溃 (退出码: -1073741571)，影响开发体验和 GitHub Copilot Agent 功能。
+
+**根本原因**: VS Code Shell Integration 与某些 PowerShell 脚本产生递归调用冲突。
+
+**解决方案**:
+
+1. **禁用所有 PowerShell 脚本**: 项目中所有 `.ps1` 文件已被禁用，不再使用 PowerShell 脚本进行构建和部署
+2. **VS Code 终端配置**: 已配置 "Safe PowerShell" 模式 (`-NoProfile -NoLogo`)
+3. **Shell Integration**: 已禁用所有 VS Code 终端集成功能以避免冲突
+
+**替代方案**:
+
+- 使用 VS Code Tasks (tasks.json) 替代 PowerShell 脚本
+- 使用 npm scripts (package.json) 进行前端操作
+- 使用 cargo 命令进行后端操作
+- 使用批处理 (.bat) 文件进行必要的系统操作
+
+**禁用的脚本列表**:
+
+- `init-database.ps1` - 数据库初始化
+- `backend/run.ps1` - 后端启动脚本
+- `backend/init-db.ps1` - 数据库初始化
+- `scripts/*.ps1` - 所有构建、部署、修复脚本
+
+**开发命令**:
+
+```bash
+# 前端开发
+cd frontend && npm run dev
+
+# 后端开发
+cd backend && cargo run
+
+# 构建
+cd frontend && npm run build
+cd backend && cargo build --release
+```

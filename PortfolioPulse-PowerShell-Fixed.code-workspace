@@ -1,0 +1,266 @@
+{
+  "folders": [
+    {
+      "name": "📁 项目根目录",
+      "path": "."
+    },
+    {
+      "name": "🎨 前端应用 (Next.js)",
+      "path": "./frontend"
+    },
+    {
+      "name": "⚙️ 后端服务 (Rust)",
+      "path": "./backend"
+    },
+    {
+      "name": "🗄️ 数据库配置",
+      "path": "./database"
+    },
+    {
+      "name": "📜 部署脚本",
+      "path": "./scripts"
+    },
+    {
+      "name": "📚 项目文档",
+      "path": "./docs"
+    },
+    {
+      "name": "⚙️ 配置文件",
+      "path": "./configs"
+    }
+  ],
+  "settings": {
+    // === 全局编辑器设置 ===
+    "editor.formatOnSave": true,
+    "editor.tabSize": 2,
+    "editor.insertSpaces": true,
+    "editor.detectIndentation": false,
+    "editor.codeActionsOnSave": {
+      "source.fixAll.eslint": "explicit",
+      "source.organizeImports": "explicit"
+    },
+    "editor.rulers": [80, 120],
+    "editor.wordWrap": "bounded",
+    "editor.wordWrapColumn": 120,
+
+    // === 修复 PowerShell 崩溃问题的终端设置 ===
+    "terminal.integrated.defaultProfile.windows": "Command Prompt",
+    "terminal.integrated.cwd": "${workspaceFolder}",
+    "terminal.integrated.shellIntegration.enabled": false,
+    "terminal.integrated.shellIntegration.decorationsEnabled": "never",
+
+    // === PowerShell 安全配置 ===
+    "terminal.integrated.profiles.windows": {
+      "PowerShell Safe": {
+        "source": "PowerShell",
+        "args": ["-NoProfile", "-NoLogo", "-ExecutionPolicy", "Bypass"]
+      },
+      "Command Prompt": {
+        "path": [
+          "${env:windir}\\Sysnative\\cmd.exe",
+          "${env:windir}\\System32\\cmd.exe"
+        ],
+        "args": ["/k", "echo PortfolioPulse 开发环境已就绪"]
+      }
+    },
+
+    // === 禁用可能冲突的 PowerShell 功能 ===
+    "powershell.integratedConsole.suppressStartupBanner": true,
+    "powershell.integratedConsole.startInBackground": false,
+    "powershell.enableProfileLoading": false,
+    "powershell.powerShellAdditionalExePaths": {},
+
+    // === TypeScript 和 JavaScript 优化 ===
+    "typescript.preferences.includePackageJsonAutoImports": "auto",
+    "typescript.suggest.autoImports": true,
+    "typescript.disableAutomaticTypeAcquisition": false,
+    "typescript.preferences.importModuleSpecifier": "relative",
+
+    // === Rust 开发优化 ===
+    "rust-analyzer.check.command": "check",
+    "rust-analyzer.cargo.buildScripts.enable": true,
+    "rust-analyzer.procMacro.enable": true,
+    "rust-analyzer.diagnostics.enable": true,
+
+    // === Git 设置 ===
+    "git.ignoreLimitWarning": true,
+    "git.autofetch": true,
+    "git.confirmSync": false,
+    "git.enableSmartCommit": true,
+
+    // === 代码格式化设置 ===
+    "[typescript]": {
+      "editor.defaultFormatter": "esbenp.prettier-vscode",
+      "editor.formatOnSave": true
+    },
+    "[typescriptreact]": {
+      "editor.defaultFormatter": "esbenp.prettier-vscode",
+      "editor.formatOnSave": true
+    },
+    "[javascript]": {
+      "editor.defaultFormatter": "esbenp.prettier-vscode",
+      "editor.formatOnSave": true
+    },
+    "[json]": {
+      "editor.defaultFormatter": "esbenp.prettier-vscode"
+    },
+    "[jsonc]": {
+      "editor.defaultFormatter": "esbenp.prettier-vscode"
+    },
+    "[rust]": {
+      "editor.defaultFormatter": "rust-lang.rust-analyzer",
+      "editor.formatOnSave": true
+    },
+    "[sql]": {
+      "editor.formatOnSave": true
+    },
+    "[markdown]": {
+      "editor.formatOnSave": false,
+      "editor.wordWrap": "on"
+    },
+    "[css]": {
+      "editor.defaultFormatter": "esbenp.prettier-vscode"
+    }
+  },
+  "extensions": {
+    "recommendations": [
+      // === 前端开发必备 ===
+      "bradlc.vscode-tailwindcss",
+      "esbenp.prettier-vscode",
+      "dbaeumer.vscode-eslint",
+      "ms-vscode.vscode-typescript-next",
+
+      // === Rust 开发必备 ===
+      "rust-lang.rust-analyzer",
+      "vadimcn.vscode-lldb",
+      "serayuzgur.crates",
+      "tamasfe.even-better-toml",
+
+      // === 数据库相关 ===
+      "mtxr.sqltools",
+      "mtxr.sqltools-driver-mysql",
+
+      // === Git 和版本控制 ===
+      "eamodio.gitlens",
+      "donjayamanne.githistory",
+
+      // === AI 助手 ===
+      "github.copilot",
+      "github.copilot-chat"
+
+      // 注意：暂时不推荐 ms-vscode.powershell 扩展，避免崩溃
+    ]
+  },
+  "tasks": {
+    "version": "2.0.0",
+    "tasks": [
+      // === 前端任务 ===
+      {
+        "label": "🚀 启动前端开发服务器",
+        "type": "shell",
+        "command": "npm",
+        "args": ["run", "dev"],
+        "options": {
+          "cwd": "${workspaceFolder}/frontend"
+        },
+        "group": "build",
+        "isBackground": true,
+        "presentation": {
+          "echo": true,
+          "reveal": "always",
+          "focus": false,
+          "panel": "new"
+        },
+        "problemMatcher": []
+      },
+      {
+        "label": "🏗️ 构建前端",
+        "type": "shell",
+        "command": "npm",
+        "args": ["run", "build"],
+        "options": {
+          "cwd": "${workspaceFolder}/frontend"
+        },
+        "group": {
+          "kind": "build",
+          "isDefault": false
+        }
+      },
+
+      // === 后端任务 ===
+      {
+        "label": "🚀 启动后端开发服务器",
+        "type": "shell",
+        "command": "cargo",
+        "args": ["run"],
+        "options": {
+          "cwd": "${workspaceFolder}/backend"
+        },
+        "group": "build",
+        "isBackground": true
+      },
+      {
+        "label": "🏗️ 构建后端",
+        "type": "shell",
+        "command": "cargo",
+        "args": ["build", "--release"],
+        "options": {
+          "cwd": "${workspaceFolder}/backend"
+        },
+        "group": {
+          "kind": "build",
+          "isDefault": false
+        }
+      },
+
+      // === 测试任务 ===
+      {
+        "label": "🧪 运行前端测试",
+        "type": "shell",
+        "command": "npm",
+        "args": ["test"],
+        "options": {
+          "cwd": "${workspaceFolder}/frontend"
+        },
+        "group": "test"
+      },
+      {
+        "label": "🧪 运行后端测试",
+        "type": "shell",
+        "command": "cargo",
+        "args": ["test"],
+        "options": {
+          "cwd": "${workspaceFolder}/backend"
+        },
+        "group": "test"
+      },
+
+      // === 数据库任务 ===
+      {
+        "label": "🗄️ 数据库迁移",
+        "type": "shell",
+        "command": "diesel",
+        "args": ["migration", "run"],
+        "options": {
+          "cwd": "${workspaceFolder}/backend"
+        },
+        "group": "build"
+      },
+
+      // === 格式化任务 (使用 CMD 而非 PowerShell) ===
+      {
+        "label": "🔧 格式化所有代码",
+        "type": "shell",
+        "command": "cmd",
+        "args": [
+          "/c",
+          "cd frontend && npm run format && cd ..\\backend && cargo fmt"
+        ],
+        "options": {
+          "cwd": "${workspaceFolder}"
+        },
+        "group": "build"
+      }
+    ]
+  }
+}

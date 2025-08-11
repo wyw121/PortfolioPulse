@@ -171,7 +171,8 @@
     },
     "[css]": {
       "editor.defaultFormatter": "esbenp.prettier-vscode"
-    }
+    },
+    "powershell.cwd": "📁 项目根目录"
   },
   "extensions": {
     "recommendations": [
