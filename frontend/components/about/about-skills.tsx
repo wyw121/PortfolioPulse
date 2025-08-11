@@ -40,7 +40,7 @@ export function AboutSkills() {
   return (
     <section className="py-20 px-6 bg-gray-50/50 dark:bg-gray-800/50">
       <div className="max-w-6xl mx-auto">
-        <AnimatedContainer direction="up" duration={600}>
+        <AnimatedContainer direction="up" duration={350} fastResponse={true}>
           <div className="text-center mb-16">
             <h2 className="text-3xl md:text-4xl font-bold mb-4 text-gray-900 dark:text-white">
               技能专长
@@ -56,8 +56,9 @@ export function AboutSkills() {
             <AnimatedContainer
               key={skillGroup.category}
               direction="up"
-              duration={600}
-              delay={200 + groupIndex * 100}
+              duration={350}
+              delay={100 + groupIndex * 80} // 减少延迟间隔
+              fastResponse={true}
             >
               <div className="bg-white dark:bg-gray-800 rounded-2xl p-6 shadow-sm border border-gray-200 dark:border-gray-700">
                 <h3 className="text-xl font-semibold mb-6 text-gray-900 dark:text-white">
@@ -68,10 +69,11 @@ export function AboutSkills() {
                   {skillGroup.items.map((skill, index) => (
                     <motion.div
                       key={skill.name}
-                      initial={{ opacity: 0, x: -20 }}
+                      initial={{ opacity: 0, x: -15 }} // 减少移动距离
                       animate={{ opacity: 1, x: 0 }}
                       transition={{
-                        delay: 0.5 + groupIndex * 0.1 + index * 0.05,
+                        delay: 0.3 + groupIndex * 0.08 + index * 0.04, // 减少延迟
+                        duration: 0.35,
                       }}
                     >
                       <div className="flex items-center justify-between mb-2">
@@ -92,8 +94,8 @@ export function AboutSkills() {
                           initial={{ width: 0 }}
                           animate={{ width: `${skill.level}%` }}
                           transition={{
-                            delay: 0.8 + groupIndex * 0.1 + index * 0.05,
-                            duration: 1,
+                            delay: 0.5 + groupIndex * 0.08 + index * 0.04, // 减少延迟
+                            duration: 0.8, // 进度条动画稍微快一些
                             ease: "easeOut",
                           }}
                         />

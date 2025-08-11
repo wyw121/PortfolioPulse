@@ -50,7 +50,7 @@ export function AboutContact() {
       className="py-20 px-6 bg-gray-50/50 dark:bg-gray-800/50"
     >
       <div className="max-w-6xl mx-auto">
-        <AnimatedContainer direction="up" duration={600}>
+        <AnimatedContainer direction="up" duration={350} fastResponse={true}>
           <div className="text-center mb-16">
             <h2 className="text-3xl md:text-4xl font-bold mb-4 text-gray-900 dark:text-white">
               联系方式
@@ -66,8 +66,9 @@ export function AboutContact() {
             <AnimatedContainer
               key={contact.label}
               direction="up"
-              duration={600}
-              delay={200 + index * 100}
+              duration={350}
+              delay={100 + index * 60} // 减少延迟间隔
+              fastResponse={true}
             >
               <motion.a
                 href={contact.href}

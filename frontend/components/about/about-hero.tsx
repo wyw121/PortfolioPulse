@@ -10,7 +10,11 @@ export function AboutHero() {
         <div className="grid lg:grid-cols-2 gap-12 items-center">
           {/* 左侧文字内容 */}
           <div>
-            <AnimatedContainer direction="left" duration={600}>
+            <AnimatedContainer
+              direction="left"
+              duration={350}
+              fastResponse={true}
+            >
               <h1 className="text-4xl md:text-5xl font-bold mb-6">
                 <span className="bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500 bg-clip-text text-transparent">
                   关于我
@@ -18,13 +22,23 @@ export function AboutHero() {
               </h1>
             </AnimatedContainer>
 
-            <AnimatedContainer direction="left" duration={600} delay={200}>
+            <AnimatedContainer
+              direction="left"
+              duration={350}
+              delay={100}
+              fastResponse={true}
+            >
               <p className="text-xl text-gray-600 dark:text-gray-300 mb-6 leading-relaxed">
                 我是一名热爱技术的全栈开发者，专注于现代Web技术栈的探索和实践。
               </p>
             </AnimatedContainer>
 
-            <AnimatedContainer direction="left" duration={600} delay={400}>
+            <AnimatedContainer
+              direction="left"
+              duration={350}
+              delay={200}
+              fastResponse={true}
+            >
               <div className="space-y-4 text-gray-600 dark:text-gray-300">
                 <p>
                   拥有多年的前端和后端开发经验，熟练掌握React、Next.js、TypeScript、Rust等技术栈。
@@ -37,7 +51,12 @@ export function AboutHero() {
               </div>
             </AnimatedContainer>
 
-            <AnimatedContainer direction="left" duration={600} delay={600}>
+            <AnimatedContainer
+              direction="left"
+              duration={350}
+              delay={300}
+              fastResponse={true}
+            >
               <div className="flex flex-wrap gap-4 mt-8">
                 <motion.a
                   href="https://github.com/wyw121"
@@ -62,7 +81,12 @@ export function AboutHero() {
           </div>
 
           {/* 右侧头像 */}
-          <AnimatedContainer direction="right" duration={600} delay={200}>
+          <AnimatedContainer
+            direction="right"
+            duration={350}
+            delay={150}
+            fastResponse={true}
+          >
             <div className="flex justify-center lg:justify-end">
               <div className="relative">
                 <div className="w-80 h-80 rounded-full overflow-hidden shadow-2xl border-4 border-white dark:border-gray-800">

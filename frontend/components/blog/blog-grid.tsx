@@ -96,7 +96,12 @@ export function BlogGrid() {
   return (
     <div className="max-w-6xl mx-auto px-6 pb-20">
       {/* 特色文章 */}
-      <AnimatedContainer direction="up" duration={600} delay={200}>
+      <AnimatedContainer
+        direction="up"
+        duration={350}
+        delay={100}
+        fastResponse={true}
+      >
         <div className="mb-16">
           <h2 className="text-2xl font-bold mb-8 text-gray-900 dark:text-white">
             特色文章
@@ -107,9 +112,12 @@ export function BlogGrid() {
               .map((post, index) => (
                 <motion.div
                   key={post.id}
-                  initial={{ opacity: 0, y: 20 }}
+                  initial={{ opacity: 0, y: 15 }}
                   animate={{ opacity: 1, y: 0 }}
-                  transition={{ delay: index * 0.1 }}
+                  transition={{
+                    delay: 0.2 + index * 0.08, // 减少延迟间隔
+                    duration: 0.4,
+                  }}
                 >
                   <FeaturedBlogCard post={post} />
                 </motion.div>
@@ -119,7 +127,12 @@ export function BlogGrid() {
       </AnimatedContainer>
 
       {/* 分类过滤 */}
-      <AnimatedContainer direction="up" duration={600} delay={400}>
+      <AnimatedContainer
+        direction="up"
+        duration={350}
+        delay={200}
+        fastResponse={true}
+      >
         <div className="mb-8">
           <div className="flex flex-wrap gap-3 justify-center">
             {categories.map((category) => (
@@ -137,14 +150,22 @@ export function BlogGrid() {
       </AnimatedContainer>
 
       {/* 全部文章 */}
-      <AnimatedContainer direction="up" duration={600} delay={600}>
+      <AnimatedContainer
+        direction="up"
+        duration={350}
+        delay={300}
+        fastResponse={true}
+      >
         <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
           {blogPosts.map((post, index) => (
             <motion.div
               key={post.id}
-              initial={{ opacity: 0, y: 20 }}
+              initial={{ opacity: 0, y: 15 }}
               animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.8 + index * 0.1 }}
+              transition={{
+                delay: 0.4 + index * 0.06, // 进一步减少延迟，让整体显示更快
+                duration: 0.35,
+              }}
             >
               <BlogCard post={post} />
             </motion.div>

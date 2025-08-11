@@ -1,5 +1,4 @@
 import { Navigation } from "@/components/layout";
-import { ProjectGrid } from "@/components/portfolio";
 import { HeroSection } from "@/components/sections";
 
 export default function HomePage() {
@@ -12,7 +11,6 @@ export default function HomePage() {
 
       <main>
         <HeroSection />
-        <ProjectGrid />
       </main>
     </div>
   );

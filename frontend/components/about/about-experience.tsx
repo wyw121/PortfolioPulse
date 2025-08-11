@@ -62,7 +62,7 @@ export function AboutExperience() {
     <section className="py-20 px-6">
       <div className="max-w-6xl mx-auto">
         {/* 工作经验 */}
-        <AnimatedContainer direction="up" duration={600}>
+        <AnimatedContainer direction="up" duration={350} fastResponse={true}>
           <div className="mb-16">
             <h2 className="text-3xl md:text-4xl font-bold mb-4 text-gray-900 dark:text-white text-center">
               工作经验
@@ -78,14 +78,18 @@ export function AboutExperience() {
             <AnimatedContainer
               key={index}
               direction="up"
-              duration={600}
-              delay={200 + index * 100}
+              duration={350}
+              delay={100 + index * 80} // 减少延迟间隔
+              fastResponse={true}
             >
               <motion.div
                 className="relative pl-8 border-l-2 border-blue-200 dark:border-blue-800"
-                initial={{ opacity: 0, y: 20 }}
+                initial={{ opacity: 0, y: 15 }} // 减少移动距离
                 animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.3 + index * 0.1 }}
+                transition={{
+                  delay: 0.2 + index * 0.08, // 减少延迟
+                  duration: 0.4,
+                }}
               >
                 {/* 时间线圆点 */}
                 <div className="absolute -left-2 top-0 w-4 h-4 bg-blue-500 rounded-full"></div>
@@ -139,7 +143,7 @@ export function AboutExperience() {
         </div>
 
         {/* 教育背景 */}
-        <AnimatedContainer direction="up" duration={600}>
+        <AnimatedContainer direction="up" duration={350} fastResponse={true}>
           <div className="mb-12">
             <h2 className="text-3xl md:text-4xl font-bold mb-4 text-gray-900 dark:text-white text-center">
               教育背景

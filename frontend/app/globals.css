@@ -254,11 +254,11 @@ html.dark {
     border: 1px solid rgba(42, 42, 42, 0.8);
   }
 
-  /* 淡入动画效果类 */
+  /* 淡入动画效果类 - 优化后的快速响应版本 */
   .fade-in-up {
     opacity: 0;
-    transform: translateY(30px);
-    transition: all 800ms cubic-bezier(0.25, 0.8, 0.25, 1);
+    transform: translateY(20px); /* 减少初始偏移 */
+    transition: all 400ms cubic-bezier(0.25, 0.1, 0.25, 1); /* 减少时长，优化缓动 */
   }
 
   .fade-in-up.animate {
@@ -268,19 +268,31 @@ html.dark {
 
   .fade-in {
     opacity: 0;
-    transition: opacity 800ms cubic-bezier(0.25, 0.8, 0.25, 1);
+    transition: opacity 400ms cubic-bezier(0.25, 0.1, 0.25, 1); /* 减少时长，优化缓动 */
   }
 
   .fade-in.animate {
     opacity: 1;
   }
 
-  /* 交错动画延迟 */
+  /* 交错动画延迟 - 减少延迟间隔 */
+  .animation-delay-50 {
+    animation-delay: 50ms;
+  }
+  .animation-delay-80 {
+    animation-delay: 80ms;
+  }
   .animation-delay-100 {
     animation-delay: 100ms;
   }
+  .animation-delay-150 {
+    animation-delay: 150ms;
+  }
   .animation-delay-200 {
     animation-delay: 200ms;
+  }
+  .animation-delay-250 {
+    animation-delay: 250ms;
   }
   .animation-delay-300 {
     animation-delay: 300ms;
@@ -292,9 +304,18 @@ html.dark {
     animation-delay: 500ms;
   }
 
-  /* 过渡延迟类 */
+  /* 过渡延迟类 - 减少延迟间隔 */
+  .transition-delay-50 {
+    transition-delay: 50ms;
+  }
+  .transition-delay-80 {
+    transition-delay: 80ms;
+  }
   .transition-delay-100 {
     transition-delay: 100ms;
+  }
+  .transition-delay-150 {
+    transition-delay: 150ms;
   }
   .transition-delay-200 {
     transition-delay: 200ms;
