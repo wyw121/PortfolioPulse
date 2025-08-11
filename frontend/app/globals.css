@@ -2,17 +2,21 @@
 @tailwind components;
 @tailwind utilities;
 
+/* 导入 Inter 和 JetBrains Mono 字体 */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap');
+
 /* 防止主题切换时的闪烁 */
 html {
   /* 设置初始背景色，在 CSS 变量加载前提供默认样式 */
   background-color: #ffffff;
-  color: #0f0f23;
+  color: #0f0f0f;
   color-scheme: light dark;
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
 }
 
 html.dark {
-  background-color: #0f0f23;
-  color: #fafafa;
+  background-color: #0f0f0f;
+  color: #ffffff;
 }
 
 /* 确保主题过渡平滑 */
@@ -39,48 +43,60 @@ html.dark {
 
 @layer base {
   :root {
+    /* 品牌主色调 - 蓝紫粉渐变主题 */
+    --primary-gradient: linear-gradient(135deg, #3b82f6 0%, #8b5cf6 50%, #ec4899 100%);
+    --primary-blue: #3b82f6;
+    --primary-purple: #8b5cf6;
+    --primary-pink: #ec4899;
+    
+    /* shadcn/ui 兼容变量 - 亮色模式 */
     --background: 0 0% 100%;
-    --foreground: 222.2 84% 4.9%;
+    --foreground: 240 10% 3.9%;
     --card: 0 0% 100%;
-    --card-foreground: 222.2 84% 4.9%;
+    --card-foreground: 240 10% 3.9%;
     --popover: 0 0% 100%;
-    --popover-foreground: 222.2 84% 4.9%;
-    --primary: 222.2 47.4% 11.2%;
-    --primary-foreground: 210 40% 98%;
-    --secondary: 210 40% 96%;
-    --secondary-foreground: 222.2 47.4% 11.2%;
-    --muted: 210 40% 96%;
-    --muted-foreground: 215.4 16.3% 46.9%;
-    --accent: 210 40% 96%;
-    --accent-foreground: 222.2 47.4% 11.2%;
+    --popover-foreground: 240 10% 3.9%;
+    --primary: 217 91% 60%;
+    --primary-foreground: 0 0% 98%;
+    --secondary: 240 4.8% 95.9%;
+    --secondary-foreground: 240 5.9% 10%;
+    --muted: 240 4.8% 95.9%;
+    --muted-foreground: 240 3.8% 46.1%;
+    --accent: 240 4.8% 95.9%;
+    --accent-foreground: 240 5.9% 10%;
     --destructive: 0 84.2% 60.2%;
-    --destructive-foreground: 210 40% 98%;
-    --border: 214.3 31.8% 91.4%;
-    --input: 214.3 31.8% 91.4%;
-    --ring: 222.2 84% 4.9%;
-    --radius: 0.5rem;
+    --destructive-foreground: 0 0% 98%;
+    --border: 240 5.9% 90%;
+    --input: 240 5.9% 90%;
+    --ring: 217 91% 60%;
+    --radius: 0.75rem;
+    
+    /* 字体系统 */
+    --font-primary: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    --font-mono: 'JetBrains Mono', 'Fira Code', monospace;
   }
 
   .dark {
-    --background: 222.2 84% 4.9%;
-    --foreground: 210 40% 98%;
-    --card: 222.2 84% 4.9%;
-    --card-foreground: 210 40% 98%;
-    --popover: 222.2 84% 4.9%;
-    --popover-foreground: 210 40% 98%;
-    --primary: 210 40% 98%;
-    --primary-foreground: 222.2 47.4% 11.2%;
-    --secondary: 217.2 32.6% 17.5%;
-    --secondary-foreground: 210 40% 98%;
-    --muted: 217.2 32.6% 17.5%;
-    --muted-foreground: 215 20.2% 65.1%;
-    --accent: 217.2 32.6% 17.5%;
-    --accent-foreground: 210 40% 98%;
+    /* shadcn/ui 兼容变量 - 暗色模式 */
+    --background: 240 10% 3.9%;
+    --foreground: 0 0% 98%;
+    --card: 240 10% 3.9%;
+    --card-foreground: 0 0% 98%;
+    --popover: 240 10% 3.9%;
+    --popover-foreground: 0 0% 98%;
+    --primary: 217 91% 60%;
+    --primary-foreground: 0 0% 9%;
+    --secondary: 240 3.7% 15.9%;
+    --secondary-foreground: 0 0% 98%;
+    --muted: 240 3.7% 15.9%;
+    --muted-foreground: 240 5% 64.9%;
+    --accent: 240 3.7% 15.9%;
+    --accent-foreground: 0 0% 98%;
     --destructive: 0 62.8% 30.6%;
-    --destructive-foreground: 210 40% 98%;
-    --border: 217.2 32.6% 17.5%;
-    --input: 217.2 32.6% 17.5%;
-    --ring: 212.7 26.8% 83.9%;
+    --destructive-foreground: 0 0% 98%;
+    --border: 240 3.7% 15.9%;
+    --input: 240 3.7% 15.9%;
+    --ring: 217 91% 60%;
   }
 }
 
@@ -89,19 +105,113 @@ html.dark {
     @apply border-border;
   }
   body {
-    @apply bg-background text-foreground;
+    @apply bg-background text-foreground font-primary;
+    background-color: var(--bg-primary);
+    color: var(--text-primary);
   }
 }
 
-/* Custom styles inspired by sindresorhus.com */
-.hero-gradient {
-  background: linear-gradient(
-    135deg,
-    hsl(var(--primary)) 0%,
-    hsl(var(--primary) / 0.8) 100%
-  );
+/* 核心渐变科技风格组件 */
+@layer components {
+  /* 渐变边框效果 - 核心特色 */
+  .gradient-border {
+    @apply relative overflow-hidden;
+  }
+  
+  .gradient-border:hover::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    padding: 1px;
+    background: var(--primary-gradient);
+    border-radius: inherit;
+    mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+    mask-composite: xor;
+    -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+    -webkit-mask-composite: xor;
+  }
+  
+  /* 标准悬停提升效果 */
+  .hover-lift {
+    @apply transition-all duration-300 ease-out;
+    transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+  }
+  
+  .hover-lift:hover {
+    @apply -translate-y-1;
+  }
+  
+  /* 亮色模式悬停阴影 */
+  .hover-lift:hover {
+    box-shadow: 0 20px 40px -12px rgba(59, 130, 246, 0.2);
+  }
+  
+  /* 暗色模式悬停阴影 */
+  .dark .hover-lift:hover {
+    box-shadow: 0 20px 40px -12px rgba(59, 130, 246, 0.4);
+  }
+  
+  /* 发光效果 - 自适应 */
+  .glow-blue {
+    box-shadow: 0 0 20px rgba(59, 130, 246, 0.2);
+  }
+  .dark .glow-blue {
+    box-shadow: 0 0 20px rgba(59, 130, 246, 0.4);
+  }
+  
+  .glow-purple {
+    box-shadow: 0 0 20px rgba(139, 92, 246, 0.2);
+  }
+  .dark .glow-purple {
+    box-shadow: 0 0 20px rgba(139, 92, 246, 0.4);
+  }
+  
+  .glow-pink {
+    box-shadow: 0 0 20px rgba(236, 72, 153, 0.2);
+  }
+  .dark .glow-pink {
+    box-shadow: 0 0 20px rgba(236, 72, 153, 0.4);
+  }
+  
+  /* 渐变文字效果 */
+  .text-gradient {
+    background: var(--primary-gradient);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+  
+  /* 渐变背景 */
+  .bg-gradient {
+    background: var(--primary-gradient);
+  }
+  
+  /* Vercel 风格中心布局 */
+  .vercel-container {
+    @apply max-w-6xl mx-auto px-6 lg:px-8;
+  }
+  
+  /* 科技感卡片 - 自适应主题 */
+  .tech-card {
+    @apply gradient-border hover-lift;
+    background: var(--bg-secondary);
+    border: 1px solid var(--bg-tertiary);
+  }
+  
+  /* 亮色模式卡片增强 */
+  .tech-card {
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+  }
+  
+  /* 暗色模式卡片增强 */
+  .dark .tech-card {
+    background: rgba(30, 30, 30, 0.8);
+    border: 1px solid rgba(42, 42, 42, 0.8);
+  }
 }
 
+/* 兼容性和实用性样式 */
 .glass-effect {
   @apply bg-white/10 backdrop-blur-md border border-white/20;
 }

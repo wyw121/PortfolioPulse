@@ -1,34 +1,35 @@
 "use client"
 
+import Link from 'next/link'
 import { ThemeToggle } from '@/components/theme-toggle'
 import { siteConfig } from '@/lib/config'
 
 export function Header() {
   return (
-    <header className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
-      <div className="container flex h-16 items-center justify-between">
+    <header className="sticky top-0 z-50 w-full border-b border-gray-200 dark:border-gray-800 bg-white/90 dark:bg-gray-900/90 backdrop-blur-md supports-[backdrop-filter]:bg-white/60 supports-[backdrop-filter]:dark:bg-gray-900/60">
+      <div className="vercel-container flex h-16 items-center justify-between">
         <div className="flex items-center space-x-4">
-          <a href="/" className="flex items-center space-x-2">
-            <div className="h-8 w-8 bg-gradient-to-r from-purple-600 to-blue-600 rounded-lg flex items-center justify-center">
-              <span className="text-white font-bold text-sm">{siteConfig.shortName}</span>
+          <Link href="/" className="flex items-center space-x-3 group">
+            <div className="h-10 w-10 bg-gradient-primary rounded-xl flex items-center justify-center group-hover:shadow-lg group-hover:shadow-blue-500/25 transition-all duration-300">
+              <span className="text-white font-bold text-lg">{siteConfig.shortName}</span>
             </div>
-            <span className="font-bold text-xl">{siteConfig.name}</span>
-          </a>
+            <span className="font-bold text-xl text-gray-900 dark:text-white font-primary">{siteConfig.name}</span>
+          </Link>
         </div>
 
-        <nav className="flex items-center space-x-6">
-          <a href="/projects" className="text-sm font-medium hover:text-primary transition-colors">
+        <nav className="hidden md:flex items-center space-x-8">
+          <Link href="/projects" className="text-sm font-medium text-gray-600 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white transition-all duration-200 hover:-translate-y-0.5 relative after:content-[''] after:absolute after:bottom-0 after:left-0 after:w-0 after:h-0.5 after:bg-gradient-primary after:transition-all after:duration-300 hover:after:w-full">
             项目
-          </a>
-          <a href="/blog" className="text-sm font-medium hover:text-primary transition-colors">
+          </Link>
+          <Link href="/blog" className="text-sm font-medium text-gray-600 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white transition-all duration-200 hover:-translate-y-0.5 relative after:content-[''] after:absolute after:bottom-0 after:left-0 after:w-0 after:h-0.5 after:bg-gradient-primary after:transition-all after:duration-300 hover:after:w-full">
             博客
-          </a>
-          <a href="/activity" className="text-sm font-medium hover:text-primary transition-colors">
+          </Link>
+          <Link href="/activity" className="text-sm font-medium text-gray-600 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white transition-all duration-200 hover:-translate-y-0.5 relative after:content-[''] after:absolute after:bottom-0 after:left-0 after:w-0 after:h-0.5 after:bg-gradient-primary after:transition-all after:duration-300 hover:after:w-full">
             动态
-          </a>
-          <a href="/about" className="text-sm font-medium hover:text-primary transition-colors">
+          </Link>
+          <Link href="/about" className="text-sm font-medium text-gray-600 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white transition-all duration-200 hover:-translate-y-0.5 relative after:content-[''] after:absolute after:bottom-0 after:left-0 after:w-0 after:h-0.5 after:bg-gradient-primary after:transition-all after:duration-300 hover:after:w-full">
             关于
-          </a>
+          </Link>
         </nav>
 
         <div className="flex items-center space-x-4">

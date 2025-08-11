@@ -18,13 +18,13 @@ export function Footer() {
   }
 
   return (
-    <footer className="border-t bg-background">
-      <div className="container py-6">
-        <div className="flex flex-col sm:flex-row justify-between items-center gap-4">
+    <footer className="border-t border-gray-200 dark:border-gray-800 bg-white/90 dark:bg-gray-900/90 backdrop-blur-sm">
+      <div className="vercel-container py-8">
+        <div className="flex flex-col sm:flex-row justify-between items-center gap-6">
           {/* 左侧 - 格言 */}
           <div>
             <button
-              className="text-sm text-muted-foreground italic cursor-pointer hover:opacity-80 transition-opacity select-none bg-transparent border-none p-0 font-normal"
+              className="text-sm text-gray-600 dark:text-gray-300 italic cursor-pointer hover:text-gray-900 dark:hover:text-white transition-all duration-200 select-none bg-transparent border-none p-0 font-normal hover:-translate-y-0.5"
               onClick={toggleLanguage}
               onKeyDown={handleKeyDown}
               title="点击切换语言"
@@ -49,12 +49,12 @@ export function Footer() {
           </div>
 
           {/* 右侧 - 社交媒体图标 */}
-          <div className="flex space-x-4">
+          <div className="flex space-x-6">
             <a
               href="https://x.com/wywyw12121"
               target="_blank"
               rel="noopener noreferrer"
-              className="text-muted-foreground hover:text-primary transition-colors"
+              className="text-gray-600 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white transition-all duration-200 hover:-translate-y-0.5 hover:glow-blue"
               aria-label="Follow me on X"
             >
               <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
@@ -65,7 +65,7 @@ export function Footer() {
               href="https://instagram.com/wywyw12121"
               target="_blank"
               rel="noopener noreferrer"
-              className="text-muted-foreground hover:text-primary transition-colors"
+              className="text-gray-600 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white transition-all duration-200 hover:-translate-y-0.5 hover:glow-pink"
               aria-label="Follow me on Instagram"
             >
               <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
@@ -76,7 +76,7 @@ export function Footer() {
               href="https://github.com/wyw121"
               target="_blank"
               rel="noopener noreferrer"
-              className="text-muted-foreground hover:text-primary transition-colors"
+              className="text-gray-600 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white transition-all duration-200 hover:-translate-y-0.5 hover:glow-purple"
               aria-label="Follow me on GitHub"
             >
               <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">

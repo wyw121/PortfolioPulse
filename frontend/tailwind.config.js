@@ -16,7 +16,33 @@ module.exports = {
       },
     },
     extend: {
+      // 品牌渐变色彩系统
       colors: {
+        // 品牌主色调
+        'brand': {
+          'blue': '#3b82f6',
+          'purple': '#8b5cf6', 
+          'pink': '#ec4899',
+        },
+        // 背景色系 - 支持亮暗主题
+        'bg': {
+          'primary': '#ffffff',
+          'secondary': '#f8fafc', 
+          'tertiary': '#e2e8f0',
+          'dark-primary': '#0f0f0f',
+          'dark-secondary': '#1e1e1e',
+          'dark-tertiary': '#2a2a2a',
+        },
+        // 文字色系 - 支持亮暗主题
+        'text': {
+          'primary': '#0f0f0f',
+          'secondary': '#4a5568',
+          'muted': '#9ca3af',
+          'dark-primary': '#ffffff',
+          'dark-secondary': '#a3a3a3',
+          'dark-muted': '#6b7280',
+        },
+        // shadcn/ui 兼容色彩
         border: "hsl(var(--border))",
         input: "hsl(var(--input))",
         ring: "hsl(var(--ring))",
@@ -51,6 +77,37 @@ module.exports = {
           foreground: "hsl(var(--card-foreground))",
         },
       },
+      // 字体系统
+      fontFamily: {
+        'primary': ['Inter', '-apple-system', 'BlinkMacSystemFont', 'Segoe UI', 'Roboto', 'sans-serif'],
+        'mono': ['JetBrains Mono', 'Fira Code', 'monospace'],
+      },
+      // 渐变背景
+      backgroundImage: {
+        'gradient-primary': 'linear-gradient(135deg, #3b82f6 0%, #8b5cf6 50%, #ec4899 100%)',
+        'gradient-radial': 'radial-gradient(var(--tw-gradient-stops))',
+        'gradient-conic': 'conic-gradient(from 180deg at 50% 50%, var(--tw-gradient-stops))',
+      },
+      // 动画和过渡
+      animation: {
+        'fade-in': 'fadeIn 0.5s ease-in-out',
+        'slide-up': 'slideUp 0.3s ease-out',
+        'glow': 'glow 2s ease-in-out infinite alternate',
+      },
+      keyframes: {
+        fadeIn: {
+          '0%': { opacity: '0' },
+          '100%': { opacity: '1' },
+        },
+        slideUp: {
+          '0%': { transform: 'translateY(10px)', opacity: '0' },
+          '100%': { transform: 'translateY(0)', opacity: '1' },
+        },
+        glow: {
+          '0%': { boxShadow: '0 0 20px rgba(59, 130, 246, 0.3)' },
+          '100%': { boxShadow: '0 0 30px rgba(59, 130, 246, 0.6)' },
+        },
+      },
       borderRadius: {
         lg: "var(--radius)",
         md: "calc(var(--radius) - 2px)",
@@ -72,5 +129,5 @@ module.exports = {
       },
     },
   },
-  plugins: [require("tailwindcss-animate")],
+  plugins: [require("tailwindcss-animate")], // ESLint 禁用对此行的检查
 }

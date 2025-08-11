@@ -6,60 +6,66 @@ import { ExternalLink, Github } from 'lucide-react'
 
 export function Hero() {
   return (
-    <section className="relative py-20 px-4 sm:px-6 lg:px-8">
-      <div className="max-w-4xl mx-auto text-center">
-        <div className="hero-gradient rounded-2xl p-1 mb-8">
-          <div className="bg-background rounded-xl p-8">
-            <h1 className="text-4xl sm:text-6xl font-bold text-foreground mb-6">
+    <section className="relative py-24 px-4 sm:px-6 lg:px-8">
+      <div className="vercel-container">
+        {/* 主 Hero 区域 */}
+        <div className="text-center mb-20">
+          <div className="tech-card rounded-2xl p-12 mb-12 bg-white/90 dark:bg-gray-800/80 backdrop-blur-sm border border-gray-200/50 dark:border-gray-700/80">
+            <h1 className="text-5xl sm:text-7xl font-bold mb-8 font-primary text-gray-900 dark:text-white">
               欢迎来到{" "}
-              <span className="bg-gradient-to-r from-purple-600 to-blue-600 bg-clip-text text-transparent">
+              <span className="text-gradient">
                 {siteConfig.name}
               </span>
             </h1>
-            <p className="text-xl text-muted-foreground mb-8 max-w-2xl mx-auto">
+            <p className="text-xl sm:text-2xl text-gray-600 dark:text-gray-300 mb-10 max-w-3xl mx-auto leading-relaxed">
               {siteConfig.description}
             </p>
-            <div className="flex flex-col sm:flex-row gap-4 justify-center">
-              <Button size="lg" className="gap-2">
-                <Github className="h-5 w-5" />
+            <div className="flex flex-col sm:flex-row gap-6 justify-center">
+              <Button size="lg" className="gradient-border hover-lift bg-gradient-primary text-white font-medium px-8 py-4 text-lg shadow-lg hover:shadow-xl">
+                <Github className="h-6 w-6 mr-3" />
                 查看项目
               </Button>
-              <Button variant="outline" size="lg" className="gap-2">
-                <ExternalLink className="h-5 w-5" />
+              <Button 
+                variant="outline" 
+                size="lg" 
+                className="gradient-border hover-lift border-gray-300 dark:border-gray-600 bg-white/50 dark:bg-gray-800/50 text-gray-900 dark:text-white hover:bg-gray-100/50 dark:hover:bg-gray-700 px-8 py-4 text-lg"
+              >
+                <ExternalLink className="h-6 w-6 mr-3" />
                 在线演示
               </Button>
             </div>
           </div>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mt-16">
-          <div className="p-6 rounded-lg bg-card">
-            <div className="h-12 w-12 mx-auto mb-4 bg-blue-100 dark:bg-blue-900 rounded-lg flex items-center justify-center">
-              <Github className="h-6 w-6 text-blue-600 dark:text-blue-400" />
+        {/* 特性展示网格 */}
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+          <div className="tech-card p-8 rounded-xl bg-white/80 dark:bg-gray-800/60 backdrop-blur-sm text-center border border-gray-200/30 dark:border-gray-700/50">
+            <div className="h-16 w-16 mx-auto mb-6 bg-gradient-primary rounded-2xl flex items-center justify-center glow-blue">
+              <Github className="h-8 w-8 text-white" />
             </div>
-            <h3 className="text-lg font-semibold mb-2">Git 集成</h3>
-            <p className="text-muted-foreground">
-              实时追踪 GitHub 提交动态，展示最新的开发进展
+            <h3 className="text-xl font-semibold mb-4 text-gray-900 dark:text-white font-primary">Git 集成</h3>
+            <p className="text-gray-600 dark:text-gray-300 leading-relaxed">
+              实时追踪 GitHub 提交动态，展示最新的开发进展和代码统计
             </p>
           </div>
 
-          <div className="p-6 rounded-lg bg-card">
-            <div className="h-12 w-12 mx-auto mb-4 bg-green-100 dark:bg-green-900 rounded-lg flex items-center justify-center">
-              <ExternalLink className="h-6 w-6 text-green-600 dark:text-green-400" />
+          <div className="tech-card p-8 rounded-xl bg-white/80 dark:bg-gray-800/60 backdrop-blur-sm text-center border border-gray-200/30 dark:border-gray-700/50">
+            <div className="h-16 w-16 mx-auto mb-6 bg-gradient-to-r from-brand-purple to-brand-pink rounded-2xl flex items-center justify-center glow-purple">
+              <ExternalLink className="h-8 w-8 text-white" />
             </div>
-            <h3 className="text-lg font-semibold mb-2">项目展示</h3>
-            <p className="text-muted-foreground">
-              统一管理和展示多个项目，提供便捷的访问入口
+            <h3 className="text-xl font-semibold mb-4 text-gray-900 dark:text-white font-primary">项目展示</h3>
+            <p className="text-gray-600 dark:text-gray-300 leading-relaxed">
+              统一管理和展示多个项目，提供便捷的访问入口和状态监控
             </p>
           </div>
 
-          <div className="p-6 rounded-lg bg-card">
-            <div className="h-12 w-12 mx-auto mb-4 bg-purple-100 dark:bg-purple-900 rounded-lg flex items-center justify-center">
-              <div className="h-6 w-6 bg-purple-600 dark:bg-purple-400 rounded"></div>
+          <div className="tech-card p-8 rounded-xl bg-white/80 dark:bg-gray-800/60 backdrop-blur-sm text-center border border-gray-200/30 dark:border-gray-700/50">
+            <div className="h-16 w-16 mx-auto mb-6 bg-gradient-to-r from-brand-pink to-brand-purple rounded-2xl flex items-center justify-center glow-pink">
+              <div className="h-8 w-8 bg-white rounded-lg"></div>
             </div>
-            <h3 className="text-lg font-semibold mb-2">数据可视化</h3>
-            <p className="text-muted-foreground">
-              直观的图表展示开发活动和项目统计信息
+            <h3 className="text-xl font-semibold mb-4 text-gray-900 dark:text-white font-primary">数据可视化</h3>
+            <p className="text-gray-600 dark:text-gray-300 leading-relaxed">
+              直观的图表展示开发活动和项目统计信息，一目了然
             </p>
           </div>
         </div>
