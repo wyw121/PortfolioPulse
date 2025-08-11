@@ -114,21 +114,11 @@ jobs:
           fi
 
           echo "✅ 后端编译完成"
-          cargo install sqlx-cli --no-default-features --features native-tls,mysql
-
-          echo "📋 生成 SQLx 查询缓存..."
-          cargo sqlx prepare --check || cargo sqlx prepare
-
-          echo "📦 构建依赖..."
-          cargo build --release --target x86_64-unknown-linux-gnu
-
-          echo "✅ 编译完成"
-          ls -la target/x86_64-unknown-linux-gnu/release/
 
       - name: 🟢 编译前端
         working-directory: frontend
         run: |
-          echo "📦 安装依赖..."
+          echo "� 安装依赖..."
           npm ci
 
           echo "🏗️  构建应用..."
@@ -140,9 +130,23 @@ jobs:
           if [ -d ".next/standalone" ]; then
             echo "✅ Standalone 构建成功"
             ls -la .next/standalone/
+            
+            # 验证 standalone 目录内容
+            echo "📋 Standalone 目录内容:"
+            find .next/standalone -type f -name "*.js" | head -5
+            
+            if [ -f ".next/standalone/server.js" ]; then
+              echo "✅ server.js 存在"
+            else
+              echo "❌ server.js 缺失"
+              exit 1
+            fi
           else
             echo "❌ Standalone 输出不存在"
             echo "检查 next.config.js 配置："
+            cat next.config.js
+            exit 1
+          fi
             cat next.config.js
             exit 1
           fi
