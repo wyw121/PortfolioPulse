@@ -28,7 +28,6 @@ jobs:
     - name: 🦀 安装 Rust
       uses: dtolnay/rust-toolchain@stable
       with:
-        toolchain: '1.82'
         targets: x86_64-unknown-linux-gnu
         components: rustfmt, clippy
 
@@ -46,6 +45,8 @@ jobs:
 
     - name: 🦀 编译后端
       working-directory: backend
+      env:
+        CARGO_NET_GIT_FETCH_WITH_CLI: true
       run: |
         echo "🔍 检查 Rust 环境..."
         rustc --version

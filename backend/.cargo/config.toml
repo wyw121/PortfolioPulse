@@ -1,0 +1,19 @@
+[build]
+# 使用较新的索引协议
+index-sync = true
+
+[net]
+# 使用稀疏索引加速下载
+git-fetch-with-cli = false
+
+[profile.dev]
+# 开发时的优化设置
+opt-level = 0
+debug = true
+
+[profile.release]
+# 发布时的优化设置
+opt-level = 3
+debug = false
+lto = true
+codegen-units = 1
