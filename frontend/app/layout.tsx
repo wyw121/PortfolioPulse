@@ -1,3 +1,4 @@
+import { PerformanceMonitor } from '@/components/performance-monitor'
 import { ThemeProvider } from '@/components/theme-provider'
 import { siteConfig } from '@/lib/config'
 import type { Metadata } from 'next'
@@ -99,6 +100,7 @@ export default function RootLayout({
           disableTransitionOnChange
         >
           {children}
+          <PerformanceMonitor />
         </ThemeProvider>
       </body>
     </html>

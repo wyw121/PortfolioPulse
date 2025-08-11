@@ -1,7 +1,7 @@
 "use client"
 
-import { useState, useEffect } from 'react'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
+import { useEffect, useState } from 'react'
 
 interface GitActivity {
   date: string
@@ -73,11 +73,10 @@ export function ActivitySection() {
       }
     ]
 
-    setTimeout(() => {
-      setActivities(mockActivities)
-      setRecentCommits(mockCommits)
-      setLoading(false)
-    }, 800)
+    // 移除人为延迟，直接设置数据
+    setActivities(mockActivities)
+    setRecentCommits(mockCommits)
+    setLoading(false)
   }, [])
 
   const formatDate = (dateString: string) => {
@@ -125,7 +124,7 @@ export function ActivitySection() {
             </CardHeader>
             <CardContent>
               <div className="grid grid-cols-7 gap-2">
-                {activities.map((activity, index) => (
+                {activities.map((activity) => (
                   <div key={activity.date} className="text-center">
                     <div className="text-xs text-muted-foreground mb-2">
                       {new Date(activity.date).toLocaleDateString('zh-CN', { weekday: 'short' })}

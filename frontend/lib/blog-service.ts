@@ -1,6 +1,28 @@
 import { BlogCategory, BlogPost, BlogQuery, CreateBlogPostRequest, UpdateBlogPostRequest } from '@/types/blog'
 
 const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000'
+const REQUEST_TIMEOUT = 3000 // 3秒超时
+
+// 创建带超时的 fetch
+const fetchWithTimeout = async (url: string, options: RequestInit = {}) => {
+  const controller = new AbortController()
+  const timeoutId = setTimeout(() => controller.abort(), REQUEST_TIMEOUT)
+
+  try {
+    const response = await fetch(url, {
+      ...options,
+      signal: controller.signal,
+    })
+    clearTimeout(timeoutId)
+    return response
+  } catch (error) {
+    clearTimeout(timeoutId)
+    if (error instanceof Error && error.name === 'AbortError') {
+      throw new Error('请求超时')
+    }
+    throw error
+  }
+}
 
 export class BlogService {
   // 获取博客文章列表
@@ -12,8 +34,9 @@ export class BlogService {
     if (query.category) params.set('category', query.category)
     if (query.search) params.set('search', query.search)
 
-    const response = await fetch(`${API_BASE_URL}/api/blog/posts?${params}`, {
-      cache: 'no-store'
+    const response = await fetchWithTimeout(`${API_BASE_URL}/api/blog/posts?${params}`, {
+      cache: 'force-cache',
+      next: { revalidate: 300 } // 5分钟缓存
     })
 
     if (!response.ok) {
@@ -26,8 +49,9 @@ export class BlogService {
   // 根据slug获取单篇文章
   static async getPostBySlug(slug: string): Promise<BlogPost | null> {
     try {
-      const response = await fetch(`${API_BASE_URL}/api/blog/posts/${slug}`, {
-        cache: 'no-store'
+      const response = await fetchWithTimeout(`${API_BASE_URL}/api/blog/posts/${slug}`, {
+        cache: 'force-cache',
+        next: { revalidate: 600 } // 10分钟缓存
       })
 
       if (!response.ok) {
@@ -42,8 +66,9 @@ export class BlogService {
 
   // 获取精选文章
   static async getFeaturedPosts(): Promise<BlogPost[]> {
-    const response = await fetch(`${API_BASE_URL}/api/blog/featured`, {
-      cache: 'no-store'
+    const response = await fetchWithTimeout(`${API_BASE_URL}/api/blog/featured`, {
+      cache: 'force-cache',
+      next: { revalidate: 300 } // 5分钟缓存
     })
 
     if (!response.ok) {

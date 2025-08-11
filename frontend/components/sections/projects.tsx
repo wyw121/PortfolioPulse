@@ -1,9 +1,9 @@
 "use client"
 
-import { useState, useEffect } from 'react'
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
-import { ExternalLink, Github, Star, GitFork } from 'lucide-react'
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
+import { ExternalLink, GitFork, Github, Star } from 'lucide-react'
+import { useEffect, useState } from 'react'
 
 interface Project {
   id: number
@@ -21,7 +21,6 @@ interface Project {
 export function ProjectsSection() {
   const [projects, setProjects] = useState<Project[]>([])
   const [loading, setLoading] = useState(true)
-  const [error, setError] = useState<string | null>(null)
 
   useEffect(() => {
     // 模拟数据，实际应从后端API获取
@@ -63,10 +62,9 @@ export function ProjectsSection() {
       }
     ]
 
-    setTimeout(() => {
-      setProjects(mockProjects)
-      setLoading(false)
-    }, 1000)
+    // 移除人为延迟，直接设置数据
+    setProjects(mockProjects)
+    setLoading(false)
   }, [])
 
   const formatDate = (dateString: string) => {
@@ -99,17 +97,6 @@ export function ProjectsSection() {
               <div key={i} className="h-64 bg-muted rounded-lg animate-pulse"></div>
             ))}
           </div>
-        </div>
-      </section>
-    )
-  }
-
-  if (error) {
-    return (
-      <section className="py-16 px-4 sm:px-6 lg:px-8">
-        <div className="max-w-6xl mx-auto text-center">
-          <h2 className="text-3xl font-bold mb-8">项目展示</h2>
-          <p className="text-red-500">{error}</p>
         </div>
       </section>
     )
