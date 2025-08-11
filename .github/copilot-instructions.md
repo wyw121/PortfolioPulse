@@ -226,19 +226,79 @@ diesel migration generate <migration_name>
 
 ## UI/UX 设计指导
 
-### 设计原则
+### 设计风格定位
 
-- 现代简洁的设计风格
-- 支持明暗主题切换
-- 响应式设计，移动端友好
-- 无障碍访问支持
+- **选定风格**: 渐变科技风格（Gradient Tech）
+- **参考标杆**: Vercel、Stripe
+- **布局模式**: Vercel 风格 - 大屏中心式布局
+- **核心理念**: 简洁现代、科技感强、专业展示
 
-### 组件使用
+### 色彩系统
 
-- 优先使用 shadcn/ui 组件
-- 保持设计系统一致性
-- 遵循 Material Design 或类似设计语言
-- 使用语义化的颜色变量
+#### 品牌主色调
+
+```css
+/* 蓝紫粉渐变主题 */
+--primary-gradient: linear-gradient(
+  135deg,
+  #3b82f6 0%,
+  #8b5cf6 50%,
+  #ec4899 100%
+);
+--primary-blue: #3b82f6; /* 主蓝色 */
+--primary-purple: #8b5cf6; /* 主紫色 */
+--primary-pink: #ec4899; /* 主粉色 */
+```
+
+#### 暗色模式配色（主要）
+
+```css
+:root[data-theme="dark"] {
+  --bg-primary: #0f0f0f; /* 主背景 - 极深灰 */
+  --bg-secondary: #1e1e1e; /* 卡片背景 - 深灰 */
+  --bg-tertiary: #2a2a2a; /* 悬停背景 - 中灰 */
+  --text-primary: #ffffff; /* 主文字 - 纯白 */
+  --text-secondary: #a3a3a3; /* 辅助文字 - 中灰 */
+  --text-muted: #6b7280; /* 弱化文字 - 浅灰 */
+}
+```
+
+### 核心交互效果
+
+#### 渐变边框效果（重要）
+
+```css
+.gradient-border:hover::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  padding: 1px;
+  background: linear-gradient(135deg, #3b82f6 0%, #8b5cf6 50%, #ec4899 100%);
+  border-radius: inherit;
+  mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  mask-composite: xor;
+}
+```
+
+#### 标准交互规范
+
+- **悬停提升**: translateY(-4px) + 发光阴影
+- **过渡动画**: 300ms cubic-bezier(0.4, 0, 0.2, 1)
+- **发光效果**: 品牌色阴影 (rgba(59, 130, 246, 0.3))
+
+### 布局特色
+
+- **极简主义设计**: 大量留白空间，内容居中对齐
+- **全屏 Hero Section**: 突出个人品牌和核心信息
+- **卡片式展示**: 项目以 3 列网格形式展示
+- **响应式设计**: 完美适配各种屏幕尺寸
+
+### 组件使用原则
+
+- 优先使用 shadcn/ui 组件，自定义渐变科技风格
+- 统一使用 Inter 字体系统 + JetBrains Mono 代码字体
+- 严格遵循色彩变量，避免硬编码颜色
+- 确保色彩对比度符合 WCAG AA 标准
 
 ## 部署和运维
 
@@ -296,7 +356,11 @@ diesel migration generate <migration_name>
 ## 重要提醒
 
 - 该项目处于活跃开发阶段，架构可能发生变化
+- **设计风格**: 已确定渐变科技风格（Gradient Tech），参考 Vercel 布局
+- **核心交互**: 渐变边框悬停效果、300ms 过渡动画、translateY(-4px) 提升
+- **色彩系统**: 蓝紫粉渐变主题，暗色模式为主，高对比度文字
 - 提交代码前请运行完整的测试套件
 - 遵循项目的 Git 分支策略
 - 及时更新依赖包，关注安全更新
 - 保持代码简洁可读，优先选择可维护性而非过度优化
+- **UI 开发**: 严格遵循设计系统，使用 CSS 变量，确保响应式设计

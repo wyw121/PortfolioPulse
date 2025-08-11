@@ -1,0 +1,28 @@
+{
+  "folders": [
+    {
+      "path": "."
+    }
+  ],
+  "settings": {
+    "chat.promptFiles": true,
+    "github.copilot.enable": {
+      "*": true,
+      "plaintext": false,
+      "markdown": true,
+      "scminput": false
+    },
+    "github.copilot.advanced": {},
+    "editor.inlineSuggest.enabled": true,
+    "github.copilot.editor.enableAutoCompletions": true
+  },
+  "extensions": {
+    "recommendations": [
+      "GitHub.copilot",
+      "GitHub.copilot-chat",
+      "ms-vscode.vscode-typescript-next",
+      "bradlc.vscode-tailwindcss",
+      "rust-lang.rust-analyzer"
+    ]
+  }
+}
