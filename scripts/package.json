@@ -1,0 +1,10 @@
+{
+  "name": "check-docs-sync",
+  "description": "检查 PortfolioPulse 文档同步状态",
+  "version": "1.0.0",
+  "main": "check-docs-sync.js",
+  "scripts": {
+    "check": "node check-docs-sync.js"
+  },
+  "dependencies": {}
+}

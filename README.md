@@ -14,6 +14,17 @@
 
 </div>
 
+## 📚 文档导航
+
+> 📋 **完整文档索引**: [docs/DOCUMENTATION_INDEX.md](docs/DOCUMENTATION_INDEX.md)
+
+### 🔗 快速链接
+- **🤖 AI开发指令**: [.github/copilot-instructions.md](.github/copilot-instructions.md) - GitHub Copilot 开发指南
+- **🏗️ 系统架构**: [docs/SYSTEM_ARCHITECTURE_ANALYSIS.md](docs/SYSTEM_ARCHITECTURE_ANALYSIS.md) - 架构设计详解
+- **🛠️ 技术实现**: [docs/TECHNICAL_IMPLEMENTATION_GUIDE.md](docs/TECHNICAL_IMPLEMENTATION_GUIDE.md) - 技术栈指南
+- **🚀 部署指南**: [docs/BINARY_DEPLOYMENT_GUIDE.md](docs/BINARY_DEPLOYMENT_GUIDE.md) - 二进制部署方案
+- **🎨 设计规范**: [docs/PROJECT_STYLE_GUIDE.md](docs/PROJECT_STYLE_GUIDE.md) - UI/UX设计系统
+
 ## ✨ 主要特性
 
 - 🚀 **现代技术栈**: Next.js 15 + Tailwind CSS + shadcn/ui + Zustand + Rust + MySQL
@@ -80,7 +91,7 @@
    ```bash
    # 安装 Diesel CLI
    cargo install diesel_cli --no-default-features --features mysql
-   
+
    # 运行迁移
    cd backend
    diesel migration run
@@ -90,13 +101,13 @@
    ```bash
    # 启动后端服务 (端口 8000)
    cd backend && cargo run
-   
+
    # 启动前端服务 (端口 3000)
    cd frontend && npm run dev
    ```
 
 7. **访问应用**
-   
+
    打开浏览器访问 `http://localhost:3000`
 
 ## 📁 项目结构

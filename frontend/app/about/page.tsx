@@ -1,22 +1,25 @@
-import { Footer } from '@/components/layout/footer'
-import { Header } from '@/components/layout/header'
-import { About } from '@/components/sections/about'
-import { siteConfig } from '@/lib/config'
-import type { Metadata } from 'next'
-
-export const metadata: Metadata = {
-  title: `关于 ${siteConfig.name} - ${siteConfig.description}`,
-  description: siteConfig.longDescription,
-}
+import {
+  AboutContact,
+  AboutExperience,
+  AboutHero,
+  AboutSkills,
+} from "@/components/about";
+import { Navigation } from "@/components/layout";
 
 export default function AboutPage() {
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-50 to-slate-100 dark:from-slate-900 dark:to-slate-800 flex flex-col">
-      <Header />
-      <main className="flex-1 pt-16">
-        <About />
+    <div className="min-h-screen bg-white dark:bg-gray-900">
+      {/* 背景渐变效果 */}
+      <div className="fixed inset-0 -z-10 bg-gradient-to-br from-blue-50/30 via-purple-50/20 to-pink-50/30 dark:from-gray-900/90 dark:via-gray-800/80 dark:to-gray-900/90" />
+
+      <Navigation />
+
+      <main className="pt-20">
+        <AboutHero />
+        <AboutSkills />
+        <AboutExperience />
+        <AboutContact />
       </main>
-      <Footer />
     </div>
-  )
+  );
 }

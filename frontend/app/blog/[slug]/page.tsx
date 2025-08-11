@@ -1,36 +1,42 @@
-import { BlogPost } from '@/components/sections/blog-post'
-import { BlogPostMeta } from '@/components/sections/blog-post-meta'
-import { RelatedPosts } from '@/components/sections/related-posts'
-import { notFound } from 'next/navigation'
+import { BlogPost } from "@/components/sections/blog-post";
+import { BlogPostMeta } from "@/components/sections/blog-post-meta";
+import { RelatedPosts } from "@/components/sections/related-posts";
+import { notFound } from "next/navigation";
 
 interface BlogPostPageProps {
-  params: {
-    slug: string
-  }
+  params: Promise<{
+    slug: string;
+  }>;
 }
 
 async function getBlogPost(slug: string) {
   try {
-    const res = await fetch(`${process.env.API_URL || 'http://localhost:8000'}/api/blog/posts/${slug}`, {
-      cache: 'no-store' // 确保获取最新内容
-    })
+    const res = await fetch(
+      `${
+        process.env.API_URL || "http://localhost:8000"
+      }/api/blog/posts/${slug}`,
+      {
+        cache: "no-store", // 确保获取最新内容
+      }
+    );
 
     if (!res.ok) {
-      return null
+      return null;
     }
 
-    return await res.json()
+    return await res.json();
   } catch (error) {
-    console.error('获取博客文章失败:', error)
-    return null
+    console.error("获取博客文章失败:", error);
+    return null;
   }
 }
 
 export default async function BlogPostPage({ params }: BlogPostPageProps) {
-  const post = await getBlogPost(params.slug)
+  const { slug } = await params;
+  const post = await getBlogPost(slug);
 
   if (!post) {
-    notFound()
+    notFound();
   }
 
   return (
@@ -41,20 +47,21 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
       </article>
 
       <div className="border-t pt-8">
-        <RelatedPosts currentSlug={params.slug} category={post.category} />
+        <RelatedPosts currentSlug={slug} category={post.category} />
       </div>
     </div>
-  )
+  );
 }
 
 // 动态生成页面标题
 export async function generateMetadata({ params }: BlogPostPageProps) {
-  const post = await getBlogPost(params.slug)
+  const { slug } = await params;
+  const post = await getBlogPost(slug);
 
   if (!post) {
     return {
-      title: '文章未找到'
-    }
+      title: "文章未找到",
+    };
   }
 
   return {
@@ -63,11 +70,11 @@ export async function generateMetadata({ params }: BlogPostPageProps) {
     openGraph: {
       title: post.title,
       description: post.excerpt || post.title,
-      type: 'article',
+      type: "article",
       publishedTime: post.published_at,
       modifiedTime: post.updated_at,
-      authors: ['PortfolioPulse'],
+      authors: ["PortfolioPulse"],
       images: post.cover_image ? [{ url: post.cover_image }] : undefined,
     },
-  }
+  };
 }

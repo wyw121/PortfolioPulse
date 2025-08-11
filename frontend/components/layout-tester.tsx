@@ -1,32 +1,33 @@
-'use client';
+"use client";
 
-import { useEffect, useState } from 'react';
+import { useEffect, useState } from "react";
 
-type LayoutMode = 'vercel' | 'stripe' | 'grid';
+type LayoutMode = "vercel" | "stripe" | "grid";
 
-interface LayoutTesterProps {
-  className?: string;
-}
-
-export default function LayoutTester({ className }: LayoutTesterProps) {
-  const [currentLayout, setCurrentLayout] = useState<LayoutMode>('vercel');
+export default function LayoutTester() {
+  const [currentLayout, setCurrentLayout] = useState<LayoutMode>("vercel");
   const [isDark, setIsDark] = useState(false);
   const [mounted, setMounted] = useState(false);
 
   useEffect(() => {
     setMounted(true);
     // 检查系统主题偏好
-    const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+    const prefersDark = window.matchMedia(
+      "(prefers-color-scheme: dark)"
+    ).matches;
     setIsDark(prefersDark);
   }, []);
 
   useEffect(() => {
     if (mounted) {
-      document.documentElement.setAttribute('data-theme', isDark ? 'dark' : 'light');
+      document.documentElement.setAttribute(
+        "data-theme",
+        isDark ? "dark" : "light"
+      );
       if (isDark) {
-        document.documentElement.classList.add('dark');
+        document.documentElement.classList.add("dark");
       } else {
-        document.documentElement.classList.remove('dark');
+        document.documentElement.classList.remove("dark");
       }
     }
   }, [isDark, mounted]);
@@ -36,9 +37,21 @@ export default function LayoutTester({ className }: LayoutTesterProps) {
   }
 
   const layoutOptions = [
-    { id: 'vercel', name: 'Vercel 风格 - 大屏中心式', desc: '大量留白，内容居中，专业简洁' },
-    { id: 'stripe', name: 'Stripe 风格 - 分栏信息密集', desc: '左右分栏，信息丰富，商业化强' },
-    { id: 'grid', name: '现代网格布局', desc: '不规则网格，创意展示，视觉冲击' }
+    {
+      id: "vercel",
+      name: "Vercel 风格 - 大屏中心式",
+      desc: "大量留白，内容居中，专业简洁",
+    },
+    {
+      id: "stripe",
+      name: "Stripe 风格 - 分栏信息密集",
+      desc: "左右分栏，信息丰富，商业化强",
+    },
+    {
+      id: "grid",
+      name: "现代网格布局",
+      desc: "不规则网格，创意展示，视觉冲击",
+    },
   ];
 
   const VercelLayout = () => (
@@ -51,13 +64,22 @@ export default function LayoutTester({ className }: LayoutTesterProps) {
               PortfolioPulse
             </div>
             <div className="hidden md:flex items-center space-x-8">
-              <a href="#" className="text-gray-600 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white transition-colors">
+              <a
+                href="#"
+                className="text-gray-600 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white transition-colors"
+              >
                 项目
               </a>
-              <a href="#" className="text-gray-600 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white transition-colors">
+              <a
+                href="#"
+                className="text-gray-600 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white transition-colors"
+              >
                 博客
               </a>
-              <a href="#" className="text-gray-600 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white transition-colors">
+              <a
+                href="#"
+                className="text-gray-600 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white transition-colors"
+              >
                 关于
               </a>
             </div>
@@ -96,8 +118,10 @@ export default function LayoutTester({ className }: LayoutTesterProps) {
               <div key={i} className="group">
                 <div className="bg-white dark:bg-[#1e1e1e] rounded-2xl p-6 border border-gray-200 dark:border-[#333333] hover:border-transparent hover:shadow-xl hover:shadow-blue-500/10 transition-all duration-300 transform group-hover:-translate-y-2 relative overflow-hidden">
                   {/* 渐变边框效果 */}
-                  <div className="absolute inset-0 bg-gradient-to-r from-[#3b82f6] via-[#8b5cf6] to-[#ec4899] rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-300 -z-10"
-                       style={{ padding: '1px' }}>
+                  <div
+                    className="absolute inset-0 bg-gradient-to-r from-[#3b82f6] via-[#8b5cf6] to-[#ec4899] rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-300 -z-10"
+                    style={{ padding: "1px" }}
+                  >
                     <div className="bg-white dark:bg-[#1e1e1e] rounded-2xl h-full w-full"></div>
                   </div>
 
@@ -136,10 +160,30 @@ export default function LayoutTester({ className }: LayoutTesterProps) {
             </div>
             <div className="flex items-center space-x-6">
               <nav className="hidden md:flex space-x-8">
-                <a href="#" className="text-gray-600 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white">产品</a>
-                <a href="#" className="text-gray-600 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white">解决方案</a>
-                <a href="#" className="text-gray-600 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white">开发者</a>
-                <a href="#" className="text-gray-600 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white">资源</a>
+                <a
+                  href="#"
+                  className="text-gray-600 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white"
+                >
+                  产品
+                </a>
+                <a
+                  href="#"
+                  className="text-gray-600 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white"
+                >
+                  解决方案
+                </a>
+                <a
+                  href="#"
+                  className="text-gray-600 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white"
+                >
+                  开发者
+                </a>
+                <a
+                  href="#"
+                  className="text-gray-600 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white"
+                >
+                  资源
+                </a>
               </nav>
             </div>
           </div>
@@ -151,21 +195,81 @@ export default function LayoutTester({ className }: LayoutTesterProps) {
         <aside className="hidden lg:block w-64 bg-gray-50 dark:bg-[#1e1e1e] border-r border-gray-200 dark:border-[#333333] min-h-screen">
           <div className="p-6 space-y-6">
             <div>
-              <h3 className="font-semibold text-gray-900 dark:text-white mb-3">项目类型</h3>
+              <h3 className="font-semibold text-gray-900 dark:text-white mb-3">
+                项目类型
+              </h3>
               <ul className="space-y-2">
-                <li><a href="#" className="block py-2 text-gray-600 dark:text-gray-300 hover:text-purple-600 dark:hover:text-purple-400">Web 应用</a></li>
-                <li><a href="#" className="block py-2 text-gray-600 dark:text-gray-300 hover:text-purple-600 dark:hover:text-purple-400">移动应用</a></li>
-                <li><a href="#" className="block py-2 text-gray-600 dark:text-gray-300 hover:text-purple-600 dark:hover:text-purple-400">开源库</a></li>
-                <li><a href="#" className="block py-2 text-gray-600 dark:text-gray-300 hover:text-purple-600 dark:hover:text-purple-400">工具脚本</a></li>
+                <li>
+                  <a
+                    href="#"
+                    className="block py-2 text-gray-600 dark:text-gray-300 hover:text-purple-600 dark:hover:text-purple-400"
+                  >
+                    Web 应用
+                  </a>
+                </li>
+                <li>
+                  <a
+                    href="#"
+                    className="block py-2 text-gray-600 dark:text-gray-300 hover:text-purple-600 dark:hover:text-purple-400"
+                  >
+                    移动应用
+                  </a>
+                </li>
+                <li>
+                  <a
+                    href="#"
+                    className="block py-2 text-gray-600 dark:text-gray-300 hover:text-purple-600 dark:hover:text-purple-400"
+                  >
+                    开源库
+                  </a>
+                </li>
+                <li>
+                  <a
+                    href="#"
+                    className="block py-2 text-gray-600 dark:text-gray-300 hover:text-purple-600 dark:hover:text-purple-400"
+                  >
+                    工具脚本
+                  </a>
+                </li>
               </ul>
             </div>
             <div>
-              <h3 className="font-semibold text-gray-900 dark:text-white mb-3">技术栈</h3>
+              <h3 className="font-semibold text-gray-900 dark:text-white mb-3">
+                技术栈
+              </h3>
               <ul className="space-y-2">
-                <li><a href="#" className="block py-2 text-gray-600 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400">React</a></li>
-                <li><a href="#" className="block py-2 text-gray-600 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400">Next.js</a></li>
-                <li><a href="#" className="block py-2 text-gray-600 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400">TypeScript</a></li>
-                <li><a href="#" className="block py-2 text-gray-600 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400">Rust</a></li>
+                <li>
+                  <a
+                    href="#"
+                    className="block py-2 text-gray-600 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400"
+                  >
+                    React
+                  </a>
+                </li>
+                <li>
+                  <a
+                    href="#"
+                    className="block py-2 text-gray-600 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400"
+                  >
+                    Next.js
+                  </a>
+                </li>
+                <li>
+                  <a
+                    href="#"
+                    className="block py-2 text-gray-600 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400"
+                  >
+                    TypeScript
+                  </a>
+                </li>
+                <li>
+                  <a
+                    href="#"
+                    className="block py-2 text-gray-600 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400"
+                  >
+                    Rust
+                  </a>
+                </li>
               </ul>
             </div>
           </div>
@@ -182,7 +286,8 @@ export default function LayoutTester({ className }: LayoutTesterProps) {
                 技术解决方案
               </h1>
               <p className="text-xl text-gray-600 dark:text-gray-300 mb-8">
-                专注于创建高质量的 Web 应用程序，提供从概念到部署的完整开发服务。
+                专注于创建高质量的 Web
+                应用程序，提供从概念到部署的完整开发服务。
               </p>
               <div className="flex flex-col sm:flex-row gap-4">
                 <button className="px-8 py-4 bg-gradient-to-r from-[#3b82f6] to-[#8b5cf6] text-white rounded-lg font-medium hover:shadow-lg hover:shadow-blue-500/25 transition-all duration-300">
@@ -211,9 +316,14 @@ export default function LayoutTester({ className }: LayoutTesterProps) {
           {/* 项目网格 */}
           <div className="grid md:grid-cols-2 gap-8">
             {[1, 2, 3, 4].map((i) => (
-              <div key={i} className="group border border-gray-200 dark:border-[#333333] rounded-xl p-6 hover:border-transparent hover:shadow-xl hover:shadow-purple-500/10 transition-all duration-300 bg-white dark:bg-[#1e1e1e] relative overflow-hidden">
-                <div className="absolute inset-0 bg-gradient-to-r from-[#3b82f6] via-[#8b5cf6] to-[#ec4899] opacity-0 group-hover:opacity-100 transition-opacity duration-300 -z-10 rounded-xl"
-                     style={{ padding: '1px' }}>
+              <div
+                key={i}
+                className="group border border-gray-200 dark:border-[#333333] rounded-xl p-6 hover:border-transparent hover:shadow-xl hover:shadow-purple-500/10 transition-all duration-300 bg-white dark:bg-[#1e1e1e] relative overflow-hidden"
+              >
+                <div
+                  className="absolute inset-0 bg-gradient-to-r from-[#3b82f6] via-[#8b5cf6] to-[#ec4899] opacity-0 group-hover:opacity-100 transition-opacity duration-300 -z-10 rounded-xl"
+                  style={{ padding: "1px" }}
+                >
                   <div className="bg-white dark:bg-[#1e1e1e] rounded-xl h-full w-full"></div>
                 </div>
 
@@ -226,8 +336,12 @@ export default function LayoutTester({ className }: LayoutTesterProps) {
                 </p>
                 <div className="flex items-center justify-between">
                   <div className="flex space-x-2">
-                    <span className="px-2 py-1 bg-blue-100 dark:bg-blue-900/30 text-blue-800 dark:text-blue-300 rounded text-sm">React</span>
-                    <span className="px-2 py-1 bg-green-100 dark:bg-green-900/30 text-green-800 dark:text-green-300 rounded text-sm">Node.js</span>
+                    <span className="px-2 py-1 bg-blue-100 dark:bg-blue-900/30 text-blue-800 dark:text-blue-300 rounded text-sm">
+                      React
+                    </span>
+                    <span className="px-2 py-1 bg-green-100 dark:bg-green-900/30 text-green-800 dark:text-green-300 rounded text-sm">
+                      Node.js
+                    </span>
                   </div>
                   <button className="text-purple-600 dark:text-purple-400 hover:text-purple-800 dark:hover:text-purple-300 font-medium">
                     查看详情 →
@@ -251,9 +365,24 @@ export default function LayoutTester({ className }: LayoutTesterProps) {
               PortfolioPulse
             </div>
             <div className="flex items-center space-x-8">
-              <a href="#" className="text-gray-600 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white">作品</a>
-              <a href="#" className="text-gray-600 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white">服务</a>
-              <a href="#" className="text-gray-600 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white">联系</a>
+              <a
+                href="#"
+                className="text-gray-600 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white"
+              >
+                作品
+              </a>
+              <a
+                href="#"
+                className="text-gray-600 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white"
+              >
+                服务
+              </a>
+              <a
+                href="#"
+                className="text-gray-600 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white"
+              >
+                联系
+              </a>
             </div>
           </div>
         </div>
@@ -281,8 +410,12 @@ export default function LayoutTester({ className }: LayoutTesterProps) {
                 <div className="absolute inset-0 bg-gradient-to-br from-[#3b82f6]/10 via-[#8b5cf6]/10 to-[#ec4899]/10 opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
                 <div className="relative z-10">
                   <div className="h-32 bg-gradient-to-br from-blue-400 to-purple-600 rounded-xl mb-6"></div>
-                  <h3 className="text-2xl font-bold mb-3 text-gray-900 dark:text-white">主要项目</h3>
-                  <p className="text-gray-600 dark:text-gray-300">这是一个重要的大型项目，具有复杂的功能和创新的设计。</p>
+                  <h3 className="text-2xl font-bold mb-3 text-gray-900 dark:text-white">
+                    主要项目
+                  </h3>
+                  <p className="text-gray-600 dark:text-gray-300">
+                    这是一个重要的大型项目，具有复杂的功能和创新的设计。
+                  </p>
                 </div>
               </div>
             </div>
@@ -293,8 +426,12 @@ export default function LayoutTester({ className }: LayoutTesterProps) {
                 <div className="absolute inset-0 bg-gradient-to-br from-purple-500/10 to-pink-500/10 opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
                 <div className="relative z-10">
                   <div className="h-20 bg-gradient-to-br from-purple-400 to-pink-500 rounded-lg mb-4"></div>
-                  <h3 className="text-lg font-semibold mb-2 text-gray-900 dark:text-white">工具库</h3>
-                  <p className="text-gray-600 dark:text-gray-300 text-sm">开源工具</p>
+                  <h3 className="text-lg font-semibold mb-2 text-gray-900 dark:text-white">
+                    工具库
+                  </h3>
+                  <p className="text-gray-600 dark:text-gray-300 text-sm">
+                    开源工具
+                  </p>
                 </div>
               </div>
             </div>
@@ -305,8 +442,12 @@ export default function LayoutTester({ className }: LayoutTesterProps) {
                 <div className="absolute inset-0 bg-gradient-to-br from-green-500/10 to-blue-500/10 opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
                 <div className="relative z-10">
                   <div className="h-24 bg-gradient-to-br from-green-400 to-blue-500 rounded-lg mb-4"></div>
-                  <h3 className="text-lg font-semibold mb-2 text-gray-900 dark:text-white">API 服务</h3>
-                  <p className="text-gray-600 dark:text-gray-300 text-sm">后端架构设计</p>
+                  <h3 className="text-lg font-semibold mb-2 text-gray-900 dark:text-white">
+                    API 服务
+                  </h3>
+                  <p className="text-gray-600 dark:text-gray-300 text-sm">
+                    后端架构设计
+                  </p>
                 </div>
               </div>
             </div>
@@ -317,8 +458,12 @@ export default function LayoutTester({ className }: LayoutTesterProps) {
                 <div className="absolute inset-0 bg-gradient-to-br from-orange-500/10 to-red-500/10 opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
                 <div className="relative z-10">
                   <div className="h-28 bg-gradient-to-br from-orange-400 to-red-500 rounded-lg mb-4"></div>
-                  <h3 className="text-xl font-semibold mb-2 text-gray-900 dark:text-white">移动应用</h3>
-                  <p className="text-gray-600 dark:text-gray-300">跨平台解决方案</p>
+                  <h3 className="text-xl font-semibold mb-2 text-gray-900 dark:text-white">
+                    移动应用
+                  </h3>
+                  <p className="text-gray-600 dark:text-gray-300">
+                    跨平台解决方案
+                  </p>
                 </div>
               </div>
             </div>
@@ -329,8 +474,12 @@ export default function LayoutTester({ className }: LayoutTesterProps) {
                 <div className="absolute inset-0 bg-gradient-to-br from-indigo-500/10 to-purple-500/10 opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
                 <div className="relative z-10">
                   <div className="h-20 bg-gradient-to-br from-indigo-400 to-purple-500 rounded-lg mb-4"></div>
-                  <h3 className="text-lg font-semibold mb-2 text-gray-900 dark:text-white">插件</h3>
-                  <p className="text-gray-600 dark:text-gray-300 text-sm">效率工具</p>
+                  <h3 className="text-lg font-semibold mb-2 text-gray-900 dark:text-white">
+                    插件
+                  </h3>
+                  <p className="text-gray-600 dark:text-gray-300 text-sm">
+                    效率工具
+                  </p>
                 </div>
               </div>
             </div>
@@ -340,8 +489,12 @@ export default function LayoutTester({ className }: LayoutTesterProps) {
                 <div className="absolute inset-0 bg-gradient-to-br from-teal-500/10 to-cyan-500/10 opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
                 <div className="relative z-10">
                   <div className="h-28 bg-gradient-to-br from-teal-400 to-cyan-500 rounded-lg mb-4"></div>
-                  <h3 className="text-xl font-semibold mb-2 text-gray-900 dark:text-white">数据可视化</h3>
-                  <p className="text-gray-600 dark:text-gray-300">图表与分析平台</p>
+                  <h3 className="text-xl font-semibold mb-2 text-gray-900 dark:text-white">
+                    数据可视化
+                  </h3>
+                  <p className="text-gray-600 dark:text-gray-300">
+                    图表与分析平台
+                  </p>
                 </div>
               </div>
             </div>
@@ -353,11 +506,11 @@ export default function LayoutTester({ className }: LayoutTesterProps) {
 
   const renderCurrentLayout = () => {
     switch (currentLayout) {
-      case 'vercel':
+      case "vercel":
         return <VercelLayout />;
-      case 'stripe':
+      case "stripe":
         return <StripeLayout />;
-      case 'grid':
+      case "grid":
         return <GridLayout />;
       default:
         return <VercelLayout />;
@@ -368,50 +521,62 @@ export default function LayoutTester({ className }: LayoutTesterProps) {
     <div className="min-h-screen transition-all duration-500">
       {/* 控制面板 */}
       <div className="fixed top-4 right-4 z-50 bg-white/90 dark:bg-[#1e1e1e]/90 backdrop-blur-md rounded-2xl p-6 border border-gray-200 dark:border-[#333333] shadow-xl min-w-[320px]">
-        <h3 className="font-bold text-lg mb-4 text-gray-900 dark:text-white">布局测试面板</h3>
+        <h3 className="font-bold text-lg mb-4 text-gray-900 dark:text-white">
+          布局测试面板
+        </h3>
 
         {/* 主题切换 */}
         <div className="flex items-center justify-between mb-6 p-3 bg-gray-50 dark:bg-[#2a2a2a] rounded-lg">
           <span className="text-sm font-medium text-gray-700 dark:text-gray-300">
-            {isDark ? '🌙 暗色主题' : '☀️ 亮色主题'}
+            {isDark ? "🌙 暗色主题" : "☀️ 亮色主题"}
           </span>
           <button
             onClick={() => setIsDark(!isDark)}
             className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors focus:outline-none ${
-              isDark ? 'bg-gradient-to-r from-[#3b82f6] to-[#8b5cf6]' : 'bg-gray-300'
+              isDark
+                ? "bg-gradient-to-r from-[#3b82f6] to-[#8b5cf6]"
+                : "bg-gray-300"
             }`}
           >
-            <span className={`inline-block h-4 w-4 transform rounded-full bg-white transition-transform ${
-              isDark ? 'translate-x-6' : 'translate-x-1'
-            }`} />
+            <span
+              className={`inline-block h-4 w-4 transform rounded-full bg-white transition-transform ${
+                isDark ? "translate-x-6" : "translate-x-1"
+              }`}
+            />
           </button>
         </div>
 
         {/* 布局选择 */}
         <div className="space-y-3">
-          <h4 className="text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">选择布局模式</h4>
+          <h4 className="text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+            选择布局模式
+          </h4>
           {layoutOptions.map((option) => (
             <button
               key={option.id}
               onClick={() => setCurrentLayout(option.id as LayoutMode)}
               className={`w-full text-left p-3 rounded-lg border transition-all duration-300 ${
                 currentLayout === option.id
-                  ? 'border-transparent bg-gradient-to-r from-[#3b82f6]/10 via-[#8b5cf6]/10 to-[#ec4899]/10 shadow-lg shadow-blue-500/20'
-                  : 'border-gray-200 dark:border-[#333333] bg-white dark:bg-[#2a2a2a] hover:border-gray-300 dark:hover:border-gray-500'
+                  ? "border-transparent bg-gradient-to-r from-[#3b82f6]/10 via-[#8b5cf6]/10 to-[#ec4899]/10 shadow-lg shadow-blue-500/20"
+                  : "border-gray-200 dark:border-[#333333] bg-white dark:bg-[#2a2a2a] hover:border-gray-300 dark:hover:border-gray-500"
               }`}
             >
               <div className="flex items-center space-x-3">
-                <div className={`w-3 h-3 rounded-full transition-colors ${
-                  currentLayout === option.id
-                    ? 'bg-gradient-to-r from-[#3b82f6] to-[#8b5cf6]'
-                    : 'bg-gray-300 dark:bg-gray-600'
-                }`} />
-                <div>
-                  <div className={`font-medium text-sm ${
+                <div
+                  className={`w-3 h-3 rounded-full transition-colors ${
                     currentLayout === option.id
-                      ? 'bg-gradient-to-r from-[#3b82f6] via-[#8b5cf6] to-[#ec4899] bg-clip-text text-transparent'
-                      : 'text-gray-900 dark:text-white'
-                  }`}>
+                      ? "bg-gradient-to-r from-[#3b82f6] to-[#8b5cf6]"
+                      : "bg-gray-300 dark:bg-gray-600"
+                  }`}
+                />
+                <div>
+                  <div
+                    className={`font-medium text-sm ${
+                      currentLayout === option.id
+                        ? "bg-gradient-to-r from-[#3b82f6] via-[#8b5cf6] to-[#ec4899] bg-clip-text text-transparent"
+                        : "text-gray-900 dark:text-white"
+                    }`}
+                  >
                     {option.name}
                   </div>
                   <div className="text-xs text-gray-500 dark:text-gray-400 mt-1">
@@ -426,7 +591,7 @@ export default function LayoutTester({ className }: LayoutTesterProps) {
         {/* 当前选择指示 */}
         <div className="mt-4 p-3 bg-gradient-to-r from-[#3b82f6]/5 via-[#8b5cf6]/5 to-[#ec4899]/5 rounded-lg border border-blue-200 dark:border-blue-800">
           <div className="text-sm font-medium text-blue-800 dark:text-blue-300">
-            当前: {layoutOptions.find(opt => opt.id === currentLayout)?.name}
+            当前: {layoutOptions.find((opt) => opt.id === currentLayout)?.name}
           </div>
         </div>
       </div>

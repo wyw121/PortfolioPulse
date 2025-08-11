@@ -1,83 +1,93 @@
-'use client'
+"use client";
 
-import { Badge } from '@/components/ui/badge'
-import { Button } from '@/components/ui/button'
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
-import { BlogService } from '@/lib/blog-service'
-import type { BlogPost } from '@/types/blog'
-import { EditIcon, EyeIcon, PlusIcon, TrashIcon } from 'lucide-react'
-import Link from 'next/link'
-import { useRouter } from 'next/navigation'
-import { useEffect, useState } from 'react'
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+import { BlogService } from "@/lib/blog-service";
+import type { BlogPost } from "@/types/blog";
+import { EditIcon, EyeIcon, PlusIcon, TrashIcon } from "lucide-react";
+import Link from "next/link";
+// import { useRouter } from "next/navigation"; // 暂时注释掉未使用的useRouter
+import { useCallback, useEffect, useState } from "react";
 
 export default function BlogAdminPage() {
-  const [posts, setPosts] = useState<BlogPost[]>([])
-  const [loading, setLoading] = useState(true)
-  const [error, setError] = useState<string | null>(null)
-  const [currentPage, setCurrentPage] = useState(1)
-  const router = useRouter()
+  const [posts, setPosts] = useState<BlogPost[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+  const [currentPage] = useState(1);
+  // const router = useRouter(); // 暂时注释掉未使用的router
 
-  useEffect(() => {
-    loadPosts()
-  }, [currentPage])
-
-  const loadPosts = async () => {
+  const loadPosts = useCallback(async () => {
     try {
-      setLoading(true)
+      setLoading(true);
       const data = await BlogService.getAllPostsAdmin({
         page: currentPage,
-        page_size: 20
-      })
-      setPosts(data)
+        page_size: 20,
+      });
+      setPosts(data);
     } catch (err) {
-      setError(err instanceof Error ? err.message : '获取文章失败')
+      setError(err instanceof Error ? err.message : "加载失败");
     } finally {
-      setLoading(false)
+      setLoading(false);
     }
-  }
+  }, [currentPage]);
+
+  useEffect(() => {
+    loadPosts();
+  }, [loadPosts]);
 
   const handleDelete = async (id: string, title: string) => {
     if (!confirm(`确定要删除文章《${title}》吗？此操作不可撤销。`)) {
-      return
+      return;
     }
 
     try {
-      await BlogService.deletePost(id)
-      setPosts(posts.filter(post => post.id !== id))
+      await BlogService.deletePost(id);
+      setPosts(posts.filter((post) => post.id !== id));
     } catch (error) {
-      alert('删除失败: ' + (error instanceof Error ? error.message : '未知错误'))
+      alert(
+        "删除失败: " + (error instanceof Error ? error.message : "未知错误")
+      );
     }
-  }
+  };
 
   const getStatusBadge = (status: string) => {
     switch (status) {
-      case 'published':
-        return <Badge className="bg-green-500 hover:bg-green-600">已发布</Badge>
-      case 'draft':
-        return <Badge variant="secondary">草稿</Badge>
-      case 'archived':
-        return <Badge variant="outline">已归档</Badge>
+      case "published":
+        return (
+          <Badge className="bg-green-500 hover:bg-green-600">已发布</Badge>
+        );
+      case "draft":
+        return <Badge variant="secondary">草稿</Badge>;
+      case "archived":
+        return <Badge variant="outline">已归档</Badge>;
       default:
-        return <Badge variant="outline">{status}</Badge>
+        return <Badge variant="outline">{status}</Badge>;
     }
-  }
+  };
 
   const formatDate = (dateString: string) => {
-    return new Date(dateString).toLocaleDateString('zh-CN', {
-      year: 'numeric',
-      month: 'short',
-      day: 'numeric',
-      hour: '2-digit',
-      minute: '2-digit'
-    })
-  }
+    return new Date(dateString).toLocaleDateString("zh-CN", {
+      year: "numeric",
+      month: "short",
+      day: "numeric",
+      hour: "2-digit",
+      minute: "2-digit",
+    });
+  };
 
   if (loading) {
     return (
       <div className="container max-w-6xl mx-auto px-4 py-8">
         <div className="text-center">加载中...</div>
       </div>
-    )
+    );
   }
 
   if (error) {
@@ -88,7 +98,7 @@ export default function BlogAdminPage() {
           <Button onClick={() => window.location.reload()}>重试</Button>
         </div>
       </div>
-    )
+    );
   }
 
   return (
@@ -110,9 +120,7 @@ export default function BlogAdminPage() {
           </Button>
 
           <Button variant="outline" asChild>
-            <Link href="/admin/blog/upload">
-              上传HTML文件
-            </Link>
+            <Link href="/admin/blog/upload">上传HTML文件</Link>
           </Button>
         </div>
       </div>
@@ -134,7 +142,7 @@ export default function BlogAdminPage() {
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold text-green-600">
-              {posts.filter(p => p.status === 'published').length}
+              {posts.filter((p) => p.status === "published").length}
             </div>
           </CardContent>
         </Card>
@@ -145,7 +153,7 @@ export default function BlogAdminPage() {
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold text-yellow-600">
-              {posts.filter(p => p.status === 'draft').length}
+              {posts.filter((p) => p.status === "draft").length}
             </div>
           </CardContent>
         </Card>
@@ -261,5 +269,5 @@ export default function BlogAdminPage() {
         </div>
       )}
     </div>
-  )
+  );
 }
