@@ -133,7 +133,7 @@ jobs:
 
             # 验证 standalone 目录内容
             echo "📋 Standalone 目录内容:"
-            find .next/standalone -type f -name "*.js" | head -5
+            find .next/standalone -type f -name "*.js" | head -5 || true
 
             if [ -f ".next/standalone/server.js" ]; then
               echo "✅ server.js 存在"
@@ -144,9 +144,6 @@ jobs:
           else
             echo "❌ Standalone 输出不存在"
             echo "检查 next.config.js 配置："
-            cat next.config.js
-            exit 1
-          fi
             cat next.config.js
             exit 1
           fi
@@ -173,12 +170,12 @@ jobs:
           fi
 
           echo "🟢 复制前端文件..."
-          
+
           # 验证 standalone 构建是否存在
           if [ -d "frontend/.next/standalone" ]; then
             echo "✅ 发现 standalone 构建目录"
             ls -la frontend/.next/standalone/
-            
+
             # 复制 standalone 应用的内容到 deploy 根目录
             cp -r frontend/.next/standalone/* deploy/
             echo "✅ 复制了 standalone 内容"
@@ -191,7 +188,7 @@ jobs:
 
           # 确保 .next 目录完整
           mkdir -p deploy/.next
-          
+
           # 复制完整的构建文件到 deploy/.next
           if [ -d "frontend/.next/static" ]; then
             mkdir -p deploy/.next/static
@@ -223,7 +220,7 @@ jobs:
           echo "📋 验证前端文件结构..."
           echo "deploy 目录内容:"
           ls -la deploy/
-          
+
           # 检查是否有 Next.js 构建文件（更重要）
           if [ -d "deploy/.next" ]; then
             echo "✅ Next.js 构建目录存在"
@@ -231,7 +228,7 @@ jobs:
             echo "❌ Next.js 构建目录缺失"
             exit 1
           fi
-          
+
           # 如果没有 server.js，创建一个基本的
           if [ ! -f "deploy/server.js" ]; then
             echo "🔧 创建 server.js..."
