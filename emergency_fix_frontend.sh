@@ -106,15 +106,15 @@ print_success "npm 版本: $NPM_VERSION"
 # 方案1: 直接修复（适用于缺少 .next 目录的情况）
 if [[ "$PROBLEM" == "missing_next_dir" ]] || [[ "$PROBLEM" == "missing_build_id" ]]; then
     print_step "方案1：手动创建 Next.js 构建文件"
-    
+
     # 创建 .next 目录结构
     mkdir -p .next/{server/pages,static}
-    
+
     # 生成 BUILD_ID
     BUILD_ID=$(date +%s%N | cut -c1-13)
     echo "$BUILD_ID" > .next/BUILD_ID
     print_success "生成 BUILD_ID: $BUILD_ID"
-    
+
     # 创建基本的路由配置
     cat > .next/routes-manifest.json << 'EOF'
 {
@@ -137,7 +137,7 @@ if [[ "$PROBLEM" == "missing_next_dir" ]] || [[ "$PROBLEM" == "missing_build_id"
   "i18n": null
 }
 EOF
-    
+
     # 创建预渲染配置
     cat > .next/prerender-manifest.json << 'EOF'
 {
@@ -150,7 +150,7 @@ EOF
   }
 }
 EOF
-    
+
     # 创建页面配置
     cat > .next/server/pages-manifest.json << 'EOF'
 {
@@ -159,7 +159,7 @@ EOF
   "/": "pages/index.js"
 }
 EOF
-    
+
     print_success "基本 Next.js 配置文件创建完成"
 fi
 
@@ -172,7 +172,7 @@ if [[ -d "app" ]] || [[ -d "pages" ]] || [[ -d "src" ]]; then
     HAS_SOURCE=true
     print_success "检测到 Next.js 源码结构"
 elif [[ -f "package.json" ]] && grep -q "next" package.json; then
-    HAS_SOURCE=true  
+    HAS_SOURCE=true
     print_success "检测到 Next.js 项目配置"
 else
     print_warning "未检测到 Next.js 源码，跳过重建"
@@ -180,47 +180,47 @@ fi
 
 if [[ "$HAS_SOURCE" == "true" ]]; then
     print_step "尝试本地重建前端"
-    
+
     # 检查 package.json 中的构建脚本
     if [[ -f "package.json" ]] && grep -q '"build"' package.json; then
         print_step "执行 npm run build"
-        
+
         # 备份现有的 server.js
         if [[ -f "server.js" ]]; then
             cp server.js server.js.backup
             print_success "已备份 server.js"
         fi
-        
+
         # 尝试重建
         if npm run build; then
             print_success "前端重建成功"
-            
+
             # 检查新的构建产物
             if [[ -d ".next/standalone" ]]; then
                 print_step "更新部署文件"
-                
+
                 # 复制新构建的文件
                 cp -f .next/standalone/server.js ./
-                
+
                 # 复制或更新 .next 目录
                 if [[ -d ".next/standalone/.next" ]]; then
                     rm -rf .next
                     cp -r .next/standalone/.next ./
                 fi
-                
+
                 # 复制静态文件
                 if [[ -d ".next/static" ]]; then
                     mkdir -p .next/static
                     cp -r .next/static/* .next/static/ 2>/dev/null || true
                 fi
-                
+
                 print_success "部署文件更新完成"
             else
                 print_warning "重建完成但未找到 standalone 输出"
             fi
         else
             print_error "前端重建失败"
-            
+
             # 恢复备份
             if [[ -f "server.js.backup" ]]; then
                 mv server.js.backup server.js
@@ -242,7 +242,7 @@ if [[ -d ".next" ]]; then
     echo ""
     echo ".next 目录内容:"
     ls -la .next/
-    
+
     if [[ -f ".next/BUILD_ID" ]]; then
         print_success ".next/BUILD_ID 存在: $(cat .next/BUILD_ID)"
     else
@@ -271,7 +271,7 @@ else
     echo "错误日志:"
     cat test_start.log
     rm -f test_start.log
-    
+
     if grep -q "Could not find a production build" test_start.log 2>/dev/null; then
         print_error "仍然是 .next 目录问题"
         echo ""

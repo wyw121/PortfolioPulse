@@ -41,29 +41,29 @@ print_step "通过端口强制终止进程"
 
 for port in 3000 8000; do
     echo "处理端口 $port..."
-    
+
     # 查找占用端口的进程
     PIDS=$(lsof -ti:$port 2>/dev/null || true)
-    
+
     if [[ -n "$PIDS" ]]; then
         echo "发现占用端口 $port 的进程: $PIDS"
-        
+
         for pid in $PIDS; do
             # 查看进程信息
             PROCESS_INFO=$(ps -p $pid -o pid,ppid,cmd --no-headers 2>/dev/null || echo "进程不存在")
             echo "  进程信息: $PROCESS_INFO"
-            
+
             # 尝试优雅终止
             echo "  尝试优雅终止 PID $pid..."
             kill -TERM $pid 2>/dev/null || true
             sleep 2
-            
+
             # 检查是否还在运行
             if kill -0 $pid 2>/dev/null; then
                 echo "  强制终止 PID $pid..."
                 kill -KILL $pid 2>/dev/null || true
                 sleep 1
-                
+
                 # 最终检查
                 if kill -0 $pid 2>/dev/null; then
                     print_error "无法终止进程 $pid"
@@ -91,19 +91,19 @@ PROCESS_PATTERNS=(
 
 for pattern in "${PROCESS_PATTERNS[@]}"; do
     echo "查找进程模式: $pattern"
-    
+
     PIDS=$(pgrep -f "$pattern" 2>/dev/null || true)
-    
+
     if [[ -n "$PIDS" ]]; then
         echo "发现匹配进程: $PIDS"
-        
+
         for pid in $PIDS; do
             PROCESS_INFO=$(ps -p $pid -o pid,ppid,cmd --no-headers 2>/dev/null || echo "进程不存在")
             echo "  终止: $PROCESS_INFO"
-            
+
             kill -KILL $pid 2>/dev/null || true
         done
-        
+
         print_success "已终止所有匹配 '$pattern' 的进程"
     else
         echo "未找到匹配 '$pattern' 的进程"
@@ -127,13 +127,13 @@ NODE_PIDS=$(pgrep node 2>/dev/null || true)
 if [[ -n "$NODE_PIDS" ]]; then
     echo "发现 Node.js 进程: $NODE_PIDS"
     echo "将终止所有 Node.js 进程（这可能影响其他应用）"
-    
+
     for pid in $NODE_PIDS; do
         PROCESS_INFO=$(ps -p $pid -o pid,ppid,cmd --no-headers 2>/dev/null || echo "进程不存在")
         echo "  终止 Node.js 进程: $PROCESS_INFO"
         kill -KILL $pid 2>/dev/null || true
     done
-    
+
     print_success "已终止所有 Node.js 进程"
 fi
 
@@ -151,12 +151,12 @@ for port in 3000 8000; do
         print_error "端口 $port 仍被占用!"
         echo "占用详情:"
         lsof -i:$port
-        
+
         # 最后手段：系统级端口重置
         echo "尝试系统级端口重置..."
         fuser -k ${port}/tcp 2>/dev/null || true
         sleep 2
-        
+
         if lsof -ti:$port >/dev/null 2>&1; then
             print_error "无法释放端口 $port，可能需要重启系统"
             exit 1
@@ -178,7 +178,7 @@ export PORT=3000
 if [[ -f "portfolio_pulse_backend" ]]; then
     print_step "启动后端服务"
     chmod +x portfolio_pulse_backend
-    
+
     # 检查后端端口
     if lsof -ti:8000 >/dev/null 2>&1; then
         print_error "端口 8000 仍被占用，无法启动后端"
@@ -186,9 +186,9 @@ if [[ -f "portfolio_pulse_backend" ]]; then
         nohup ./portfolio_pulse_backend > backend.log 2>&1 &
         BACKEND_PID=$!
         echo $BACKEND_PID > backend.pid
-        
+
         sleep 2
-        
+
         if kill -0 $BACKEND_PID 2>/dev/null; then
             print_success "后端已启动 (PID: $BACKEND_PID)"
         else
@@ -222,11 +222,11 @@ sleep 5
 # 检查前端是否成功启动
 if kill -0 $FRONTEND_PID 2>/dev/null; then
     print_success "前端服务已启动 (PID: $FRONTEND_PID)"
-    
+
     # 测试连接
     echo "🧪 测试服务连接..."
     sleep 2
-    
+
     # 测试前端响应
     if curl -s -m 10 http://localhost:3000 > /dev/null 2>&1; then
         print_success "前端服务响应正常"
@@ -235,7 +235,7 @@ if kill -0 $FRONTEND_PID 2>/dev/null; then
         echo "前端日志："
         tail -5 frontend.log
     fi
-    
+
     # 测试后端响应
     if [[ -f "backend.pid" ]]; then
         if curl -s -m 5 http://localhost:8000 > /dev/null 2>&1; then
@@ -244,24 +244,24 @@ if kill -0 $FRONTEND_PID 2>/dev/null; then
             print_warning "后端服务可能需要更多启动时间"
         fi
     fi
-    
+
 else
     print_error "前端服务启动失败"
     echo "前端错误日志："
     tail -10 frontend.log
-    
+
     echo ""
     echo "🔍 诊断信息："
     echo "1. 进程状态："
     ps aux | grep -E "(node|portfolio)" | grep -v grep
-    
+
     echo "2. 端口状态："
     netstat -tulpn | grep -E ':(3000|8000)'
-    
+
     echo "3. 最新日志："
     echo "--- frontend.log ---"
     tail -20 frontend.log
-    
+
     exit 1
 fi
 

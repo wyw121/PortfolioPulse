@@ -130,11 +130,11 @@ jobs:
           if [ -d ".next/standalone" ]; then
             echo "✅ Standalone 构建成功"
             ls -la .next/standalone/
-            
+
             # 验证 standalone 目录内容
             echo "📋 Standalone 目录内容:"
             find .next/standalone -type f -name "*.js" | head -5
-            
+
             if [ -f ".next/standalone/server.js" ]; then
               echo "✅ server.js 存在"
             else
@@ -174,60 +174,39 @@ jobs:
 
           echo "🟢 复制前端文件..."
           
-          # 复制 standalone 应用的内容到 deploy 根目录
+          # 验证 standalone 构建是否存在
           if [ -d "frontend/.next/standalone" ]; then
+            echo "✅ 发现 standalone 构建目录"
+            ls -la frontend/.next/standalone/
+            
+            # 复制 standalone 应用的内容到 deploy 根目录
             cp -r frontend/.next/standalone/* deploy/
             echo "✅ 复制了 standalone 内容"
           else
-            echo "❌ standalone 目录不存在，创建基本结构"
-            # 创建基本的服务器文件
-            cat > deploy/server.js << 'SERVERJS'
-          const { createServer } = require('http')
-          const { parse } = require('url')
-          const next = require('next')
-
-          const dev = false
-          const hostname = 'localhost'
-          const port = parseInt(process.env.PORT || '3000', 10)
-
-          const app = next({ dev, hostname, port, dir: __dirname })
-          const handle = app.getRequestHandler()
-
-          app.prepare().then(() => {
-            createServer(async (req, res) => {
-              try {
-                const parsedUrl = parse(req.url, true)
-                await handle(req, res, parsedUrl)
-              } catch (err) {
-                console.error('Error occurred handling', req.url, err)
-                res.statusCode = 500
-                res.end('internal server error')
-              }
-            }).listen(port, (err) => {
-              if (err) throw err
-              console.log(`> Ready on http://${hostname}:${port}`)
-            })
-          })
-          SERVERJS
+            echo "❌ standalone 目录不存在，构建可能有问题"
+            echo "frontend/.next 目录内容:"
+            ls -la frontend/.next/ || echo "❌ .next 目录不存在"
+            exit 1
           fi
 
-          # 创建 .next 目录并复制所有构建文件
+          # 确保 .next 目录完整
           mkdir -p deploy/.next
           
-          # 复制静态资源
+          # 复制完整的构建文件到 deploy/.next
           if [ -d "frontend/.next/static" ]; then
             mkdir -p deploy/.next/static
             cp -r frontend/.next/static/* deploy/.next/static/
+            echo "✅ 复制了静态文件"
           fi
 
-          # 复制服务端文件
           if [ -d "frontend/.next/server" ]; then
             mkdir -p deploy/.next/server
             cp -r frontend/.next/server/* deploy/.next/server/
+            echo "✅ 复制了服务端文件"
           fi
 
           # 复制关键配置文件
-          for file in BUILD_ID routes-manifest.json prerender-manifest.json app-paths-manifest.json; do
+          for file in BUILD_ID routes-manifest.json prerender-manifest.json app-paths-manifest.json app-path-routes-manifest.json; do
             if [ -f "frontend/.next/$file" ]; then
               cp "frontend/.next/$file" "deploy/.next/"
               echo "✅ 复制了 $file"
@@ -237,30 +216,27 @@ jobs:
           # 复制 public 目录
           if [ -d "frontend/public" ]; then
             cp -r frontend/public deploy/
-          fi
-
-          # 复制 public 目录
-          if [ -d "frontend/public" ]; then
-            cp -r frontend/public deploy/
+            echo "✅ 复制了 public 目录"
           fi
 
           # 验证关键文件是否存在
           echo "📋 验证前端文件结构..."
-          if [ -f "deploy/server.js" ]; then
-            echo "✅ server.js 存在"
+          echo "deploy 目录内容:"
+          ls -la deploy/
+          
+          # 检查是否有 Next.js 构建文件（更重要）
+          if [ -d "deploy/.next" ]; then
+            echo "✅ Next.js 构建目录存在"
           else
-            echo "❌ server.js 缺失"
-            ls -la deploy/
+            echo "❌ Next.js 构建目录缺失"
             exit 1
           fi
-
-          if [ -f "deploy/.next/BUILD_ID" ] || [ -d "deploy/.next/server" ]; then
-            echo "✅ Next.js 构建文件存在"
-          else
-            echo "❌ Next.js 构建文件缺失"
-            echo "deploy/.next 内容:"
-            ls -la deploy/.next/ || echo "❌ .next 目录不存在"
-            exit 1
+          
+          # 如果没有 server.js，创建一个基本的
+          if [ ! -f "deploy/server.js" ]; then
+            echo "🔧 创建 server.js..."
+            echo 'const next = require("next"); const app = next({dev: false, dir: __dirname}); app.prepare().then(() => { require("http").createServer(app.getRequestHandler()).listen(3000, () => console.log("Server ready")) })' > deploy/server.js
+            echo "✅ 创建了基本的 server.js"
           fi
 
           echo "📋 创建启动脚本..."

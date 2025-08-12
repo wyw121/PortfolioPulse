@@ -70,23 +70,23 @@ fi
 
 if [[ "$MISSING_NEXT" == "true" ]]; then
     print_step "尝试修复 .next 目录结构"
-    
+
     # 方案1: 从 node_modules 中查找 Next.js 构建信息
     if [[ -d "node_modules/next" ]]; then
         print_step "检查 node_modules/next 版本"
         NEXT_VERSION=$(node -p "require('./node_modules/next/package.json').version" 2>/dev/null || echo "unknown")
         echo "Next.js 版本: $NEXT_VERSION"
     fi
-    
+
     # 方案2: 创建最小化的 .next 目录结构
     print_step "创建最小化 .next 目录结构"
-    
+
     mkdir -p .next/{server,static}
-    
+
     # 生成 BUILD_ID
     echo "$(date +%s)" > .next/BUILD_ID
     print_success "生成 BUILD_ID: $(cat .next/BUILD_ID)"
-    
+
     # 创建基本的 routes-manifest.json
     cat > .next/routes-manifest.json << 'EOF'
 {
@@ -109,7 +109,7 @@ if [[ "$MISSING_NEXT" == "true" ]]; then
   "i18n": null
 }
 EOF
-    
+
     # 创建基本的 prerender-manifest.json
     cat > .next/prerender-manifest.json << 'EOF'
 {
@@ -122,17 +122,17 @@ EOF
   }
 }
 EOF
-    
+
     print_success "创建了基本的 Next.js 配置文件"
-    
+
     # 方案3: 重新构建前端（如果有源码）
     if [[ -f "package.json" ]] && [[ -d "app" ]] || [[ -d "pages" ]] || [[ -d "src" ]]; then
         print_step "检测到源码，尝试重新构建"
-        
+
         # 检查是否有 next.config.js
         if [[ -f "next.config.js" ]]; then
             print_success "发现 next.config.js"
-            
+
             # 确保配置了 standalone 输出
             if grep -q "output.*standalone" next.config.js; then
                 print_success "next.config.js 已配置 standalone 输出"
@@ -141,28 +141,28 @@ EOF
                 echo "请确保 next.config.js 包含: output: 'standalone'"
             fi
         fi
-        
+
         # 尝试重新构建
         if command -v npm >/dev/null 2>&1; then
             print_step "使用 npm 重新构建..."
             npm run build
-            
+
             if [[ -d ".next/standalone" ]]; then
                 print_success "重新构建成功，更新文件"
-                
+
                 # 备份现有文件
                 mkdir -p .backup
                 cp -f server.js .backup/ 2>/dev/null || true
-                
+
                 # 复制新构建的文件
                 cp -r .next/standalone/* ./
-                
+
                 # 恢复静态文件
                 if [[ -d ".next/static" ]]; then
                     mkdir -p .next/static
                     cp -r .next/static/* .next/static/
                 fi
-                
+
                 print_success "前端重新构建完成"
             else
                 print_error "重新构建失败，.next/standalone 目录不存在"
@@ -205,14 +205,14 @@ if grep -q "Error.*Could not find a production build" test.log; then
     echo "错误信息:"
     cat test.log
     rm -f test.log
-    
+
     print_step "尝试最后的修复方案"
-    
+
     # 创建一个假的 BUILD_ID 和必要文件
     mkdir -p .next/server/pages
     echo "standalone" > .next/BUILD_ID
     echo '{}' > .next/server/pages-manifest.json
-    
+
     # 再次测试
     timeout 3s node server.js > test2.log 2>&1 || true
     if grep -q "Error.*Could not find a production build" test2.log; then
@@ -224,7 +224,7 @@ if grep -q "Error.*Could not find a production build" test.log; then
         print_success "修复成功！"
         rm -f test2.log
     fi
-    
+
 else
     print_success "前端启动测试通过"
     rm -f test.log

@@ -104,7 +104,7 @@ else
 fi
 
 if lsof -ti:8000 >/dev/null 2>&1; then
-    print_error "端口 8000 仍被占用"  
+    print_error "端口 8000 仍被占用"
     lsof -i:8000
     exit 1
 else
@@ -116,11 +116,11 @@ print_step "第二步：检查和修复 Node.js 模块问题"
 # 检查 node_modules 目录
 if [[ ! -d "node_modules" ]]; then
     print_error "node_modules 目录不存在"
-    
+
     if [[ -f "package.json" ]]; then
         print_step "尝试重新安装依赖"
         npm ci || npm install
-        
+
         if [[ -d "node_modules" ]]; then
             print_success "依赖安装成功"
         else
@@ -133,7 +133,7 @@ if [[ ! -d "node_modules" ]]; then
     fi
 else
     print_success "node_modules 目录存在"
-    
+
     # 检查关键模块
     if [[ ! -d "node_modules/next" ]]; then
         print_error "Next.js 模块缺失"
@@ -263,7 +263,7 @@ sleep 5
 
 if kill -0 $TEST_PID 2>/dev/null; then
     kill $TEST_PID 2>/dev/null || true
-    
+
     # 检查日志中是否有错误
     if grep -qi "error\|failed\|cannot\|missing" startup_test.log; then
         print_error "启动测试中发现错误:"
@@ -286,17 +286,17 @@ print_step "第六步：启动所有服务"
 # 启动后端
 if [[ -f "portfolio_pulse_backend" ]]; then
     print_step "启动后端服务 (端口 8000)"
-    
+
     # 确保文件可执行
     chmod +x portfolio_pulse_backend
-    
+
     # 启动后端
     nohup ./portfolio_pulse_backend > backend.log 2>&1 &
     BACKEND_PID=$!
     echo $BACKEND_PID > backend.pid
-    
+
     sleep 3
-    
+
     if kill -0 $BACKEND_PID 2>/dev/null; then
         print_success "后端服务已启动 (PID: $BACKEND_PID)"
     else
@@ -328,28 +328,28 @@ sleep 5
 
 if kill -0 $FRONTEND_PID 2>/dev/null; then
     print_success "前端服务已启动 (PID: $FRONTEND_PID)"
-    
+
     # 测试服务响应
     sleep 2
     echo "🧪 测试服务响应..."
-    
+
     # 测试前端
     if curl -s -m 5 http://localhost:3000 > /dev/null 2>&1; then
         print_success "前端服务响应正常"
     else
         print_warning "前端服务可能需要更多时间启动，请稍后测试"
     fi
-    
+
     # 测试后端（如果存在）
     if [[ -f "backend.pid" ]] && curl -s -m 5 http://localhost:8000 > /dev/null 2>&1; then
         print_success "后端服务响应正常"
     fi
-    
+
 else
     print_error "前端服务启动失败"
     echo "前端错误日志:"
     tail -20 frontend.log
-    
+
     # 分析常见错误
     if grep -q "EADDRINUSE" frontend.log; then
         print_error "端口仍被占用，需要手动检查"
@@ -361,7 +361,7 @@ else
         print_error "找不到模块，检查文件结构"
         ls -la .next/server/
     fi
-    
+
     exit 1
 fi
 

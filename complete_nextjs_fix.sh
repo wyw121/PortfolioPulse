@@ -291,26 +291,26 @@ else
     echo "错误日志:"
     cat test_start.log
     rm -f test_start.log
-    
+
     # 检查是否还有其他缺失的文件
     if grep -q "ENOENT" test_start.log 2>/dev/null; then
         MISSING_FILE=$(grep "ENOENT" test_start.log | grep -o "'[^']*'" | tail -1 | tr -d "'")
         print_error "仍然缺少文件: $MISSING_FILE"
-        
+
         # 尝试创建缺失的文件
         if [[ -n "$MISSING_FILE" ]]; then
             print_step "尝试创建缺失的文件: $MISSING_FILE"
             mkdir -p "$(dirname "$MISSING_FILE")"
             echo "{}" > "$MISSING_FILE"
             print_success "已创建 $MISSING_FILE"
-            
+
             # 再次测试
             echo "重新测试前端启动..."
             timeout 5s node server.js > test_start2.log 2>&1 &
             TEST_PID2=$!
-            
+
             sleep 3
-            
+
             if kill -0 $TEST_PID2 2>/dev/null; then
                 kill $TEST_PID2 2>/dev/null || true
                 print_success "修复成功，前端可以启动！"
@@ -335,9 +335,9 @@ if [[ -f "portfolio_pulse_backend" ]]; then
     nohup ./portfolio_pulse_backend > backend.log 2>&1 &
     BACKEND_PID=$!
     echo $BACKEND_PID > backend.pid
-    
+
     sleep 2
-    
+
     if kill -0 $BACKEND_PID 2>/dev/null; then
         print_success "后端已启动 (PID: $BACKEND_PID)"
     else
@@ -357,24 +357,24 @@ sleep 3
 
 if kill -0 $FRONTEND_PID 2>/dev/null; then
     print_success "前端已启动 (PID: $FRONTEND_PID)"
-    
+
     # 测试访问
     echo "🧪 测试服务响应..."
-    
+
     # 测试前端
     if curl -s -o /dev/null -w "%{http_code}" http://localhost:3000 | grep -q "200"; then
         print_success "前端服务响应正常 (HTTP 200)"
     else
         print_warning "前端服务可能需要更多时间启动"
     fi
-    
+
     # 测试后端
     if curl -s -o /dev/null -w "%{http_code}" http://localhost:8000 2>/dev/null | grep -q "200\|404"; then
         print_success "后端服务响应正常"
     else
         print_warning "后端服务可能需要更多时间启动"
     fi
-    
+
 else
     print_error "前端启动失败"
     echo "前端日志:"

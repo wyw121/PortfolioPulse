@@ -125,18 +125,18 @@ fi
 # 检查 .next 目录结构（关键检查）
 if [[ -d ".next" ]]; then
     print_success ".next 目录存在"
-    
+
     # 检查关键的 Next.js 构建文件
     NEXT_FILES_MISSING=()
-    
+
     if [[ ! -f ".next/BUILD_ID" ]]; then
         NEXT_FILES_MISSING+=("BUILD_ID")
     fi
-    
+
     if [[ ! -d ".next/server" ]] && [[ ! -f ".next/routes-manifest.json" ]]; then
         NEXT_FILES_MISSING+=("server目录或routes-manifest.json")
     fi
-    
+
     if [[ ${#NEXT_FILES_MISSING[@]} -gt 0 ]]; then
         print_error ".next 目录缺少关键文件:"
         for missing in "${NEXT_FILES_MISSING[@]}"; do
@@ -150,7 +150,7 @@ if [[ -d ".next" ]]; then
     else
         print_success ".next 目录结构完整"
     fi
-    
+
     echo "  .next 目录内容:"
     ls -la .next/ | head -10
 else
@@ -158,7 +158,7 @@ else
     print_error "这是导致前端启动失败的主要原因"
     echo ""
     echo "🔧 修复建议:"
-    echo "1. 运行修复脚本: ./fix_frontend_deployment.sh"  
+    echo "1. 运行修复脚本: ./fix_frontend_deployment.sh"
     echo "2. 或者重新从 GitHub Actions 下载最新构建产物"
 fi
 
@@ -170,7 +170,7 @@ FRONTEND_PATHS=(
 for path in "${FRONTEND_PATHS[@]}"; do
     if [[ -d "$path" ]]; then
         print_success "$path 目录存在"
-        
+
         # 检查目录是否为空
         if [[ -n "$(ls -A "$path" 2>/dev/null)" ]]; then
             print_success "$path 包含文件"

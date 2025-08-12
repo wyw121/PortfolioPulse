@@ -271,7 +271,7 @@ print_step "创建源码目录结构（如果缺失）"
 # 如果没有 app 目录，创建基本的 app 目录结构
 if [[ ! -d "app" ]]; then
     mkdir -p app
-    
+
     # 创建基本的 layout.tsx
     cat > app/layout.tsx << 'EOF'
 export default function RootLayout({
@@ -298,7 +298,7 @@ export default function HomePage() {
   )
 }
 EOF
-    
+
     print_success "已创建基本的 app 目录结构"
 else
     print_success "app 目录已存在"
@@ -320,19 +320,19 @@ sleep 5
 
 if kill -0 $TEST_PID 2>/dev/null; then
     kill $TEST_PID 2>/dev/null
-    
+
     # 检查日志
     if grep -qi "MODULE_NOT_FOUND\|Cannot find\|Error" app_test.log; then
         print_error "仍然存在模块问题:"
         grep -A 5 -B 5 "MODULE_NOT_FOUND\|Cannot find\|Error" app_test.log
         rm -f app_test.log
-        
+
         # 尝试降级处理
         print_step "尝试降级为 Pages Router 兼容模式"
-        
+
         # 创建 pages 目录
         mkdir -p pages
-        
+
         cat > pages/index.js << 'EOF'
 export default function HomePage() {
   return (
@@ -365,19 +365,19 @@ export default function Document() {
   )
 }
 EOF
-        
+
         print_success "已创建 Pages Router 兼容模式"
-        
+
         # 再次测试
         echo "🧪 测试 Pages Router 兼容模式..."
         timeout 10s node server.js > pages_test.log 2>&1 &
         TEST_PID2=$!
-        
+
         sleep 5
-        
+
         if kill -0 $TEST_PID2 2>/dev/null; then
             kill $TEST_PID2 2>/dev/null
-            
+
             if grep -qi "MODULE_NOT_FOUND\|Cannot find\|Error" pages_test.log; then
                 print_error "Pages Router 模式仍有问题:"
                 cat pages_test.log
@@ -393,7 +393,7 @@ EOF
             rm -f pages_test.log
             exit 1
         fi
-        
+
     else
         print_success "App Router 测试通过"
         rm -f app_test.log
@@ -418,7 +418,7 @@ sleep 5
 
 if kill -0 $FRONTEND_PID 2>/dev/null; then
     print_success "前端应用已启动 (PID: $FRONTEND_PID)"
-    
+
     # 测试访问
     sleep 3
     if curl -s -m 10 http://localhost:3000 | grep -qi "portfoliopulse\|html\|error" >/dev/null 2>&1; then
@@ -426,7 +426,7 @@ if kill -0 $FRONTEND_PID 2>/dev/null; then
     else
         print_warning "前端应用可能需要更多启动时间"
     fi
-    
+
 else
     print_error "前端应用启动失败"
     echo "详细错误日志:"

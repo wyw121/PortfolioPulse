@@ -119,9 +119,9 @@ console.log(`🚀 启动 Next.js ${dev ? '开发' : '生产'} 服务器...`)
 console.log(`📡 监听地址: http://${hostname}:${port}`)
 
 // Next.js 15 App Router 配置
-const app = next({ 
-  dev, 
-  hostname, 
+const app = next({
+  dev,
+  hostname,
   port,
   // 关键：指定正确的目录
   dir: process.cwd(),
