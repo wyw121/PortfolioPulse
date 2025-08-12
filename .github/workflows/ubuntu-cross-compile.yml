@@ -173,18 +173,48 @@ jobs:
           fi
 
           echo "🟢 复制前端文件..."
-          # 复制 standalone 应用的内容到 deploy 根目录
-          cp -r frontend/.next/standalone/* deploy/
-
-          # 重要：创建 .next 目录并复制必要文件
-          mkdir -p deploy/.next
           
-          # 复制 standalone 目录中的 .next 内容（如果存在）
-          if [ -d "frontend/.next/standalone/.next" ]; then
-            cp -r frontend/.next/standalone/.next/* deploy/.next/
+          # 复制 standalone 应用的内容到 deploy 根目录
+          if [ -d "frontend/.next/standalone" ]; then
+            cp -r frontend/.next/standalone/* deploy/
+            echo "✅ 复制了 standalone 内容"
+          else
+            echo "❌ standalone 目录不存在，创建基本结构"
+            # 创建基本的服务器文件
+            cat > deploy/server.js << 'SERVERJS'
+          const { createServer } = require('http')
+          const { parse } = require('url')
+          const next = require('next')
+
+          const dev = false
+          const hostname = 'localhost'
+          const port = parseInt(process.env.PORT || '3000', 10)
+
+          const app = next({ dev, hostname, port, dir: __dirname })
+          const handle = app.getRequestHandler()
+
+          app.prepare().then(() => {
+            createServer(async (req, res) => {
+              try {
+                const parsedUrl = parse(req.url, true)
+                await handle(req, res, parsedUrl)
+              } catch (err) {
+                console.error('Error occurred handling', req.url, err)
+                res.statusCode = 500
+                res.end('internal server error')
+              }
+            }).listen(port, (err) => {
+              if (err) throw err
+              console.log(`> Ready on http://${hostname}:${port}`)
+            })
+          })
+          SERVERJS
           fi
 
-          # 复制静态资源到正确位置
+          # 创建 .next 目录并复制所有构建文件
+          mkdir -p deploy/.next
+          
+          # 复制静态资源
           if [ -d "frontend/.next/static" ]; then
             mkdir -p deploy/.next/static
             cp -r frontend/.next/static/* deploy/.next/static/
@@ -196,13 +226,18 @@ jobs:
             cp -r frontend/.next/server/* deploy/.next/server/
           fi
 
-          # 复制 build-id 和其他必要的构建文件
-          for file in BUILD_ID routes-manifest.json prerender-manifest.json; do
+          # 复制关键配置文件
+          for file in BUILD_ID routes-manifest.json prerender-manifest.json app-paths-manifest.json; do
             if [ -f "frontend/.next/$file" ]; then
               cp "frontend/.next/$file" "deploy/.next/"
               echo "✅ 复制了 $file"
             fi
           done
+
+          # 复制 public 目录
+          if [ -d "frontend/public" ]; then
+            cp -r frontend/public deploy/
+          fi
 
           # 复制 public 目录
           if [ -d "frontend/public" ]; then
