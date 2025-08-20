@@ -7,7 +7,7 @@ import {
 
 export default function AboutPage() {
   return (
-    <main className="pt-4">
+    <main className="pt-16">
       <AboutHero />
       <AboutSkills />
       <AboutExperience />

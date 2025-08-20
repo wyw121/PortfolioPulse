@@ -3,7 +3,7 @@ import { AnimatedContainer } from "@/components/ui/effects";
 
 export default function ProjectsPage() {
   return (
-    <main className="pt-4">
+    <main className="pt-16">
       <div className="max-w-6xl mx-auto px-6 py-12">
         <AnimatedContainer direction="up" duration={600}>
           <div className="text-center mb-12">

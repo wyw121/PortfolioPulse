@@ -5,6 +5,7 @@ import { siteConfig } from "@/lib/config";
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import "./globals.css";
+import { HomeLayout } from "./home-layout";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -104,9 +105,7 @@ export default function RootLayout({
           <div className="fixed inset-0 -z-20 bg-gradient-to-br from-blue-50/30 via-purple-50/20 to-pink-50/30 dark:from-gray-900/90 dark:via-gray-800/80 dark:to-gray-900/90" />
 
           <Navigation />
-          <div className="pt-16 min-h-screen bg-white/50 dark:bg-gray-900/50">
-            {children}
-          </div>
+          <HomeLayout>{children}</HomeLayout>
           <PerformanceMonitor />
         </ThemeProvider>
       </body>

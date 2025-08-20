@@ -27,7 +27,7 @@ export const Navigation = () => {
 
   return (
     <motion.nav
-      className="sticky top-0 w-full z-50 backdrop-blur-md bg-white/90 dark:bg-gray-900/90 border-b border-gray-200/50 dark:border-gray-800/50 transition-all duration-150"
+      className="sticky top-0 w-full z-50 backdrop-blur-md bg-white/95 dark:bg-gray-900/95 border-b border-gray-200/80 dark:border-gray-800/80 transition-all duration-150"
       initial={{ opacity: 1, y: 0 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.15 }}

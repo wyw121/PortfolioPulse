@@ -1,28 +1,35 @@
 "use client";
 
 import { AnimatedContainer } from "@/components/ui/effects";
+import { siteConfig } from "@/lib/config";
 import { motion } from "framer-motion";
+
+const techStack = ["Next.js", "Rust", "Tailwind"];
 
 export const HeroSection = () => {
   return (
-    <section className="min-h-screen flex items-center justify-center pt-16 px-6">
-      <div className="max-w-4xl mx-auto text-center">
-        <AnimatedContainer direction="up" duration={800}>
-          <h1 className="text-5xl md:text-7xl font-bold mb-8">
-            <span className="bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500 bg-clip-text text-transparent">
-              Vynix
-            </span>
-          </h1>
-        </AnimatedContainer>
+    <section className="flex-1 flex items-center justify-center">
+      <div className="container mx-auto max-w-4xl px-6 text-center">
+        {/* Hero Title */}
+        <div className="mb-12">
+          <AnimatedContainer direction="up" duration={800}>
+            <h1 className="text-5xl md:text-7xl font-bold mb-8">
+              <span className="bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500 bg-clip-text text-transparent glow-pulse">
+                {siteConfig.name}
+              </span>
+            </h1>
+          </AnimatedContainer>
 
-        <AnimatedContainer direction="up" duration={800} delay={200}>
-          <p className="text-xl md:text-2xl text-gray-600 dark:text-gray-300 mb-12 max-w-3xl mx-auto leading-relaxed">
-            个人项目动态追踪平台，展示技术作品，记录学习成长，分享开发经验
-          </p>
-        </AnimatedContainer>
+          <AnimatedContainer direction="up" duration={800} delay={200}>
+            <p className="text-xl md:text-2xl text-gray-600 dark:text-gray-300 mb-8 max-w-3xl mx-auto leading-relaxed">
+              {siteConfig.description}
+            </p>
+          </AnimatedContainer>
+        </div>
 
+        {/* Hero Actions */}
         <AnimatedContainer direction="up" duration={600} delay={400}>
-          <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
+          <div className="flex flex-col sm:flex-row gap-4 justify-center items-center mb-16">
             <motion.button
               className="px-8 py-4 bg-gradient-to-r from-blue-500 to-purple-500 text-white rounded-lg font-semibold text-lg shadow-lg hover:shadow-xl"
               whileHover={{ scale: 1.05 }}
@@ -41,14 +48,14 @@ export const HeroSection = () => {
           </div>
         </AnimatedContainer>
 
-        {/* 技术栈指示器 */}
+        {/* Tech Stack */}
         <AnimatedContainer direction="up" duration={600} delay={600}>
-          <div className="mt-16 flex justify-center items-center space-x-8 opacity-70">
+          <div className="flex justify-center items-center space-x-8 opacity-70">
             <div className="text-sm text-gray-500 dark:text-gray-400">
               技术栈:
             </div>
-            <div className="flex space-x-4">
-              {["Next.js", "Rust", "MySQL", "Tailwind"].map((tech, index) => (
+            <div className="flex flex-wrap justify-center gap-3">
+              {techStack.map((tech, index) => (
                 <motion.span
                   key={tech}
                   className="px-3 py-1 bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300 rounded-full text-sm font-medium"
