@@ -2,7 +2,8 @@
 
 import { motion } from "framer-motion";
 import Link from "next/link";
-import { useEffect, useState } from "react";
+import { usePathname } from "next/navigation";
+import { useState } from "react";
 
 interface NavItem {
   name: string;
@@ -17,58 +18,66 @@ const navItems: NavItem[] = [
 ];
 
 export const Navigation = () => {
-  const [scrolled, setScrolled] = useState(false);
+  const pathname = usePathname();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
-  useEffect(() => {
-    const handleScroll = () => {
-      setScrolled(window.scrollY > 50);
-    };
-
-    window.addEventListener("scroll", handleScroll);
-    return () => window.removeEventListener("scroll", handleScroll);
-  }, []);
+  // 根据当前路径决定显示的Logo - 参考Sindre Sorhus风格
+  const isHomePage = pathname === "/";
+  const logoContent = isHomePage ? "🔮" : "Vynix";
 
   return (
     <motion.nav
-      className={`fixed top-0 w-full z-50 transition-all duration-300 ${
-        scrolled
-          ? "bg-white/90 dark:bg-gray-900/90 backdrop-blur-md shadow-lg"
-          : "bg-transparent"
-      }`}
-      initial={{ y: -100 }}
-      animate={{ y: 0 }}
-      transition={{ duration: 0.5 }}
+      className="sticky top-0 w-full z-50 backdrop-blur-md bg-white/90 dark:bg-gray-900/90 border-b border-gray-200/50 dark:border-gray-800/50 transition-all duration-150"
+      initial={{ opacity: 1, y: 0 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.15 }}
     >
-      <div className="max-w-7xl mx-auto px-6">
-        <div className="flex items-center justify-between h-16">
-          {/* Logo */}
-          <Link href="/" className="flex items-center space-x-2">
-            <div className="text-2xl font-bold bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500 bg-clip-text text-transparent">
-              PortfolioPulse
-            </div>
+      <div className="max-w-6xl mx-auto px-3 md:px-4">
+        <div className="flex items-center justify-between py-3">
+          {/* Logo - 参考Sindre Sorhus风格 */}
+          <Link href="/" className="flex items-center">
+            <span
+              className={`ml-2 font-extrabold transition-all duration-150 whitespace-nowrap ${
+                isHomePage
+                  ? "text-2xl hover:scale-110"
+                  : "text-2xl bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500 bg-clip-text text-transparent hover:scale-105"
+              }`}
+            >
+              {logoContent}
+            </span>
           </Link>
 
-          {/* Desktop Navigation */}
-          <div className="hidden md:flex items-center space-x-8">
-            {navItems.map((item) => (
-              <Link
-                key={item.name}
-                href={item.href}
-                className="text-gray-700 dark:text-gray-300 hover:text-blue-500 dark:hover:text-blue-400 transition-colors font-medium"
-              >
-                {item.name}
-              </Link>
-            ))}
-          </div>
+          {/* Desktop Navigation - Sindre风格精确间距 */}
+          <nav className="hidden md:flex items-center">
+            <ul className="flex md:flex-row text-gray-600 dark:text-slate-200 text-base space-x-1">
+              {navItems.map((item) => {
+                const isActive = pathname === item.href;
+                return (
+                  <li key={item.name}>
+                    <Link
+                      href={item.href}
+                      className={`px-4 py-3 font-medium transition duration-150 ease-in-out flex items-center ${
+                        isActive
+                          ? "text-white bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500 rounded-lg shadow-lg shadow-blue-500/25"
+                          : "text-gray-700 dark:text-gray-300 hover:text-blue-500 dark:hover:text-blue-400 hover:bg-gray-100/50 dark:hover:bg-gray-800/50 rounded-lg"
+                      }`}
+                    >
+                      {item.name}
+                    </Link>
+                  </li>
+                );
+              })}
+            </ul>
+          </nav>
 
-          {/* Mobile Menu Button */}
+          {/* Mobile Menu Button - Sindre风格 */}
           <button
-            className="md:hidden p-2 rounded-md text-gray-700 dark:text-gray-300"
+            className="md:hidden ml-1.5 text-gray-500 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-800 focus:outline-hidden focus:ring-4 focus:ring-gray-200 dark:focus:ring-gray-700 rounded-lg text-sm p-2.5 inline-flex items-center transition"
             onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+            aria-label="Toggle Menu"
           >
             <svg
-              className="h-6 w-6"
+              className="h-5 w-5"
               fill="none"
               viewBox="0 0 24 24"
               stroke="currentColor"
@@ -92,26 +101,37 @@ export const Navigation = () => {
           </button>
         </div>
 
-        {/* Mobile Navigation */}
+        {/* Mobile Navigation - Sindre风格 */}
         {mobileMenuOpen && (
           <motion.div
             className="md:hidden"
-            initial={{ opacity: 0, height: 0 }}
-            animate={{ opacity: 1, height: "auto" }}
-            exit={{ opacity: 0, height: 0 }}
+            initial={{ opacity: 0, height: 0, y: -10 }}
+            animate={{ opacity: 1, height: "auto", y: 0 }}
+            exit={{ opacity: 0, height: 0, y: -10 }}
+            transition={{ duration: 0.3, ease: "easeOut" }}
           >
-            <div className="px-2 pt-2 pb-3 space-y-1 bg-white dark:bg-gray-900 rounded-lg mt-2 shadow-lg">
-              {navItems.map((item) => (
-                <Link
-                  key={item.name}
-                  href={item.href}
-                  className="block px-3 py-2 text-gray-700 dark:text-gray-300 hover:text-blue-500 dark:hover:text-blue-400 transition-colors font-medium"
-                  onClick={() => setMobileMenuOpen(false)}
-                >
-                  {item.name}
-                </Link>
-              ))}
-            </div>
+            <nav className="items-center w-full text-gray-600 dark:text-slate-200 h-screen md:h-auto">
+              <ul className="flex flex-col pt-8 w-full text-xl">
+                {navItems.map((item) => {
+                  const isActive = pathname === item.href;
+                  return (
+                    <li key={item.name}>
+                      <Link
+                        href={item.href}
+                        className={`px-4 py-3 font-medium transition duration-150 ease-in-out flex items-center ${
+                          isActive
+                            ? "text-white bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500 rounded-lg shadow-lg shadow-blue-500/25"
+                            : "text-gray-700 dark:text-gray-300 hover:text-blue-500 dark:hover:text-blue-400 hover:bg-gray-100/50 dark:hover:bg-gray-800/50 rounded-lg"
+                        }`}
+                        onClick={() => setMobileMenuOpen(false)}
+                      >
+                        {item.name}
+                      </Link>
+                    </li>
+                  );
+                })}
+              </ul>
+            </nav>
           </motion.div>
         )}
       </div>

@@ -1,37 +1,38 @@
-import { PerformanceMonitor } from '@/components/performance-monitor'
-import { ThemeProvider } from '@/components/theme-provider'
-import { siteConfig } from '@/lib/config'
-import type { Metadata } from 'next'
-import { Inter } from 'next/font/google'
-import './globals.css'
+import { Navigation } from "@/components/layout";
+import { PerformanceMonitor } from "@/components/performance-monitor";
+import { ThemeProvider } from "@/components/theme-provider";
+import { siteConfig } from "@/lib/config";
+import type { Metadata } from "next";
+import { Inter } from "next/font/google";
+import "./globals.css";
 
-const inter = Inter({ subsets: ['latin'] })
+const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
   title: `${siteConfig.name} - ${siteConfig.description}`,
   description: siteConfig.longDescription,
-  keywords: siteConfig.keywords.join(', '),
+  keywords: siteConfig.keywords.join(", "),
   authors: [{ name: siteConfig.author.name }],
   creator: siteConfig.author.name,
   openGraph: {
-    type: 'website',
-    locale: 'zh_CN',
+    type: "website",
+    locale: "zh_CN",
     url: siteConfig.url,
     title: `${siteConfig.name} - ${siteConfig.description}`,
     description: siteConfig.longDescription,
     siteName: siteConfig.name,
   },
   twitter: {
-    card: 'summary_large_image',
+    card: "summary_large_image",
     title: `${siteConfig.name} - ${siteConfig.description}`,
     description: siteConfig.longDescription,
   },
-}
+};
 
 export default function RootLayout({
   children,
 }: Readonly<{
-  children: React.ReactNode
+  children: React.ReactNode;
 }>) {
   return (
     <html lang="zh" suppressHydrationWarning>
@@ -99,10 +100,16 @@ export default function RootLayout({
           enableSystem
           disableTransitionOnChange
         >
-          {children}
+          {/* 固定的全局背景渐变 */}
+          <div className="fixed inset-0 -z-20 bg-gradient-to-br from-blue-50/30 via-purple-50/20 to-pink-50/30 dark:from-gray-900/90 dark:via-gray-800/80 dark:to-gray-900/90" />
+
+          <Navigation />
+          <div className="pt-16 min-h-screen bg-white/50 dark:bg-gray-900/50">
+            {children}
+          </div>
           <PerformanceMonitor />
         </ThemeProvider>
       </body>
     </html>
-  )
+  );
 }

@@ -5,6 +5,9 @@
 /* 导入 Inter 和 JetBrains Mono 字体 */
 @import url("https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap");
 
+/* 导入导航布局一致性样式 */
+@import "../styles/navigation.css";
+
 /* 防止主题切换时的闪烁 */
 html {
   /* 设置初始背景色，在 CSS 变量加载前提供默认样式 */
