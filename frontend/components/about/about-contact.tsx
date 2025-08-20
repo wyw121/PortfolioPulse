@@ -7,14 +7,14 @@ const contactMethods = [
   {
     icon: "📧",
     label: "邮箱",
-    value: "contact@example.com",
-    href: "mailto:contact@example.com",
+    value: "wywyw12121@gmail.com",
+    href: "mailto:wywyw12121@gmail.com",
     description: "随时欢迎技术交流和合作咨询",
   },
   {
     icon: "💬",
     label: "微信",
-    value: "WeChat ID",
+    value: "w3148468612",
     href: "#",
     description: "添加微信，获取更及时的回复",
   },
@@ -32,15 +32,6 @@ const contactMethods = [
     href: "https://twitter.com/wywyw12121",
     description: "关注我的技术动态和思考",
   },
-];
-
-const interests = [
-  { icon: "💻", text: "编程与技术" },
-  { icon: "📚", text: "阅读与学习" },
-  { icon: "🎮", text: "游戏与娱乐" },
-  { icon: "🎵", text: "音乐与艺术" },
-  { icon: "🏃", text: "运动健身" },
-  { icon: "🌍", text: "旅行探索" },
 ];
 
 export function AboutContact() {
@@ -99,37 +90,11 @@ export function AboutContact() {
           ))}
         </div>
 
-        {/* 兴趣爱好 */}
-        <AnimatedContainer direction="up" duration={600} delay={600}>
-          <div className="bg-white dark:bg-gray-800 rounded-2xl p-8 shadow-sm border border-gray-200 dark:border-gray-700">
-            <h3 className="text-2xl font-bold mb-6 text-gray-900 dark:text-white text-center">
-              兴趣爱好
-            </h3>
-            <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
-              {interests.map((interest, index) => (
-                <motion.div
-                  key={interest.text}
-                  className="flex items-center space-x-3 p-3 rounded-lg bg-gray-50 dark:bg-gray-700/50"
-                  initial={{ opacity: 0, scale: 0.8 }}
-                  animate={{ opacity: 1, scale: 1 }}
-                  transition={{ delay: 0.8 + index * 0.1 }}
-                  whileHover={{ scale: 1.05 }}
-                >
-                  <span className="text-xl">{interest.icon}</span>
-                  <span className="text-gray-700 dark:text-gray-300 font-medium">
-                    {interest.text}
-                  </span>
-                </motion.div>
-              ))}
-            </div>
-          </div>
-        </AnimatedContainer>
-
         {/* 底部信息 */}
         <AnimatedContainer direction="up" duration={600} delay={800}>
           <div className="text-center mt-12 p-6 bg-gradient-to-r from-blue-50 to-purple-50 dark:from-gray-800 dark:to-gray-900 rounded-xl">
             <p className="text-gray-600 dark:text-gray-300 mb-4">
-              &ldquo;代码改变世界，创新驱动未来&rdquo;
+              &ldquo;技术的最佳之处在于它将人们联系在一起。&rdquo;
             </p>
             <p className="text-sm text-gray-500 dark:text-gray-400">
               期待与您的交流合作，一起创造更多可能！

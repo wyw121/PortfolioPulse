@@ -27,7 +27,7 @@ export const Navigation = () => {
 
   return (
     <motion.nav
-      className="sticky top-0 w-full z-50 backdrop-blur-md bg-white/95 dark:bg-gray-900/95 border-b border-gray-200/80 dark:border-gray-800/80 transition-all duration-150"
+      className="sticky top-0 w-full z-50 backdrop-blur-xl backdrop-saturate-150 bg-white/70 dark:bg-gray-900/70 border-b border-gray-200/20 dark:border-gray-700/30 transition-all duration-150 supports-[backdrop-filter]:bg-white/40 supports-[backdrop-filter]:dark:bg-gray-900/40"
       initial={{ opacity: 1, y: 0 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.15 }}
@@ -104,7 +104,7 @@ export const Navigation = () => {
         {/* Mobile Navigation - Sindre风格 */}
         {mobileMenuOpen && (
           <motion.div
-            className="md:hidden"
+            className="md:hidden backdrop-blur-xl bg-white/80 dark:bg-gray-900/80"
             initial={{ opacity: 0, height: 0, y: -10 }}
             animate={{ opacity: 1, height: "auto", y: 0 }}
             exit={{ opacity: 0, height: 0, y: -10 }}

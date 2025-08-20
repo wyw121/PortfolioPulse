@@ -5,54 +5,61 @@ import { motion } from "framer-motion";
 
 const experiences = [
   {
-    period: "2023 - 至今",
-    title: "全栈开发者",
-    company: "个人项目",
+    period: "2024年12月 - 2025年1月",
+    title: "智慧医养云平台",
+    company: "SmartCare_Cloud 开源项目",
     description:
-      "专注于现代Web技术栈的探索，开发多个开源项目，包括PortfolioPulse个人作品展示平台。",
-    technologies: ["Next.js", "Rust", "TypeScript", "Tailwind CSS"],
+      "开发智慧医养大数据公共服务平台，专注于医疗设备管理模块的全栈开发实现。",
+    technologies: ["Vue 3", "Spring Boot", "Element Plus", "MySQL", "MyBatis-Plus"],
     highlights: [
-      "设计并开发了完整的全栈应用架构",
-      "实现了高性能的后端API服务",
-      "优化前端性能，提升用户体验",
+      "完成设备管理模块的前后端完整开发",
+      "设计RESTful API接口和数据库表结构",
+      "实现设备接入指南和技术文档编写",
+      "掌握Vue 3组件化开发和Spring Boot后端架构",
     ],
   },
   {
-    period: "2022 - 2023",
-    title: "前端工程师",
-    company: "科技创业公司",
-    description: "负责公司核心产品的前端开发，参与产品架构设计和技术选型。",
-    technologies: ["React", "Vue.js", "Node.js", "MongoDB"],
+    period: "2024年9月 - 2024年12月",
+    title: "量化交易控制台",
+    company: "QuantConsole 开源项目",
+    description:
+      "构建全栈加密货币交易平台，实现用户认证、实时数据推送和交易管理功能。",
+    technologies: ["React 18", "TypeScript", "Rust", "MySQL", "WebSocket", "Docker"],
     highlights: [
-      "重构了老旧的前端架构，提升开发效率50%",
-      "实现了响应式设计，适配多种设备",
-      "建立了完善的组件库和开发规范",
+      "搭建React 18 + TypeScript现代前端架构",
+      "实现Rust后端服务和WebSocket实时通信",
+      "完成用户认证系统和交易仪表板开发",
+      "掌握Docker容器化部署和安全系统设计",
     ],
   },
   {
-    period: "2021 - 2022",
-    title: "Web开发实习生",
-    company: "互联网公司",
-    description: "参与多个Web项目的开发，学习现代前端框架和后端技术。",
-    technologies: ["HTML", "CSS", "JavaScript", "Python"],
+    period: "2024年5月 - 2024年8月",
+    title: "AI图像生成平台",
+    company: "ai_web_generator 开源项目",
+    description:
+      "基于DALL-E API的AI图像生成Web应用，前后端分离架构实现智能图像创作功能。",
+    technologies: ["Rust", "Actix-web", "JavaScript", "OpenAI API", "Canvas", "Serde"],
     highlights: [
-      "完成了多个功能模块的开发",
-      "学习了敏捷开发和团队协作",
-      "积极参与代码review和技术分享",
+      "完成Rust (Actix-web) 后端API服务开发",
+      "集成OpenAI DALL-E API实现AI图像生成",
+      "实现Canvas动画效果和图像处理优化",
+      "掌握Serde数据序列化和前端异步交互",
     ],
   },
 ];
 
 const education = [
   {
-    period: "2018 - 2022",
-    degree: "计算机科学与技术",
-    school: "某知名大学",
-    description: "系统学习了计算机科学基础知识，包括数据结构、算法、数据库等。",
+    period: "2023 - 2027",
+    degree: "软件工程",
+    school: "中南大学",
+    description:
+      "专注于现代Web开发技术栈和系统架构设计，致力于全栈开发能力提升。",
     achievements: [
-      "获得优秀学生奖学金",
-      "参与多个校内外编程竞赛",
-      "完成毕业设计项目获得优秀评价",
+      "深度实践Next.js + Rust全栈开发，独立完成多个项目",
+      "熟练掌握现代部署方案，包括Docker容器化和CI/CD自动化",
+      "具备跨平台开发经验，Windows/Linux双环境开发部署",
+      "实战经验丰富，注重代码质量和用户体验优化",
     ],
   },
 ];
@@ -61,14 +68,14 @@ export function AboutExperience() {
   return (
     <section className="py-20 px-6">
       <div className="max-w-6xl mx-auto">
-        {/* 工作经验 */}
+        {/* 项目经验 */}
         <AnimatedContainer direction="up" duration={350} fastResponse={true}>
           <div className="mb-16">
             <h2 className="text-3xl md:text-4xl font-bold mb-4 text-gray-900 dark:text-white text-center">
-              工作经验
+              项目经验
             </h2>
             <p className="text-lg text-gray-600 dark:text-gray-300 text-center mb-12">
-              在不同阶段的学习和实践经历
+              在技术学习和项目实践中积累的开发经验
             </p>
           </div>
         </AnimatedContainer>

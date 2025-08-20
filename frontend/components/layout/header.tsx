@@ -10,7 +10,7 @@ export function Header() {
     <AnimatedContainer
       direction="down"
       duration={600}
-      className="sticky top-0 z-50 w-full border-b border-gray-200 dark:border-gray-800 bg-white/90 dark:bg-gray-900/90 backdrop-blur-md supports-[backdrop-filter]:bg-white/60 supports-[backdrop-filter]:dark:bg-gray-900/60"
+      className="sticky top-0 z-50 w-full border-b border-gray-200/20 dark:border-gray-700/30 bg-white/70 dark:bg-gray-900/70 backdrop-blur-xl backdrop-saturate-150 supports-[backdrop-filter]:bg-white/40 supports-[backdrop-filter]:dark:bg-gray-900/40"
     >
       <header>
         <div className="vercel-container flex h-16 items-center justify-between">
