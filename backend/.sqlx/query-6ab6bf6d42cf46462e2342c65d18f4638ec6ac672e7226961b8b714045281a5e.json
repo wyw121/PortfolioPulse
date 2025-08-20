@@ -1,0 +1,168 @@
+{
+  "db_name": "MySQL",
+  "query": "\n            SELECT id, title, slug, content, excerpt, cover_image, category, tags,\n                   status, view_count, is_featured, created_at, updated_at, published_at\n            FROM blog_posts\n            WHERE slug = ? AND status = 'published'\n            ",
+  "describe": {
+    "columns": [
+      {
+        "ordinal": 0,
+        "name": "id",
+        "type_info": {
+          "type": "String",
+          "flags": "NOT_NULL | PRIMARY_KEY | NO_DEFAULT_VALUE",
+          "char_set": 224,
+          "max_size": 144
+        }
+      },
+      {
+        "ordinal": 1,
+        "name": "title",
+        "type_info": {
+          "type": "VarString",
+          "flags": "NOT_NULL | MULTIPLE_KEY | NO_DEFAULT_VALUE",
+          "char_set": 224,
+          "max_size": 2000
+        }
+      },
+      {
+        "ordinal": 2,
+        "name": "slug",
+        "type_info": {
+          "type": "VarString",
+          "flags": "NOT_NULL | UNIQUE_KEY | MULTIPLE_KEY | NO_DEFAULT_VALUE",
+          "char_set": 224,
+          "max_size": 2000
+        }
+      },
+      {
+        "ordinal": 3,
+        "name": "content",
+        "type_info": {
+          "type": "Blob",
+          "flags": "NOT_NULL | BLOB | NO_DEFAULT_VALUE",
+          "char_set": 224,
+          "max_size": 4294967295
+        }
+      },
+      {
+        "ordinal": 4,
+        "name": "excerpt",
+        "type_info": {
+          "type": "Blob",
+          "flags": "BLOB",
+          "char_set": 224,
+          "max_size": 262140
+        }
+      },
+      {
+        "ordinal": 5,
+        "name": "cover_image",
+        "type_info": {
+          "type": "VarString",
+          "flags": "",
+          "char_set": 224,
+          "max_size": 2000
+        }
+      },
+      {
+        "ordinal": 6,
+        "name": "category",
+        "type_info": {
+          "type": "VarString",
+          "flags": "MULTIPLE_KEY",
+          "char_set": 224,
+          "max_size": 400
+        }
+      },
+      {
+        "ordinal": 7,
+        "name": "tags",
+        "type_info": {
+          "type": "Json",
+          "flags": "BLOB | BINARY",
+          "char_set": 63,
+          "max_size": 4294967295
+        }
+      },
+      {
+        "ordinal": 8,
+        "name": "status",
+        "type_info": {
+          "type": "String",
+          "flags": "MULTIPLE_KEY | ENUM",
+          "char_set": 224,
+          "max_size": 36
+        }
+      },
+      {
+        "ordinal": 9,
+        "name": "view_count",
+        "type_info": {
+          "type": "Long",
+          "flags": "",
+          "char_set": 63,
+          "max_size": 11
+        }
+      },
+      {
+        "ordinal": 10,
+        "name": "is_featured",
+        "type_info": {
+          "type": "Tiny",
+          "flags": "MULTIPLE_KEY",
+          "char_set": 63,
+          "max_size": 1
+        }
+      },
+      {
+        "ordinal": 11,
+        "name": "created_at",
+        "type_info": {
+          "type": "Timestamp",
+          "flags": "MULTIPLE_KEY | BINARY | TIMESTAMP",
+          "char_set": 63,
+          "max_size": 19
+        }
+      },
+      {
+        "ordinal": 12,
+        "name": "updated_at",
+        "type_info": {
+          "type": "Timestamp",
+          "flags": "BINARY | TIMESTAMP | ON_UPDATE_NOW",
+          "char_set": 63,
+          "max_size": 19
+        }
+      },
+      {
+        "ordinal": 13,
+        "name": "published_at",
+        "type_info": {
+          "type": "Timestamp",
+          "flags": "MULTIPLE_KEY | BINARY",
+          "char_set": 63,
+          "max_size": 19
+        }
+      }
+    ],
+    "parameters": {
+      "Right": 1
+    },
+    "nullable": [
+      false,
+      false,
+      false,
+      false,
+      true,
+      true,
+      true,
+      true,
+      true,
+      true,
+      true,
+      true,
+      true,
+      true
+    ]
+  },
+  "hash": "6ab6bf6d42cf46462e2342c65d18f4638ec6ac672e7226961b8b714045281a5e"
+}

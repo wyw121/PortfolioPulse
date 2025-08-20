@@ -16,14 +16,15 @@
 
 ## 📚 文档导航
 
-> 📋 **完整文档索引**: [docs/DOCUMENTATION_INDEX.md](docs/DOCUMENTATION_INDEX.md)
+### � 部署相关
+- **📋 部署指南**: [BINARY_DEPLOYMENT_GUIDE.md](BINARY_DEPLOYMENT_GUIDE.md) - 完整的二进制部署指南
+- **🔧 后端启动**: [Ubuntu_Backend_Startup_Guide.md](Ubuntu_Backend_Startup_Guide.md) - Ubuntu后端详细说明
 
-### 🔗 快速链接
-- **🤖 AI开发指令**: [.github/copilot-instructions.md](.github/copilot-instructions.md) - GitHub Copilot 开发指南
+### 🛠️ 项目文档
 - **🏗️ 系统架构**: [docs/SYSTEM_ARCHITECTURE_ANALYSIS.md](docs/SYSTEM_ARCHITECTURE_ANALYSIS.md) - 架构设计详解
 - **🛠️ 技术实现**: [docs/TECHNICAL_IMPLEMENTATION_GUIDE.md](docs/TECHNICAL_IMPLEMENTATION_GUIDE.md) - 技术栈指南
-- **🚀 部署指南**: [docs/BINARY_DEPLOYMENT_GUIDE.md](docs/BINARY_DEPLOYMENT_GUIDE.md) - 二进制部署方案
 - **🎨 设计规范**: [docs/PROJECT_STYLE_GUIDE.md](docs/PROJECT_STYLE_GUIDE.md) - UI/UX设计系统
+- **🤖 AI开发指令**: [.github/copilot-instructions.md](.github/copilot-instructions.md) - GitHub Copilot 开发指南
 
 ## ✨ 主要特性
 
@@ -54,14 +55,14 @@
 
 ## 🚀 快速开始
 
-### 环境要求
+### 开发环境要求
 
 - Node.js >= 18.17.0
 - Rust >= 1.75.0
 - MySQL >= 8.0
 - Git
 
-### 安装和运行
+### 本地开发
 
 1. **克隆仓库**
    ```bash
@@ -69,33 +70,43 @@
    cd PortfolioPulse
    ```
 
-2. **设置环境变量**
+2. **后端开发**
    ```bash
-   cp .env.example .env.local
-   # 编辑 .env.local 配置必要的环境变量
+   cd backend
+   cargo run
+   # 后端运行在 http://localhost:8000
    ```
 
-3. **安装前端依赖**
+3. **前端开发**
    ```bash
    cd frontend
    npm install
+   npm run dev
+   # 前端运行在 http://localhost:3000
    ```
 
-4. **安装后端依赖**
+### 生产部署
+
+**推荐的二进制部署方式**：
+
+1. **准备部署文件**
+   - 后端二进制文件：`portfolio_pulse_backend`
+   - 前端构建产物：包含 `server.js` 的文件夹
+
+2. **Ubuntu服务器部署**
    ```bash
-   cd backend
-   cargo build
+   # 上传文件到服务器 /opt/portfoliopulse/
+   cd /opt/portfoliopulse
+
+   # 一键启动
+   ./start.sh
    ```
 
-5. **数据库初始化**
-   ```bash
-   # 安装 Diesel CLI
-   cargo install diesel_cli --no-default-features --features mysql
+3. **访问应用**
+   - 前端：http://your-server-ip:3000
+   - 后端API：http://your-server-ip:8000
 
-   # 运行迁移
-   cd backend
-   diesel migration run
-   ```
+📋 详细部署指南请参考：[BINARY_DEPLOYMENT_GUIDE.md](BINARY_DEPLOYMENT_GUIDE.md)
 
 6. **启动开发服务器**
    ```bash
