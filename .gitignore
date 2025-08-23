@@ -14,6 +14,59 @@ next-env.d.ts
 /build/
 /dist/
 
+# 构建和部署目录（包含所有构建产物）
+build/
+deploy/
+*-deploy/
+*deploy*/
+frontend-deploy-package/
+deploy-backup-*/
+
+# 部署相关文件夹（包含构建产物和二进制文件）
+pm2-complete-deploy/
+*.deploy/
+
+# 二进制文件
+portfolio_pulse_backend
+**/portfolio_pulse_backend
+portfolio-pulse-backend
+**/portfolio-pulse-backend
+
+# 脚本文件（自动生成的部署脚本）
+*.sh
+!setup-ubuntu-server.sh  # 保留服务器设置脚本
+
+# PowerShell 脚本（自动生成的）
+build-with-*.ps1
+deploy-to-*.ps1
+one-click-*.ps1
+**/ecosystem.config.js
+
+# Docker 配置文件（自动生成的）
+Dockerfile.builder*
+Dockerfile.backend
+Dockerfile.frontend
+docker-compose.build.yml
+docker-compose.yml
+
+# 配置文件（可能包含敏感信息）
+configs/
+
+# 部署文档（可能包含敏感信息）
+*DEPLOYMENT*.md
+*SUCCESS*.md
+*BUILD*.md
+*DEPLOY*.md
+DOCKER_DEPLOYMENT_README.md
+docs/DOCKER_MOUNT_BUILD_GUIDE.md
+docs/QUICK_START.md
+docs/MANUAL_FRONTEND_DEPLOY.md
+docs/BUILD_ANALYSIS.md
+docs/DEPLOY_UPDATE_REPORT.md
+
+# GitHub 相关文件
+.github/prompts/
+
 # Runtime data
 pids
 *.pid
@@ -93,4 +146,3 @@ coverage/
 
 # Deployment documentation with sensitive info
 DEPLOYMENT.md
-
