@@ -1,5 +1,6 @@
 use axum::{response::Json, routing::get, Router};
 use tower_http::cors::{Any, CorsLayer};
+use tower_http::services::{ServeDir, ServeFile};
 use tracing::{info, instrument};
 
 mod auth;
@@ -39,44 +40,68 @@ async fn main() -> Result<(), anyhow::Error> {
         github_token,
     };
 
-    // 构建应用路由
-    let app = Router::new()
-        .route("/", get(health_check))
-        .route("/api/health", get(health_check))
-        .route("/api/projects", get(get_projects))
-        .route("/api/projects/:id", get(get_project))
-        .route("/api/activity", get(get_activity))
-        .route("/api/commits", get(get_recent_commits))
-        .route("/api/stats", get(get_stats))
+    // 构建 API 路由
+    let api_routes = Router::new()
+        .route("/health", get(health_check))
+        .route("/projects", get(get_projects))
+        .route("/projects/:id", get(get_project))
+        .route("/activity", get(get_activity))
+        .route("/commits", get(get_recent_commits))
+        .route("/stats", get(get_stats))
         // 博客相关路由（公开访问）
-        .route("/api/blog/posts", get(get_blog_posts))
-        .route("/api/blog/posts/:slug", get(get_blog_post))
-        .route("/api/blog/featured", get(get_featured_blog_posts))
-        .route("/api/blog/categories", get(get_blog_categories))
+        .route("/blog/posts", get(get_blog_posts))
+        .route("/blog/posts/:slug", get(get_blog_post))
+        .route("/blog/featured", get(get_featured_blog_posts))
+        .route("/blog/categories", get(get_blog_categories))
         // 管理员路由（需要认证）
-        .route("/api/admin/blog/posts",
-            axum::routing::post(create_blog_post)
-                .layer(axum::middleware::from_fn_with_state(app_state.clone(), auth::admin_auth_middleware))
+        .route(
+            "/admin/blog/posts",
+            axum::routing::post(create_blog_post).layer(axum::middleware::from_fn_with_state(
+                app_state.clone(),
+                auth::admin_auth_middleware,
+            )),
         )
-        .route("/api/admin/blog/posts",
-            get(get_all_blog_posts_admin)
-                .layer(axum::middleware::from_fn_with_state(app_state.clone(), auth::admin_auth_middleware))
+        .route(
+            "/admin/blog/posts",
+            get(get_all_blog_posts_admin).layer(axum::middleware::from_fn_with_state(
+                app_state.clone(),
+                auth::admin_auth_middleware,
+            )),
         )
-        .route("/api/admin/blog/posts/:id",
-            axum::routing::put(update_blog_post)
-                .layer(axum::middleware::from_fn_with_state(app_state.clone(), auth::admin_auth_middleware))
+        .route(
+            "/admin/blog/posts/:id",
+            axum::routing::put(update_blog_post).layer(axum::middleware::from_fn_with_state(
+                app_state.clone(),
+                auth::admin_auth_middleware,
+            )),
         )
-        .route("/api/admin/blog/posts/:id",
-            axum::routing::delete(delete_blog_post)
-                .layer(axum::middleware::from_fn_with_state(app_state.clone(), auth::admin_auth_middleware))
+        .route(
+            "/admin/blog/posts/:id",
+            axum::routing::delete(delete_blog_post).layer(axum::middleware::from_fn_with_state(
+                app_state.clone(),
+                auth::admin_auth_middleware,
+            )),
         )
+        .with_state(app_state.clone());
+
+    // 静态文件服务 - 为 SPA 应用提供 fallback
+    let static_files_service =
+        ServeDir::new("static").not_found_service(ServeFile::new("static/index.html"));
+
+    // 构建完整应用路由
+    let app = Router::new()
+        // API 路由
+        .nest("/api", api_routes)
+        // 根路径健康检查（保持兼容性）
+        .route("/", get(health_check))
+        // 静态文件服务（必须放在最后）
+        .fallback_service(static_files_service)
         .layer(
             CorsLayer::new()
                 .allow_origin(Any)
                 .allow_methods(Any)
                 .allow_headers(Any),
-        )
-        .with_state(app_state);
+        );
 
     let listener = tokio::net::TcpListener::bind("0.0.0.0:8000").await?;
     info!("服务器启动在 http://0.0.0.0:8000");

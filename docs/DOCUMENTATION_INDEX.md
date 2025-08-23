@@ -1,4 +1,4 @@
-# PortfolioPulse 文档架构 & 导航索引
+# PortfolioPulse 文档架构 & 导航索引 (2025-08-23 更新)
 
 ## 📖 文档体系架构
 
@@ -11,13 +11,15 @@ PortfolioPulse 采用**三层文档架构**，实现AI指令与人类文档的�
 ├── copilot-instructions.md        # 🎯 核心入口，项目概览
 ├── instructions/                   # 📁 模块化开发指令
 │   ├── project-overview.instructions.md
-│   ├── frontend-development.instructions.md
-│   ├── backend-development.instructions.md
+│   ├── frontend-development.instructions.md    # ✅ 更新: Vite + React 18
+│   ├── backend-development.instructions.md     # ✅ 更新: 静态文件服务
 │   ├── ui-style-system.instructions.md
 │   ├── database-design.instructions.md
-│   ├── deployment-guide.instructions.md
-│   └── binary-deployment.instructions.md
-└── prompts/                       # 📁 可复用提示模板 (规划中)
+│   └── binary-deployment.instructions.md       # 🆕 新增: 统一部署
+└── prompts/                       # 📁 可复用提示模板
+    ├── README.md                  # 模板库说明
+    ├── react-component.md         # React 组件创建
+    └── api-endpoint.md            # API 端点开发
 ```
 
 ### 📚 详细技术文档层 (`docs/`)
@@ -41,10 +43,30 @@ docs/
 ```
 项目根目录/
 ├── README.md                      # 项目介绍 + 快速开始
+├── FRONTEND_REFACTOR_REPORT.md    # 🔥 重构完成报告
 ├── DEPLOYMENT.md                  # 部署概览
 ├── DEPLOYMENT_GUIDE.md            # 详细部署指南
 └── *.md                          # 其他基础文档
 ```
+
+## 🔄 重大更新记录 (2025-08-23)
+
+### ✅ 前端架构重构
+- **技术栈变更**: Next.js 15 → Vite + React 18
+- **路由系统**: App Router → React Router 6
+- **构建输出**: Standalone → 静态文件 (backend/static/)
+- **开发流程**: 双服务器 → 单一 Rust 服务器
+
+### ✅ 后端能力增强
+- **静态文件服务**: 新增 tower-http ServeDir 支持
+- **SPA 路由**: 配置 fallback 到 index.html
+- **API 前缀**: 统一使用 /api/* 避免路由冲突
+- **统一端口**: 8000 端口同时服务 API 和前端
+
+### ✅ 部署流程简化
+- **构建脚本**: 新增 build.ps1 和 build.sh
+- **VS Code 任务**: 更新所有开发任务配置
+- **二进制部署**: 真正的单一二进制 + 静态文件部署
 
 ## 🔗 文档映射关系
 

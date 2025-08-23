@@ -1,0 +1,129 @@
+#!/bin/sh
+#
+# Git Pre-commit Hook - 文档自动同步
+# 在提交前检查并更新 .github 指令文件
+#
+# 安装方法:
+# cp scripts/pre-commit .git/hooks/pre-commit
+# chmod +x .git/hooks/pre-commit
+
+echo "🔍 检查文档同步状态..."
+
+# 检查是否有项目结构变化
+has_frontend_changes=false
+has_backend_changes=false
+
+# 检查是否有前端文件变化
+if git diff --cached --name-only | grep -q "^frontend"; then
+    has_frontend_changes=true
+fi
+
+if git diff --cached --name-only | grep -q "^frontend-vite"; then
+    has_frontend_changes=true
+fi
+
+# 检查是否有后端文件变化
+if git diff --cached --name-only | grep -q "^backend"; then
+    has_backend_changes=true
+fi
+
+# 检查 .github 指令文件是否需要更新
+should_update_docs=false
+
+if [ "$has_frontend_changes" = true ]; then
+    echo "📝 检测到前端代码变化"
+    should_update_docs=true
+fi
+
+if [ "$has_backend_changes" = true ]; then
+    echo "📝 检测到后端代码变化"
+    should_update_docs=true
+fi
+
+# 检查关键文件是否存在且是最新的
+check_instruction_freshness() {
+    local instruction_file=".github/instructions/$1"
+    local related_pattern="$2"
+    
+    if [ -f "$instruction_file" ]; then
+        # 检查指令文件的修改时间是否晚于相关代码文件
+        local instruction_time=$(stat -f %m "$instruction_file" 2>/dev/null || stat -c %Y "$instruction_file" 2>/dev/null)
+        local latest_code_time=0
+        
+        # 查找相关代码文件的最新修改时间
+        for file in $(find . -path "./$related_pattern" -type f -newer "$instruction_file" 2>/dev/null | head -5); do
+            local file_time=$(stat -f %m "$file" 2>/dev/null || stat -c %Y "$file" 2>/dev/null)
+            if [ "$file_time" -gt "$latest_code_time" ]; then
+                latest_code_time=$file_time
+            fi
+        done
+        
+        if [ "$latest_code_time" -gt "$instruction_time" ]; then
+            echo "⚠️ 指令文件 $instruction_file 可能需要更新"
+            should_update_docs=true
+        fi
+    fi
+}
+
+# 检查各个指令文件的新鲜度
+check_instruction_freshness "frontend-development.instructions.md" "frontend-vite/**/*"
+check_instruction_freshness "backend-development.instructions.md" "backend/**/*"
+check_instruction_freshness "ui-style-system.instructions.md" "frontend-vite/src/styles/**/*"
+
+# 如果需要更新文档，运行同步脚本
+if [ "$should_update_docs" = true ]; then
+    echo "🔄 运行文档同步..."
+    
+    if [ -f "scripts/sync-docs.js" ]; then
+        node scripts/sync-docs.js
+        sync_result=$?
+        
+        if [ $sync_result -eq 0 ]; then
+            echo "✅ 文档同步完成"
+            
+            # 检查是否有新的文档变化需要添加到提交
+            if git diff --name-only | grep -q "^\.github/"; then
+                echo "📋 发现文档更新，请检查并添加到提交:"
+                git diff --name-only | grep "^\.github/" | sed 's/^/  - /'
+                echo ""
+                echo "建议运行: git add .github/"
+                echo ""
+                read -p "是否自动添加文档更改到此次提交? (y/N): " auto_add
+                if [ "$auto_add" = "y" ] || [ "$auto_add" = "Y" ]; then
+                    git add .github/
+                    echo "✅ 文档更改已添加到提交"
+                fi
+            fi
+        else
+            echo "❌ 文档同步失败，请手动检查"
+            exit 1
+        fi
+    else
+        echo "⚠️ 找不到文档同步脚本，跳过自动同步"
+    fi
+fi
+
+# 验证 Copilot 指令文件的基本格式
+validate_instruction_files() {
+    echo "✅ 验证指令文件格式..."
+    
+    for instruction_file in .github/instructions/*.instructions.md; do
+        if [ -f "$instruction_file" ]; then
+            # 检查是否包含 applyTo 配置
+            if ! grep -q "^applyTo:" "$instruction_file"; then
+                echo "❌ $instruction_file 缺少 applyTo 配置"
+                exit 1
+            fi
+            
+            # 检查是否包含基本内容
+            if [ "$(wc -l < "$instruction_file")" -lt 10 ]; then
+                echo "⚠️ $instruction_file 内容过少，可能不完整"
+            fi
+        fi
+    done
+}
+
+validate_instruction_files
+
+echo "🎉 文档状态检查完成，可以继续提交"
+exit 0

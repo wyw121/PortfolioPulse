@@ -1,53 +1,121 @@
 ---
-applyTo: "frontend/**/*,app/**/*,components/**/*,lib/**/*,hooks/**/*,store/**/*,types/**/*"
+applyTo: "frontend-vite/**/*,app/**/*,components/**/*,lib/**/*,hooks/**/*,store/**/*,types/**/*"
 ---
 
-# 前端开发指引 - Next.js 15 现代化开发
+# 前端开发指引 - Vite + React 18 (重构后)
 
-## 🎯 设计理念 (参考 sindresorhus.com)
+## 🎯 重构后技术栈 (2025-08-23)
+
+**技术栈**: Vite + React 18 + TypeScript + React Router  
+**构建工具**: Vite 5.4.19 (替代 Next.js)  
+**部署方式**: 静态文件，由 Rust 后端服务  
+**开发端口**: 3000 (开发) / 8000 (生产)
+
+### 📁 新目录结构
+
+```
+frontend-vite/
+├── src/
+│   ├── main.tsx              # 应用入口
+│   ├── App.tsx               # 主应用组件 + 路由
+│   ├── components/           # 可复用组件
+│   │   ├── Layout.tsx        # 布局组件
+│   │   └── Navigation.tsx    # 导航组件
+│   ├── pages/               # 页面组件
+│   │   ├── HomePage.tsx
+│   │   ├── ProjectsPage.tsx
+│   │   ├── AboutPage.tsx
+│   │   ├── BlogPage.tsx
+│   │   └── ContactPage.tsx
+│   ├── lib/                 # 工具函数
+│   └── styles/              # 样式文件
+├── public/                  # 静态资源
+├── package.json
+├── vite.config.ts           # Vite 配置
+├── tailwind.config.js       # Tailwind 配置
+└── tsconfig.json           # TypeScript 配置
+```
+
+### 🔄 路由系统 (React Router)
+
+```tsx
+// App.tsx
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+
+function App() {
+  return (
+    <Router>
+      <Routes>
+        <Route path="/" element={<HomePage />} />
+        <Route path="/projects" element={<ProjectsPage />} />
+        <Route path="/about" element={<AboutPage />} />
+        <Route path="/blog" element={<BlogPage />} />
+        <Route path="/contact" element={<ContactPage />} />
+      </Routes>
+    </Router>
+  );
+}
+```
+
+### 🛠️ 构建配置
+
+```typescript
+// vite.config.ts
+export default defineConfig({
+  build: {
+    outDir: '../backend/static',  // 输出到后端静态目录
+  },
+  server: {
+    port: 3000,
+    proxy: {
+      '/api': 'http://localhost:8000'  // API 代理到后端
+    }
+  }
+});
+```
+
+## 🎨 设计理念 (参考 sindresorhus.com)
 
 ### 核心原则
 - **极简主义**: 内容为王，去除多余装饰
 - **现代科技**: 渐变效果 + 发光阴影
 - **响应式**: 移动端优先设计
-- **性能优先**: 代码分割 + 图片优化
+- **性能优先**: Vite HMR + 懒加载
 
 ## ⚡ 开发命令
 
 ### 日常开发
 ```bash
-cd frontend
+cd frontend-vite
 npm run dev         # 开发服务器 (端口 3000)
-npm run build       # 生产构建 (Standalone输出)
-npm run test        # 运行测试
+npm run build       # 生产构建 (输出到 ../backend/static/)
+npm run preview     # 预览生产构建
 npm run lint        # 代码检查
 ```
 
-## 📁 目录结构 (App Router)
-├── app/                    # Next.js 15 App Router
-│   ├── (dashboard)/       # 仪表板路由组 (认证用户)
-│   ├── (public)/          # 公共页面路由组 (访客)
-│   ├── api/               # API 路由
-│   ├── globals.css        # 全局样式
-│   ├── layout.tsx         # 根布局
-│   └── page.tsx           # 主页
-├── components/
-│   ├── ui/                # shadcn/ui 基础组件
-│   ├── layout/            # 布局组件
-│   ├── project/           # 项目相关组件
-│   └── github/            # GitHub 相关组件
-├── lib/                   # 工具库和配置
-├── hooks/                 # 自定义 React Hooks
-├── store/                 # Zustand 状态管理
-└── types/                 # TypeScript 类型定义
+## React 18 开发规范
+
+### 组件开发
+
+- 使用函数组件 + Hooks
+- TypeScript 严格模式，类型安全第一
+- 组件命名使用 PascalCase
+- 文件命名使用 kebab-case
+
+### Hooks 使用
+
+```tsx
+// 状态管理
+const [state, setState] = useState<Type>(initialValue);
+
+// 副作用
+useEffect(() => {
+  // 异步操作
+}, [dependencies]);
+
+// API 调用
+const { data, loading, error } = useQuery('/api/projects');
 ```
-
-### 组件设计原则
-
-- 优先使用函数式组件
-- 遵循单一职责原则
-- 使用 TypeScript 严格模式
-- 组件名使用 PascalCase
 - 文件名使用 kebab-case
 
 ### 访问控制系统
