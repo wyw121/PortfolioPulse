@@ -12,9 +12,11 @@ applyTo: "**"
 
 ## 技术栈要求
 
-### 前端 (端口 3000)
+### 前端 (Vite + React 18)
 
-- **Next.js 15**: App Router + TypeScript 严格模式
+- **Vite 5.4**: 现代化构建工具，快速热重载
+- **React 18**: 函数组件 + TypeScript 严格模式
+- **React Router 6**: SPA 路由管理
 - **Tailwind CSS**: 原子化 CSS，配合自定义 CSS 变量
 - **shadcn/ui**: 现代组件库，统一设计语言
 - **Inter 字体**: 主字体，搭配 JetBrains Mono 代码字体
@@ -22,17 +24,18 @@ applyTo: "**"
 ### 后端 (端口 8000)
 
 - **Rust**: Axum 框架，异步编程模式
+- **tower-http**: 静态文件服务，SPA 路由支持
 - **MySQL**: 数据库 (端口 3306)
 - **Diesel ORM**: 数据库迁移和操作
 
 ## 部署策略（重要）
 
-**部署模式**: 二进制部署（无 Docker）
+**部署模式**: 统一 Rust 二进制部署
 
-- **前端**: Next.js Standalone 输出 + Node.js 运行时
-- **后端**: Rust 编译的原生二进制文件
+- **前端**: Vite 构建 → backend/static/ 目录
+- **后端**: Rust 编译的原生二进制文件 + 静态文件服务
 - **数据库**: 独立 MySQL 服务
-- **代理**: Nginx 负责路由分发
+- **端口**: 统一 8000 端口，无需代理
 
 ## 开发规范
 
@@ -49,14 +52,16 @@ applyTo: "**"
 
 ```bash
 # 前端开发
-cd frontend && npm run dev
+cd frontend-vite && npm run dev
 
 # 后端开发
-cd backend && cargo run --release
+cd backend && cargo run
 
-# 生产构建
-cd backend && cargo build --release
-cd frontend && npm run build
+# 统一构建
+./build.ps1
+# 或手动构建
+cd frontend-vite && npm run build
+cd ../backend && cargo build --release
 ```
 
 ### 数据库操作
