@@ -92,9 +92,7 @@ async fn main() -> Result<(), anyhow::Error> {
     let app = Router::new()
         // API 路由
         .nest("/api", api_routes)
-        // 根路径健康检查（保持兼容性）
-        .route("/", get(health_check))
-        // 静态文件服务（必须放在最后）
+        // 静态文件服务（处理所有非 API 路径）
         .fallback_service(static_files_service)
         .layer(
             CorsLayer::new()
