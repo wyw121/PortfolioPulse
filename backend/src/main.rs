@@ -3,7 +3,6 @@ use tower_http::cors::{Any, CorsLayer};
 use tower_http::services::{ServeDir, ServeFile};
 use tracing::{info, instrument};
 
-mod auth;
 mod handlers;
 mod models;
 mod services;
@@ -48,40 +47,11 @@ async fn main() -> Result<(), anyhow::Error> {
         .route("/activity", get(get_activity))
         .route("/commits", get(get_recent_commits))
         .route("/stats", get(get_stats))
-        // 博客相关路由（公开访问）
+        // 博客相关路由（只读展示）
         .route("/blog/posts", get(get_blog_posts))
         .route("/blog/posts/:slug", get(get_blog_post))
         .route("/blog/featured", get(get_featured_blog_posts))
         .route("/blog/categories", get(get_blog_categories))
-        // 管理员路由（需要认证）
-        .route(
-            "/admin/blog/posts",
-            axum::routing::post(create_blog_post).layer(axum::middleware::from_fn_with_state(
-                app_state.clone(),
-                auth::admin_auth_middleware,
-            )),
-        )
-        .route(
-            "/admin/blog/posts",
-            get(get_all_blog_posts_admin).layer(axum::middleware::from_fn_with_state(
-                app_state.clone(),
-                auth::admin_auth_middleware,
-            )),
-        )
-        .route(
-            "/admin/blog/posts/:id",
-            axum::routing::put(update_blog_post).layer(axum::middleware::from_fn_with_state(
-                app_state.clone(),
-                auth::admin_auth_middleware,
-            )),
-        )
-        .route(
-            "/admin/blog/posts/:id",
-            axum::routing::delete(delete_blog_post).layer(axum::middleware::from_fn_with_state(
-                app_state.clone(),
-                auth::admin_auth_middleware,
-            )),
-        )
         .with_state(app_state.clone());
 
     // 静态文件服务 - 为 SPA 应用提供 fallback
