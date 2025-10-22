@@ -130,24 +130,17 @@ pub struct BlogQuery {
 }
 
 // 获取博客文章列表
-#[instrument(skip(state))]
+#[instrument(skip(_state))]
 pub async fn get_blog_posts(
-    State(state): State<AppState>,
+    State(_state): State<AppState>,
     Query(params): Query<BlogQuery>,
 ) -> Result<Json<Vec<BlogPostResponse>>, (StatusCode, Json<serde_json::Value>)> {
-    let blog_service = services::blog::BlogService::new(state.db.clone());
+    let blog_service = services::blog_markdown::MarkdownBlogService::new();
     let page = params.page.unwrap_or(1);
     let page_size = params.page_size.unwrap_or(10);
 
-    let posts = if let Some(search) = params.search {
-        blog_service.search_posts(&search, page, page_size).await
-    } else if let Some(category) = params.category {
-        blog_service
-            .get_posts_by_category(&category, page, page_size)
-            .await
-    } else {
-        blog_service.get_published_posts(page, page_size).await
-    };
+    // 暂时忽略搜索和分类筛选,直接返回所有文章
+    let posts = blog_service.get_published_posts(page, page_size).await;
 
     match posts {
         Ok(posts) => {
@@ -187,12 +180,12 @@ pub async fn get_blog_posts(
 }
 
 // 根据slug获取单篇博客文章
-#[instrument(skip(state))]
+#[instrument(skip(_state))]
 pub async fn get_blog_post(
-    State(state): State<AppState>,
+    State(_state): State<AppState>,
     Path(slug): Path<String>,
 ) -> Result<Json<BlogPostResponse>, (StatusCode, Json<serde_json::Value>)> {
-    let blog_service = services::blog::BlogService::new(state.db.clone());
+    let blog_service = services::blog_markdown::MarkdownBlogService::new();
 
     match blog_service.get_post_by_slug(&slug).await {
         Ok(Some(post)) => {
@@ -232,11 +225,11 @@ pub async fn get_blog_post(
 }
 
 // 获取精选博客文章
-#[instrument(skip(state))]
+#[instrument(skip(_state))]
 pub async fn get_featured_blog_posts(
-    State(state): State<AppState>,
+    State(_state): State<AppState>,
 ) -> Result<Json<Vec<BlogPostResponse>>, (StatusCode, Json<serde_json::Value>)> {
-    let blog_service = services::blog::BlogService::new(state.db.clone());
+    let blog_service = services::blog_markdown::MarkdownBlogService::new();
 
     match blog_service.get_featured_posts(5).await {
         Ok(posts) => {
@@ -275,21 +268,11 @@ pub async fn get_featured_blog_posts(
     }
 }
 
-// 获取博客分类
-#[instrument(skip(state))]
+// 获取博客分类 (Markdown模式下暂不支持)
+#[instrument(skip(_state))]
 pub async fn get_blog_categories(
-    State(state): State<AppState>,
+    State(_state): State<AppState>,
 ) -> Result<Json<Vec<BlogCategory>>, (StatusCode, Json<serde_json::Value>)> {
-    let blog_service = services::blog::BlogService::new(state.db.clone());
-
-    match blog_service.get_all_categories().await {
-        Ok(categories) => Ok(Json(categories)),
-        Err(e) => {
-            error!("获取博客分类失败: {}", e);
-            Err((
-                StatusCode::INTERNAL_SERVER_ERROR,
-                Json(serde_json::json!({ "error": "获取博客分类失败" })),
-            ))
-        }
-    }
+    // Markdown模式下返回空列表
+    Ok(Json(vec![]))
 }

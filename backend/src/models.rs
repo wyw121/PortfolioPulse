@@ -136,7 +136,7 @@ pub struct GitHubCommitStats {
 }
 
 // 博客相关模型
-#[derive(Debug, Serialize, Deserialize, FromRow)]
+#[derive(Debug, Clone, Serialize, Deserialize, FromRow)]
 pub struct BlogPost {
     pub id: String,                          // CHAR(36) -> String
     pub title: String,                       // NOT NULL

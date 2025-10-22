@@ -25,6 +25,10 @@ sqlx = { version = "0.7", features = [
 # 时间处理
 chrono = { version = "0.4", features = ["serde"] }
 
+# Markdown 解析
+pulldown-cmark = "0.10"
+yaml-rust = "0.4"
+
 # 错误处理
 thiserror = "1.0"
 anyhow = "1.0"
