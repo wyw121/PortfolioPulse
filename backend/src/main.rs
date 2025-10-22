@@ -3,6 +3,8 @@ use tower_http::cors::{Any, CorsLayer};
 use tower_http::services::{ServeDir, ServeFile};
 use tracing::{info, instrument};
 
+mod dto;
+mod error;
 mod handlers;
 mod models;
 mod services;

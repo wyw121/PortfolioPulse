@@ -1,278 +1,78 @@
-﻿use axum::{
-    extract::{Path, Query, State},
-    http::StatusCode,
-    response::Json,
-};
+use axum::{extract::{Path, Query, State}, response::Json};
 use serde::Deserialize;
-use tracing::{error, instrument};
+use tracing::instrument;
 use uuid::Uuid;
 
-use crate::{models::*, services, AppState};
+use crate::{error::AppError, models::*, services, AppState};
 
 #[instrument(skip(state))]
-pub async fn get_projects(
-    State(state): State<AppState>,
-) -> Result<Json<Vec<ProjectResponse>>, (StatusCode, Json<serde_json::Value>)> {
-    match services::project::get_all_projects(&state.db).await {
-        Ok(projects) => Ok(Json(projects)),
-        Err(e) => {
-            error!("获取项目列表失败: {}", e);
-            Err((
-                StatusCode::INTERNAL_SERVER_ERROR,
-                Json(serde_json::json!({ "error": "获取项目列表失败" })),
-            ))
-        }
-    }
+pub async fn get_projects(State(state): State<AppState>) -> Result<Json<Vec<ProjectResponse>>, AppError> {
+    let projects = services::project::get_all_projects(&state.db).await.map_err(|_| AppError::internal("获取项目列表失败"))?;
+    Ok(Json(projects))
 }
 
 #[instrument(skip(state))]
-pub async fn get_project(
-    State(state): State<AppState>,
-    Path(id): Path<String>,
-) -> Result<Json<ProjectResponse>, (StatusCode, Json<serde_json::Value>)> {
-    let project_id = match Uuid::parse_str(&id) {
-        Ok(id) => id,
-        Err(_) => {
-            return Err((
-                StatusCode::BAD_REQUEST,
-                Json(serde_json::json!({ "error": "无效的项目ID" })),
-            ));
-        }
-    };
-
-    match services::project::get_project_by_id(&state.db, project_id).await {
-        Ok(Some(project)) => Ok(Json(project)),
-        Ok(None) => Err((
-            StatusCode::NOT_FOUND,
-            Json(serde_json::json!({ "error": "项目不存在" })),
-        )),
-        Err(e) => {
-            error!("获取项目详情失败: {}", e);
-            Err((
-                StatusCode::INTERNAL_SERVER_ERROR,
-                Json(serde_json::json!({ "error": "获取项目详情失败" })),
-            ))
-        }
-    }
+pub async fn get_project(State(state): State<AppState>, Path(id): Path<String>) -> Result<Json<ProjectResponse>, AppError> {
+    let project_id = Uuid::parse_str(&id)?;
+    let project = services::project::get_project_by_id(&state.db, project_id).await.map_err(|_| AppError::internal("获取项目详情失败"))?.ok_or_else(|| AppError::not_found("项目不存在"))?;
+    Ok(Json(project))
 }
 
 #[derive(Debug, Deserialize)]
-pub struct ActivityQuery {
-    days: Option<i32>,
-}
+pub struct ActivityQuery { days: Option<i32> }
 
 #[instrument(skip(state))]
-pub async fn get_activity(
-    State(state): State<AppState>,
-    Query(params): Query<ActivityQuery>,
-) -> Result<Json<Vec<ActivityResponse>>, (StatusCode, Json<serde_json::Value>)> {
+pub async fn get_activity(State(state): State<AppState>, Query(params): Query<ActivityQuery>) -> Result<Json<Vec<ActivityResponse>>, AppError> {
     let days = params.days.unwrap_or(7);
-
-    match services::activity::get_recent_activity(&state.db, days).await {
-        Ok(activities) => Ok(Json(activities)),
-        Err(e) => {
-            error!("获取活动数据失败: {}", e);
-            Err((
-                StatusCode::INTERNAL_SERVER_ERROR,
-                Json(serde_json::json!({ "error": "获取活动数据失败" })),
-            ))
-        }
-    }
+    let activities = services::activity::get_recent_activity(&state.db, days).await.map_err(|_| AppError::internal("获取活动数据失败"))?;
+    Ok(Json(activities))
 }
 
 #[derive(Debug, Deserialize)]
-pub struct CommitQuery {
-    limit: Option<i32>,
+pub struct CommitQuery { limit: Option<u32> }
+
+#[instrument(skip(state))]
+pub async fn get_recent_commits(State(state): State<AppState>, Query(params): Query<CommitQuery>) -> Result<Json<Vec<CommitResponse>>, AppError> {
+    let limit = params.limit.unwrap_or(10) as i32;
+    let commits = services::commit::get_recent_commits(&state.db, limit).await.map_err(|_| AppError::internal("获取最近提交失败"))?;
+    Ok(Json(commits))
 }
 
 #[instrument(skip(state))]
-pub async fn get_recent_commits(
-    State(state): State<AppState>,
-    Query(params): Query<CommitQuery>,
-) -> Result<Json<Vec<CommitResponse>>, (StatusCode, Json<serde_json::Value>)> {
-    let limit = params.limit.unwrap_or(10);
-
-    match services::commit::get_recent_commits(&state.db, limit).await {
-        Ok(commits) => Ok(Json(commits)),
-        Err(e) => {
-            error!("获取最近提交失败: {}", e);
-            Err((
-                StatusCode::INTERNAL_SERVER_ERROR,
-                Json(serde_json::json!({ "error": "获取最近提交失败" })),
-            ))
-        }
-    }
+pub async fn get_stats(State(state): State<AppState>) -> Result<Json<StatsResponse>, AppError> {
+    let stats = services::stats::get_overall_stats(&state.db).await.map_err(|_| AppError::internal("获取统计数据失败"))?;
+    Ok(Json(stats))
 }
 
-#[instrument(skip(state))]
-pub async fn get_stats(
-    State(state): State<AppState>,
-) -> Result<Json<StatsResponse>, (StatusCode, Json<serde_json::Value>)> {
-    match services::stats::get_overall_stats(&state.db).await {
-        Ok(stats) => Ok(Json(stats)),
-        Err(e) => {
-            error!("获取统计数据失败: {}", e);
-            Err((
-                StatusCode::INTERNAL_SERVER_ERROR,
-                Json(serde_json::json!({ "error": "获取统计数据失败" })),
-            ))
-        }
-    }
-}
-
-// 博客相关API处理器
 #[derive(Debug, Deserialize)]
-pub struct BlogQuery {
-    pub page: Option<u32>,
-    pub page_size: Option<u32>,
-    pub category: Option<String>,
-    pub search: Option<String>,
-}
+pub struct BlogQuery { pub page: Option<u32>, pub page_size: Option<u32>, pub category: Option<String>, pub search: Option<String> }
 
-// 获取博客文章列表
 #[instrument(skip(_state))]
-pub async fn get_blog_posts(
-    State(_state): State<AppState>,
-    Query(params): Query<BlogQuery>,
-) -> Result<Json<Vec<BlogPostResponse>>, (StatusCode, Json<serde_json::Value>)> {
+pub async fn get_blog_posts(State(_state): State<AppState>, Query(params): Query<BlogQuery>) -> Result<Json<Vec<BlogPostResponse>>, AppError> {
     let blog_service = services::blog_markdown::MarkdownBlogService::new();
     let page = params.page.unwrap_or(1);
     let page_size = params.page_size.unwrap_or(10);
-
-    // 暂时忽略搜索和分类筛选,直接返回所有文章
-    let posts = blog_service.get_published_posts(page, page_size).await;
-
-    match posts {
-        Ok(posts) => {
-            let responses: Vec<BlogPostResponse> = posts
-                .into_iter()
-                .map(|post| BlogPostResponse {
-                    id: post.id,
-                    title: post.title,
-                    slug: post.slug,
-                    content: post.content,
-                    excerpt: post.excerpt,
-                    cover_image: post.cover_image,
-                    category: post.category,
-                    tags: post
-                        .tags
-                        .and_then(|t| serde_json::from_str(&t).ok())
-                        .unwrap_or_default(),
-                    status: post.status,
-                    view_count: post.view_count,
-                    is_featured: post.is_featured != 0,
-                    created_at: post.created_at.to_rfc3339(),
-                    updated_at: post.updated_at.to_rfc3339(),
-                    published_at: post.published_at.map(|dt| dt.to_rfc3339()),
-                })
-                .collect();
-
-            Ok(Json(responses))
-        }
-        Err(e) => {
-            error!("获取博客文章失败: {}", e);
-            Err((
-                StatusCode::INTERNAL_SERVER_ERROR,
-                Json(serde_json::json!({ "error": "获取博客文章失败" })),
-            ))
-        }
-    }
+    let posts = blog_service.get_published_posts(page, page_size).await.map_err(|_| AppError::internal("获取博客文章失败"))?;
+    let responses: Vec<BlogPostResponse> = posts.into_iter().map(Into::into).collect();
+    Ok(Json(responses))
 }
 
-// 根据slug获取单篇博客文章
 #[instrument(skip(_state))]
-pub async fn get_blog_post(
-    State(_state): State<AppState>,
-    Path(slug): Path<String>,
-) -> Result<Json<BlogPostResponse>, (StatusCode, Json<serde_json::Value>)> {
+pub async fn get_blog_post(State(_state): State<AppState>, Path(slug): Path<String>) -> Result<Json<BlogPostResponse>, AppError> {
     let blog_service = services::blog_markdown::MarkdownBlogService::new();
-
-    match blog_service.get_post_by_slug(&slug).await {
-        Ok(Some(post)) => {
-            let response = BlogPostResponse {
-                id: post.id,
-                title: post.title,
-                slug: post.slug,
-                content: post.content,
-                excerpt: post.excerpt,
-                cover_image: post.cover_image,
-                category: post.category,
-                tags: post
-                    .tags
-                    .and_then(|t| serde_json::from_str(&t).ok())
-                    .unwrap_or_default(),
-                status: post.status,
-                view_count: post.view_count,
-                is_featured: post.is_featured != 0,
-                created_at: post.created_at.to_rfc3339(),
-                updated_at: post.updated_at.to_rfc3339(),
-                published_at: post.published_at.map(|dt| dt.to_rfc3339()),
-            };
-            Ok(Json(response))
-        }
-        Ok(None) => Err((
-            StatusCode::NOT_FOUND,
-            Json(serde_json::json!({ "error": "博客文章不存在" })),
-        )),
-        Err(e) => {
-            error!("获取博客文章失败: {}", e);
-            Err((
-                StatusCode::INTERNAL_SERVER_ERROR,
-                Json(serde_json::json!({ "error": "获取博客文章失败" })),
-            ))
-        }
-    }
+    let post = blog_service.get_post_by_slug(&slug).await.map_err(|_| AppError::internal("获取博客文章失败"))?.ok_or_else(|| AppError::not_found("博客文章不存在"))?;
+    Ok(Json(post.into()))
 }
 
-// 获取精选博客文章
 #[instrument(skip(_state))]
-pub async fn get_featured_blog_posts(
-    State(_state): State<AppState>,
-) -> Result<Json<Vec<BlogPostResponse>>, (StatusCode, Json<serde_json::Value>)> {
+pub async fn get_featured_blog_posts(State(_state): State<AppState>) -> Result<Json<Vec<BlogPostResponse>>, AppError> {
     let blog_service = services::blog_markdown::MarkdownBlogService::new();
-
-    match blog_service.get_featured_posts(5).await {
-        Ok(posts) => {
-            let responses: Vec<BlogPostResponse> = posts
-                .into_iter()
-                .map(|post| BlogPostResponse {
-                    id: post.id,
-                    title: post.title,
-                    slug: post.slug,
-                    content: post.content,
-                    excerpt: post.excerpt,
-                    cover_image: post.cover_image,
-                    category: post.category,
-                    tags: post
-                        .tags
-                        .and_then(|t| serde_json::from_str(&t).ok())
-                        .unwrap_or_default(),
-                    status: post.status,
-                    view_count: post.view_count,
-                    is_featured: post.is_featured != 0,
-                    created_at: post.created_at.to_rfc3339(),
-                    updated_at: post.updated_at.to_rfc3339(),
-                    published_at: post.published_at.map(|dt| dt.to_rfc3339()),
-                })
-                .collect();
-
-            Ok(Json(responses))
-        }
-        Err(e) => {
-            error!("获取精选博客文章失败: {}", e);
-            Err((
-                StatusCode::INTERNAL_SERVER_ERROR,
-                Json(serde_json::json!({ "error": "获取精选博客文章失败" })),
-            ))
-        }
-    }
+    let posts = blog_service.get_featured_posts(5).await.map_err(|_| AppError::internal("获取精选博客文章失败"))?;
+    let responses: Vec<BlogPostResponse> = posts.into_iter().map(Into::into).collect();
+    Ok(Json(responses))
 }
 
-// 获取博客分类 (Markdown模式下暂不支持)
 #[instrument(skip(_state))]
-pub async fn get_blog_categories(
-    State(_state): State<AppState>,
-) -> Result<Json<Vec<BlogCategory>>, (StatusCode, Json<serde_json::Value>)> {
-    // Markdown模式下返回空列表
+pub async fn get_blog_categories(State(_state): State<AppState>) -> Result<Json<Vec<BlogCategory>>, AppError> {
     Ok(Json(vec![]))
 }
