@@ -1,23 +1,39 @@
+//! Activity 服务层
+//! 
+//! 采用结构体封装 + 依赖注入模式
+
 use anyhow::Result;
 use chrono::Utc;
 use sqlx::MySqlPool;
+use uuid::Uuid;
 
 use crate::models::ActivityResponse;
 
-pub async fn get_recent_activity(_pool: &MySqlPool, _days: i32) -> Result<Vec<ActivityResponse>> {
-    // 占位符实现：返回空列表，待实现
-    Ok(vec![])
+/// 活动数据服务
+pub struct ActivityService {
+    pool: MySqlPool,
 }
 
-// 同步项目活动数据 (从 GitHub API)
-pub async fn sync_project_activity(
-    _pool: &MySqlPool,
-    _project_id: uuid::Uuid,
-    _date: chrono::DateTime<Utc>,
-    _commits: i32,
-    _additions: i32,
-    _deletions: i32,
-) -> Result<()> {
-    // 占位符实现，待数据库表准备好后实现
-    Ok(())
+impl ActivityService {
+    /// 创建新的活动服务实例
+    pub fn new(pool: MySqlPool) -> Self {
+        Self { pool }
+    }
+
+    /// 获取最近N天的活动数据
+    pub async fn get_recent(&self, _days: i32) -> Result<Vec<ActivityResponse>> {
+        Ok(vec![])
+    }
+
+    /// 同步项目活动数据(从GitHub API)
+    pub async fn sync_project_activity(
+        &self,
+        _project_id: Uuid,
+        _date: chrono::DateTime<Utc>,
+        _commits: i32,
+        _additions: i32,
+        _deletions: i32,
+    ) -> Result<()> {
+        Ok(())
+    }
 }

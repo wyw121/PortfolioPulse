@@ -83,19 +83,17 @@ pub async fn sync_github_data(
     github_client: &GitHubClient,
     username: &str,
 ) -> Result<()> {
-    // 获取用户的所有仓库
     let repos = github_client.get_user_repos(username).await?;
+    let project_service = crate::services::project::ProjectService::new(pool.clone());
+    let commit_service = crate::services::commit::CommitService::new(pool.clone());
 
     for repo in repos {
-        // 跳过 fork 的仓库
         if repo.full_name.starts_with(&format!("{}/", username)) {
             continue;
         }
 
-        // 创建或更新项目记录
-        let _project = crate::services::project::create_or_update_project(pool, &repo).await?;
+        let _project = project_service.create_or_update(&repo).await?;
 
-        // 获取仓库的最新提交
         let parts: Vec<&str> = repo.full_name.split('/').collect();
         if parts.len() == 2 {
             let owner = parts[0];
@@ -104,12 +102,7 @@ pub async fn sync_github_data(
             match github_client.get_repo_commits(owner, repo_name, 10).await {
                 Ok(commits) => {
                     for commit in commits {
-                        // 保存提交记录
-                        let _result = crate::services::commit::save_commit(
-                            pool,
-                            uuid::Uuid::new_v4(), // 这里应该是实际的项目ID
-                            &commit,
-                        ).await;
+                        let _ = commit_service.save(_project.id, &commit).await;
                     }
                 }
                 Err(e) => {

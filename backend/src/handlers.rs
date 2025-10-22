@@ -7,14 +7,16 @@ use crate::{error::AppError, models::*, services, AppState};
 
 #[instrument(skip(state))]
 pub async fn get_projects(State(state): State<AppState>) -> Result<Json<Vec<ProjectResponse>>, AppError> {
-    let projects = services::project::get_all_projects(&state.db).await.map_err(|_| AppError::internal("获取项目列表失败"))?;
+    let service = services::project::ProjectService::new(state.db.clone());
+    let projects = service.get_all().await.map_err(|_| AppError::internal("获取项目列表失败"))?;
     Ok(Json(projects))
 }
 
 #[instrument(skip(state))]
 pub async fn get_project(State(state): State<AppState>, Path(id): Path<String>) -> Result<Json<ProjectResponse>, AppError> {
     let project_id = Uuid::parse_str(&id)?;
-    let project = services::project::get_project_by_id(&state.db, project_id).await.map_err(|_| AppError::internal("获取项目详情失败"))?.ok_or_else(|| AppError::not_found("项目不存在"))?;
+    let service = services::project::ProjectService::new(state.db.clone());
+    let project = service.get_by_id(project_id).await.map_err(|_| AppError::internal("获取项目详情失败"))?.ok_or_else(|| AppError::not_found("项目不存在"))?;
     Ok(Json(project))
 }
 
@@ -24,7 +26,8 @@ pub struct ActivityQuery { days: Option<i32> }
 #[instrument(skip(state))]
 pub async fn get_activity(State(state): State<AppState>, Query(params): Query<ActivityQuery>) -> Result<Json<Vec<ActivityResponse>>, AppError> {
     let days = params.days.unwrap_or(7);
-    let activities = services::activity::get_recent_activity(&state.db, days).await.map_err(|_| AppError::internal("获取活动数据失败"))?;
+    let service = services::activity::ActivityService::new(state.db.clone());
+    let activities = service.get_recent(days).await.map_err(|_| AppError::internal("获取活动数据失败"))?;
     Ok(Json(activities))
 }
 
@@ -34,13 +37,15 @@ pub struct CommitQuery { limit: Option<u32> }
 #[instrument(skip(state))]
 pub async fn get_recent_commits(State(state): State<AppState>, Query(params): Query<CommitQuery>) -> Result<Json<Vec<CommitResponse>>, AppError> {
     let limit = params.limit.unwrap_or(10) as i32;
-    let commits = services::commit::get_recent_commits(&state.db, limit).await.map_err(|_| AppError::internal("获取最近提交失败"))?;
+    let service = services::commit::CommitService::new(state.db.clone());
+    let commits = service.get_recent(limit).await.map_err(|_| AppError::internal("获取最近提交失败"))?;
     Ok(Json(commits))
 }
 
 #[instrument(skip(state))]
 pub async fn get_stats(State(state): State<AppState>) -> Result<Json<StatsResponse>, AppError> {
-    let stats = services::stats::get_overall_stats(&state.db).await.map_err(|_| AppError::internal("获取统计数据失败"))?;
+    let service = services::stats::StatsService::new(state.db.clone());
+    let stats = service.get_overall().await.map_err(|_| AppError::internal("获取统计数据失败"))?;
     Ok(Json(stats))
 }
 
