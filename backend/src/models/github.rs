@@ -1,10 +1,13 @@
 //! GitHub 外部API模型
 //! 
 //! 用于与GitHub API交互的数据模型
+//! 
+//! 注意: 这些模型保留用于将来可能的GitHub同步功能
 
 use serde::Deserialize;
 
 /// GitHub仓库信息
+#[allow(dead_code)]
 #[derive(Debug, Deserialize)]
 pub struct GitHubRepo {
     pub id: i64,
@@ -21,6 +24,7 @@ pub struct GitHubRepo {
 }
 
 /// GitHub提交信息
+#[allow(dead_code)]
 #[derive(Debug, Deserialize)]
 pub struct GitHubCommit {
     pub sha: String,
@@ -29,6 +33,7 @@ pub struct GitHubCommit {
 }
 
 /// GitHub提交详细数据
+#[allow(dead_code)]
 #[derive(Debug, Deserialize)]
 pub struct GitHubCommitData {
     pub message: String,
@@ -36,6 +41,7 @@ pub struct GitHubCommitData {
 }
 
 /// GitHub提交作者信息
+#[allow(dead_code)]
 #[derive(Debug, Deserialize)]
 pub struct GitHubCommitAuthor {
     pub name: String,
@@ -44,6 +50,7 @@ pub struct GitHubCommitAuthor {
 }
 
 /// GitHub提交统计信息
+#[allow(dead_code)]
 #[derive(Debug, Deserialize)]
 pub struct GitHubCommitStats {
     pub additions: i32,

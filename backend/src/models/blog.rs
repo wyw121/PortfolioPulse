@@ -56,11 +56,3 @@ pub struct BlogPostResponse {
     pub updated_at: String,
     pub published_at: Option<String>,
 }
-
-/// Markdown博客元数据(用于解析frontmatter)
-pub struct BlogMetadata {
-    pub title: String,
-    pub description: String,
-    pub published_at: DateTime<Utc>,
-    pub tags: String,
-}

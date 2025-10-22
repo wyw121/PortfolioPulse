@@ -12,7 +12,6 @@ pub enum AppError {
     NotFound(String),
     BadRequest(String),
     InternalError(String),
-    Unauthorized(String),
 }
 
 impl fmt::Display for AppError {
@@ -21,7 +20,6 @@ impl fmt::Display for AppError {
             AppError::NotFound(msg) => write!(f, "Not Found: {}", msg),
             AppError::BadRequest(msg) => write!(f, "Bad Request: {}", msg),
             AppError::InternalError(msg) => write!(f, "Internal Error: {}", msg),
-            AppError::Unauthorized(msg) => write!(f, "Unauthorized: {}", msg),
         }
     }
 }
@@ -35,7 +33,6 @@ impl IntoResponse for AppError {
             AppError::NotFound(msg) => (StatusCode::NOT_FOUND, msg),
             AppError::BadRequest(msg) => (StatusCode::BAD_REQUEST, msg),
             AppError::InternalError(msg) => (StatusCode::INTERNAL_SERVER_ERROR, msg),
-            AppError::Unauthorized(msg) => (StatusCode::UNAUTHORIZED, msg),
         };
 
         let body = Json(json!({
@@ -61,21 +58,13 @@ impl From<uuid::Error> for AppError {
     }
 }
 
-/// 辅助函数：创建各种错误
+/// 辅助函数:创建各种错误
 impl AppError {
     pub fn not_found(msg: impl Into<String>) -> Self {
         AppError::NotFound(msg.into())
     }
 
-    pub fn bad_request(msg: impl Into<String>) -> Self {
-        AppError::BadRequest(msg.into())
-    }
-
     pub fn internal(msg: impl Into<String>) -> Self {
         AppError::InternalError(msg.into())
-    }
-
-    pub fn unauthorized(msg: impl Into<String>) -> Self {
-        AppError::Unauthorized(msg.into())
     }
 }

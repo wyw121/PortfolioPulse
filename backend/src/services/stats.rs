@@ -10,6 +10,7 @@ use crate::models::{StatsResponse, LanguageStat};
 
 /// 统计数据服务
 pub struct StatsService {
+    #[allow(dead_code)]
     pool: MySqlPool,
 }
 
@@ -62,6 +63,7 @@ impl StatsService {
     }
 
     /// 获取特定项目的统计数据
+    #[allow(dead_code)]
     pub async fn get_project_stats(&self, _project_id: Uuid) -> Result<StatsResponse> {
         // 占位符实现
         self.get_overall().await

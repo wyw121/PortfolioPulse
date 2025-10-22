@@ -39,8 +39,8 @@ pub struct CommitQuery {
 /// # 查询参数
 /// - `page`: 页码(默认1)
 /// - `page_size`: 每页数量(默认10)
-/// - `category`: 分类筛选(可选)
-/// - `search`: 搜索关键词(可选)
+/// - `category`: 分类筛选(可选,预留功能)
+/// - `search`: 搜索关键词(可选,预留功能)
 /// 
 /// # 示例
 /// ```
@@ -52,9 +52,11 @@ pub struct BlogQuery {
     pub page: Option<u32>,
     /// 每页数量,默认10
     pub page_size: Option<u32>,
-    /// 分类筛选(可选)
+    /// 分类筛选(可选,预留功能)
+    #[allow(dead_code)]
     pub category: Option<String>,
-    /// 搜索关键词(可选)
+    /// 搜索关键词(可选,预留功能)
+    #[allow(dead_code)]
     pub search: Option<String>,
 }
 

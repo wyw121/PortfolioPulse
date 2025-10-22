@@ -11,6 +11,7 @@ use crate::models::ActivityResponse;
 
 /// 活动数据服务
 pub struct ActivityService {
+    #[allow(dead_code)]
     pool: MySqlPool,
 }
 
@@ -26,6 +27,7 @@ impl ActivityService {
     }
 
     /// 同步项目活动数据(从GitHub API)
+    #[allow(dead_code)]
     pub async fn sync_project_activity(
         &self,
         _project_id: Uuid,

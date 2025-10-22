@@ -10,6 +10,7 @@ use crate::models::{CommitResponse, GitHubCommit};
 
 /// 提交记录服务
 pub struct CommitService {
+    #[allow(dead_code)]
     pool: MySqlPool,
 }
 
@@ -25,6 +26,7 @@ impl CommitService {
     }
 
     /// 保存提交记录到数据库
+    #[allow(dead_code)]
     pub async fn save(&self, _project_id: Uuid, _github_commit: &GitHubCommit) -> Result<()> {
         Ok(())
     }

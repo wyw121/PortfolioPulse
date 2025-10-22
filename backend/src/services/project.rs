@@ -11,6 +11,7 @@ use crate::models::{GitHubRepo, Project, ProjectResponse};
 
 /// 项目服务 - 统一的Service结构体模式
 pub struct ProjectService {
+    #[allow(dead_code)]
     pool: MySqlPool,
 }
 
@@ -81,6 +82,7 @@ impl ProjectService {
     }
 
     /// 创建或更新项目(从GitHub同步)
+    #[allow(dead_code)]
     pub async fn create_or_update(&self, github_repo: &GitHubRepo) -> Result<Project> {
         let project_id = Uuid::new_v4();
         let now = Utc::now();
