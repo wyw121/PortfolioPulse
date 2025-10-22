@@ -5,6 +5,18 @@ use uuid::Uuid;
 
 use crate::{error::AppError, models::*, services, AppState};
 
+/// 健康检查端点
+/// 
+/// 返回服务器健康状态和版本信息
+#[instrument]
+pub async fn health_check() -> Json<serde_json::Value> {
+    Json(serde_json::json!({
+        "status": "healthy",
+        "message": "PortfolioPulse Backend is running",
+        "version": "0.1.0"
+    }))
+}
+
 #[instrument(skip(state))]
 pub async fn get_projects(State(state): State<AppState>) -> Result<Json<Vec<ProjectResponse>>, AppError> {
     let service = services::project::ProjectService::new(state.db.clone());

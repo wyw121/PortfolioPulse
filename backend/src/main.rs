@@ -1,15 +1,14 @@
-use axum::{response::Json, routing::get, Router};
+use axum::Router;
 use tower_http::cors::{Any, CorsLayer};
 use tower_http::services::{ServeDir, ServeFile};
-use tracing::{info, instrument};
+use tracing::info;
 
 mod dto;
 mod error;
 mod handlers;
 mod models;
+mod routes;
 mod services;
-
-use handlers::*;
 
 #[derive(Clone)]
 pub struct AppState {
@@ -41,20 +40,8 @@ async fn main() -> Result<(), anyhow::Error> {
         github_token,
     };
 
-    // 构建 API 路由
-    let api_routes = Router::new()
-        .route("/health", get(health_check))
-        .route("/projects", get(get_projects))
-        .route("/projects/:id", get(get_project))
-        .route("/activity", get(get_activity))
-        .route("/commits", get(get_recent_commits))
-        .route("/stats", get(get_stats))
-        // 博客相关路由（只读展示）
-        .route("/blog/posts", get(get_blog_posts))
-        .route("/blog/posts/:slug", get(get_blog_post))
-        .route("/blog/featured", get(get_featured_blog_posts))
-        .route("/blog/categories", get(get_blog_categories))
-        .with_state(app_state.clone());
+    // 构建 API 路由(使用独立的路由模块)
+    let api_routes = routes::create_api_routes(app_state.clone());
 
     // 静态文件服务 - 为 SPA 应用提供 fallback
     let static_files_service =
@@ -79,13 +66,4 @@ async fn main() -> Result<(), anyhow::Error> {
     axum::serve(listener, app).await?;
 
     Ok(())
-}
-
-#[instrument]
-async fn health_check() -> Json<serde_json::Value> {
-    Json(serde_json::json!({
-        "status": "healthy",
-        "message": "PortfolioPulse Backend is running",
-        "version": "0.1.0"
-    }))
 }
