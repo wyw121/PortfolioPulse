@@ -7,6 +7,7 @@ mod dto;
 mod error;
 mod handlers;
 mod models;
+mod request;
 mod routes;
 mod services;
 

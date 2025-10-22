@@ -1,9 +1,8 @@
 use axum::{extract::{Path, Query, State}, response::Json};
-use serde::Deserialize;
 use tracing::instrument;
 use uuid::Uuid;
 
-use crate::{error::AppError, models::*, services, AppState};
+use crate::{error::AppError, models::*, request::*, services, AppState};
 
 /// 健康检查端点
 /// 
@@ -32,23 +31,17 @@ pub async fn get_project(State(state): State<AppState>, Path(id): Path<String>) 
     Ok(Json(project))
 }
 
-#[derive(Debug, Deserialize)]
-pub struct ActivityQuery { days: Option<i32> }
-
 #[instrument(skip(state))]
 pub async fn get_activity(State(state): State<AppState>, Query(params): Query<ActivityQuery>) -> Result<Json<Vec<ActivityResponse>>, AppError> {
-    let days = params.days.unwrap_or(7);
+    let days = params.days_or_default();
     let service = services::activity::ActivityService::new(state.db.clone());
     let activities = service.get_recent(days).await.map_err(|_| AppError::internal("获取活动数据失败"))?;
     Ok(Json(activities))
 }
 
-#[derive(Debug, Deserialize)]
-pub struct CommitQuery { limit: Option<u32> }
-
 #[instrument(skip(state))]
 pub async fn get_recent_commits(State(state): State<AppState>, Query(params): Query<CommitQuery>) -> Result<Json<Vec<CommitResponse>>, AppError> {
-    let limit = params.limit.unwrap_or(10) as i32;
+    let limit = params.limit_or_default();
     let service = services::commit::CommitService::new(state.db.clone());
     let commits = service.get_recent(limit).await.map_err(|_| AppError::internal("获取最近提交失败"))?;
     Ok(Json(commits))
@@ -61,14 +54,11 @@ pub async fn get_stats(State(state): State<AppState>) -> Result<Json<StatsRespon
     Ok(Json(stats))
 }
 
-#[derive(Debug, Deserialize)]
-pub struct BlogQuery { pub page: Option<u32>, pub page_size: Option<u32>, pub category: Option<String>, pub search: Option<String> }
-
 #[instrument(skip(_state))]
 pub async fn get_blog_posts(State(_state): State<AppState>, Query(params): Query<BlogQuery>) -> Result<Json<Vec<BlogPostResponse>>, AppError> {
     let blog_service = services::blog_markdown::MarkdownBlogService::new();
-    let page = params.page.unwrap_or(1);
-    let page_size = params.page_size.unwrap_or(10);
+    let page = params.page_or_default();
+    let page_size = params.page_size_or_default();
     let posts = blog_service.get_published_posts(page, page_size).await.map_err(|_| AppError::internal("获取博客文章失败"))?;
     let responses: Vec<BlogPostResponse> = posts.into_iter().map(Into::into).collect();
     Ok(Json(responses))
