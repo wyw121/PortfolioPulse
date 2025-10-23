@@ -50,3 +50,28 @@ pub struct BlogCategory {
     pub slug: String,
     pub count: usize,
 }
+
+/// BlogPost → BlogPostResponse 转换
+impl From<BlogPost> for BlogPostResponse {
+    fn from(post: BlogPost) -> Self {
+        BlogPostResponse {
+            id: post.id,
+            title: post.title,
+            slug: post.slug,
+            content: post.content,
+            excerpt: post.excerpt,
+            cover_image: post.cover_image,
+            category: post.category,
+            tags: post
+                .tags
+                .map(|t| t.split(',').map(|s| s.trim().to_string()).collect())
+                .unwrap_or_default(),
+            status: post.status,
+            view_count: post.view_count,
+            is_featured: post.is_featured != 0,
+            created_at: post.created_at.to_rfc3339(),
+            updated_at: post.updated_at.to_rfc3339(),
+            published_at: post.published_at.map(|dt| dt.to_rfc3339()),
+        }
+    }
+}

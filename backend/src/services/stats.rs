@@ -2,22 +2,17 @@
 //! 
 //! 采用结构体封装 + 依赖注入模式
 
-use sqlx::MySqlPool;
 use anyhow::Result;
-use uuid::Uuid;
 
 use crate::models::{StatsResponse, LanguageStat};
 
 /// 统计数据服务
-pub struct StatsService {
-    #[allow(dead_code)]
-    pool: MySqlPool,
-}
+pub struct StatsService;
 
 impl StatsService {
     /// 创建新的统计服务实例
-    pub fn new(pool: MySqlPool) -> Self {
-        Self { pool }
+    pub fn new() -> Self {
+        Self
     }
 
     /// 获取整体统计数据
@@ -62,10 +57,5 @@ impl StatsService {
         Ok(stats)
     }
 
-    /// 获取特定项目的统计数据
-    #[allow(dead_code)]
-    pub async fn get_project_stats(&self, _project_id: Uuid) -> Result<StatsResponse> {
-        // 占位符实现
-        self.get_overall().await
-    }
+
 }

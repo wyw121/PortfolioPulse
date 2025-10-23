@@ -18,9 +18,7 @@ pub use commit::*;
 mod blog;
 pub use blog::*;
 
-// GitHub外部API
-mod github;
-pub use github::*;
+
 
 // 统计数据
 mod stats;

@@ -3,7 +3,6 @@ use tower_http::cors::{Any, CorsLayer};
 use tower_http::services::{ServeDir, ServeFile};
 use tracing::info;
 
-mod dto;
 mod error;
 mod handlers;
 mod models;
@@ -13,7 +12,6 @@ mod services;
 
 #[derive(Clone)]
 pub struct AppState {
-    pub db: sqlx::MySqlPool,
     pub github_token: String,
 }
 
@@ -25,19 +23,9 @@ async fn main() -> Result<(), anyhow::Error> {
     // 加载环境变量
     dotenvy::dotenv().ok();
 
-    // 数据库连接
-    let database_url = std::env::var("DATABASE_URL")
-        .unwrap_or_else(|_| "mysql://root@localhost/portfolio_pulse".to_string());
-
-    let pool = sqlx::MySqlPool::connect(&database_url).await?;
-
-    // 运行数据库迁移
-    sqlx::migrate!("./migrations").run(&pool).await?;
-
     let github_token = std::env::var("GITHUB_TOKEN").unwrap_or_default();
 
     let app_state = AppState {
-        db: pool,
         github_token,
     };
 
