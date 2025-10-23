@@ -53,6 +53,25 @@ export async function getProjects(): Promise<Project[]> {
 }
 
 /**
+ * 获取单个项目详情
+ */
+export async function getProjectBySlug(slug: string): Promise<Project> {
+  try {
+    const response = await fetch(`${API_BASE_URL}/api/projects/${slug}`);
+
+    if (!response.ok) {
+      throw new Error(`HTTP error! status: ${response.status}`);
+    }
+
+    const project = await response.json();
+    return project;
+  } catch (error) {
+    console.error(`获取项目 ${slug} 失败:`, error);
+    throw error;
+  }
+}
+
+/**
  * 获取博客文章列表
  */
 export async function getBlogPosts(): Promise<BlogPost[]> {

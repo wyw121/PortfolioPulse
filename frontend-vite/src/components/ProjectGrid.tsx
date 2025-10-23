@@ -1,30 +1,20 @@
-import { useEffect, useState } from "react";
-import { getProjects, type Project } from "../lib/api";
+import { useProjects } from "@/hooks/useProjects";
+import { useProjectStore } from "@/store/projectStore";
 
 export function ProjectGrid() {
-  const [projects, setProjects] = useState<Project[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
-
-  const fetchProjects = async () => {
-    try {
-      setLoading(true);
-      setError(null);
-      const data = await getProjects();
-      setProjects(data);
-    } catch (err) {
-      setError(err instanceof Error ? err.message : "获取项目失败");
-      console.error("Failed to fetch projects:", err);
-    } finally {
-      setLoading(false);
-    }
+  // 使用 Zustand hook 获取项目数据
+  const { projects, isLoading, error } = useProjects();
+  
+  // 获取清除缓存的方法(用于重试)
+  const clearCache = useProjectStore(state => state.clearCache);
+  
+  // 重试函数
+  const handleRetry = () => {
+    clearCache();
+    // 清除缓存后,useProjects hook 会自动重新获取
   };
 
-  useEffect(() => {
-    fetchProjects();
-  }, []);
-
-  if (loading) {
+  if (isLoading) {
     return (
       <div className="flex items-center justify-center py-12">
         <div className="text-gray-600">加载中...</div>
@@ -37,7 +27,7 @@ export function ProjectGrid() {
       <div className="flex flex-col items-center justify-center py-12">
         <div className="text-red-600 mb-4">加载失败: {error}</div>
         <button
-          onClick={fetchProjects}
+          onClick={handleRetry}
           className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700"
         >
           重试
