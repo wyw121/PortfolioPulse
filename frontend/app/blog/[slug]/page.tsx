@@ -1,6 +1,7 @@
 import { BlogPost } from "@/components/sections/blog-post";
 import { BlogPostMeta } from "@/components/sections/blog-post-meta";
 import { RelatedPosts } from "@/components/sections/related-posts";
+import { getPostBySlug, getAllPosts } from "@/lib/blog-loader";
 import { notFound } from "next/navigation";
 
 interface BlogPostPageProps {
@@ -9,31 +10,9 @@ interface BlogPostPageProps {
   }>;
 }
 
-async function getBlogPost(slug: string) {
-  try {
-    const res = await fetch(
-      `${
-        process.env.API_URL || "http://localhost:8000"
-      }/api/blog/posts/${slug}`,
-      {
-        cache: "no-store", // 确保获取最新内容
-      }
-    );
-
-    if (!res.ok) {
-      return null;
-    }
-
-    return await res.json();
-  } catch (error) {
-    console.error("获取博客文章失败:", error);
-    return null;
-  }
-}
-
 export default async function BlogPostPage({ params }: BlogPostPageProps) {
   const { slug } = await params;
-  const post = await getBlogPost(slug);
+  const post = await getPostBySlug(slug);
 
   if (!post) {
     notFound();
@@ -53,10 +32,19 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
   );
 }
 
+// 生成静态路径
+export async function generateStaticParams() {
+  const posts = await getAllPosts();
+  
+  return posts.map((post) => ({
+    slug: post.slug,
+  }));
+}
+
 // 动态生成页面标题
 export async function generateMetadata({ params }: BlogPostPageProps) {
   const { slug } = await params;
-  const post = await getBlogPost(slug);
+  const post = await getPostBySlug(slug);
 
   if (!post) {
     return {
@@ -66,15 +54,14 @@ export async function generateMetadata({ params }: BlogPostPageProps) {
 
   return {
     title: `${post.title} | PortfolioPulse 博客`,
-    description: post.excerpt || post.title,
+    description: post.description || post.title,
     openGraph: {
       title: post.title,
-      description: post.excerpt || post.title,
+      description: post.description || post.title,
       type: "article",
-      publishedTime: post.published_at,
-      modifiedTime: post.updated_at,
+      publishedTime: post.date,
       authors: ["PortfolioPulse"],
-      images: post.cover_image ? [{ url: post.cover_image }] : undefined,
+      images: post.cover ? [{ url: post.cover }] : undefined,
     },
   };
 }

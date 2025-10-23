@@ -1,26 +1,19 @@
 'use client'
 
-import type { BlogPost } from '@/types/blog'
+import type { BlogPostData } from '@/lib/blog-loader'
 
 interface BlogPostComponentProps {
-  post: BlogPost
+  post: BlogPostData
 }
 
 export function BlogPost({ post }: BlogPostComponentProps) {
   return (
     <div className="prose prose-lg max-w-none dark:prose-invert">
-      {/* 如果是HTML内容（如OneNote导出），直接渲染 */}
-      {post.content.includes('<html>') || post.content.includes('<!DOCTYPE') ? (
-        <div
-          className="blog-html-content"
-          dangerouslySetInnerHTML={{ __html: post.content }}
-        />
-      ) : (
-        <div
-          className="blog-markdown-content"
-          dangerouslySetInnerHTML={{ __html: post.content }}
-        />
-      )}
+      {/* 渲染 Markdown 转换后的 HTML */}
+      <div
+        className="blog-markdown-content"
+        dangerouslySetInnerHTML={{ __html: post.htmlContent }}
+      />
 
       <style jsx global>{`
         .blog-html-content {

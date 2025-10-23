@@ -2,57 +2,36 @@
 
 import { Badge } from '@/components/ui/badge'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
-import { BlogService } from '@/lib/blog-service'
-import type { BlogPost } from '@/types/blog'
+import type { BlogPostMeta } from '@/lib/blog-loader'
 import Link from 'next/link'
 import { useEffect, useState } from 'react'
 
 interface RelatedPostsProps {
   currentSlug: string
-  category?: string
+  category: string
 }
 
 export function RelatedPosts({ currentSlug, category }: RelatedPostsProps) {
-  const [relatedPosts, setRelatedPosts] = useState<BlogPost[]>([])
+  const [relatedPosts, setRelatedPosts] = useState<BlogPostMeta[]>([])
   const [loading, setLoading] = useState(true)
 
   useEffect(() => {
-    loadRelatedPosts()
-  }, [currentSlug, category])
-
-  const loadRelatedPosts = async () => {
-    try {
-      let posts: BlogPost[] = []
-
-      // 先尝试获取同分类的文章
-      if (category) {
-        posts = await BlogService.getPosts({
-          category: category,
-          page_size: 6
-        })
-        // 过滤掉当前文章
-        posts = posts.filter(post => post.slug !== currentSlug)
+    const loadData = async () => {
+      try {
+        const response = await fetch(
+          `/api/blog/related?slug=${encodeURIComponent(currentSlug)}&category=${encodeURIComponent(category)}&limit=3`
+        )
+        if (!response.ok) throw new Error('获取相关文章失败')
+        const posts = await response.json()
+        setRelatedPosts(posts)
+      } catch (error) {
+        console.error('获取相关文章失败:', error)
+      } finally {
+        setLoading(false)
       }
-
-      // 如果同分类文章不够，补充其他文章
-      if (posts.length < 3) {
-        const allPosts = await BlogService.getPosts({
-          page_size: 8
-        })
-        const otherPosts = allPosts
-          .filter(post => post.slug !== currentSlug && !posts.some(p => p.slug === post.slug))
-          .slice(0, 3 - posts.length)
-
-        posts = [...posts, ...otherPosts]
-      }
-
-      setRelatedPosts(posts.slice(0, 3))
-    } catch (error) {
-      console.error('获取相关文章失败:', error)
-    } finally {
-      setLoading(false)
     }
-  }
+    loadData()
+  }, [currentSlug, category])
 
   const formatDate = (dateString: string) => {
     return new Date(dateString).toLocaleDateString('zh-CN', {
@@ -94,7 +73,7 @@ export function RelatedPosts({ currentSlug, category }: RelatedPostsProps) {
       <h3 className="text-xl font-bold mb-6">相关文章</h3>
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
         {relatedPosts.map((post) => (
-          <Card key={post.id} className="hover:shadow-md transition-shadow">
+          <Card key={post.slug} className="hover:shadow-md transition-shadow">
             <CardHeader>
               <CardTitle className="text-base">
                 <Link
@@ -105,7 +84,7 @@ export function RelatedPosts({ currentSlug, category }: RelatedPostsProps) {
                 </Link>
               </CardTitle>
               <div className="flex items-center space-x-2 text-sm text-muted-foreground">
-                <span>{formatDate(post.published_at || post.created_at)}</span>
+                <span>{formatDate(post.date)}</span>
                 {post.category && (
                   <Badge variant="outline" className="text-xs">
                     {post.category}
@@ -114,10 +93,10 @@ export function RelatedPosts({ currentSlug, category }: RelatedPostsProps) {
               </div>
             </CardHeader>
 
-            {post.excerpt && (
+            {post.description && (
               <CardContent>
                 <CardDescription className="text-sm line-clamp-2">
-                  {post.excerpt}
+                  {post.description}
                 </CardDescription>
               </CardContent>
             )}
