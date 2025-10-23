@@ -1,6 +1,5 @@
 use axum::{extract::{Path, Query, State}, response::Json};
 use tracing::instrument;
-use uuid::Uuid;
 
 use crate::{error::AppError, models::*, request::*, services, AppState};
 
@@ -16,18 +15,17 @@ pub async fn health_check() -> Json<serde_json::Value> {
     }))
 }
 
-#[instrument(skip(state))]
-pub async fn get_projects(State(state): State<AppState>) -> Result<Json<Vec<ProjectResponse>>, AppError> {
-    let service = services::project::ProjectService::new(state.db.clone());
-    let projects = service.get_all().await.map_err(|_| AppError::internal("获取项目列表失败"))?;
+#[instrument(skip(_state))]
+pub async fn get_projects(State(_state): State<AppState>) -> Result<Json<Vec<ProjectResponse>>, AppError> {
+    let service = services::project_markdown::MarkdownProjectService::new();
+    let projects = service.get_all_projects().await.map_err(|_| AppError::internal("获取项目列表失败"))?;
     Ok(Json(projects))
 }
 
-#[instrument(skip(state))]
-pub async fn get_project(State(state): State<AppState>, Path(id): Path<String>) -> Result<Json<ProjectResponse>, AppError> {
-    let project_id = Uuid::parse_str(&id)?;
-    let service = services::project::ProjectService::new(state.db.clone());
-    let project = service.get_by_id(project_id).await.map_err(|_| AppError::internal("获取项目详情失败"))?.ok_or_else(|| AppError::not_found("项目不存在"))?;
+#[instrument(skip(_state))]
+pub async fn get_project(State(_state): State<AppState>, Path(slug): Path<String>) -> Result<Json<ProjectResponse>, AppError> {
+    let service = services::project_markdown::MarkdownProjectService::new();
+    let project = service.get_project_by_slug(&slug).await.map_err(|_| AppError::internal("获取项目详情失败"))?.ok_or_else(|| AppError::not_found("项目不存在"))?;
     Ok(Json(project))
 }
 

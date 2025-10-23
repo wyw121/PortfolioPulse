@@ -35,7 +35,10 @@ docs/
 ├── 📝 BLOG_USAGE_GUIDE.md
 ├── 🎯 PROJECT_REFINEMENT_GUIDE.md
 ├── 🔄 DESIGN_REFINEMENT_ROADMAP.md
-└── 🌐 MULTI_PROJECT_DEPLOYMENT.md
+├── 🌐 MULTI_PROJECT_DEPLOYMENT.md
+├── 🔍 ARCHITECTURE_ANALYSIS.md           # 🆕 新增: 架构分析报告
+├── ✅ ARCHITECTURE_ISSUES_CHECKLIST.md   # 🆕 新增: 问题清单
+└── ⚡ ARCHITECTURE_QUICK_REFERENCE.md    # 🆕 新增: 快速参考
 ```
 
 ### 🗂️ 根目录文档层 (项目根目录)
@@ -148,6 +151,53 @@ docs/
 - [SYSTEM_ARCHITECTURE_ANALYSIS.md](SYSTEM_ARCHITECTURE_ANALYSIS.md) - 系统架构
 - [BUSINESS_LOGIC_DESIGN.md](BUSINESS_LOGIC_DESIGN.md) - 业务逻辑
 - [DESIGN_REFINEMENT_ROADMAP.md](DESIGN_REFINEMENT_ROADMAP.md) - 设计规划
+- [ARCHITECTURE_ANALYSIS.md](ARCHITECTURE_ANALYSIS.md) - 🆕 架构全面分析报告
+- [ARCHITECTURE_ISSUES_CHECKLIST.md](ARCHITECTURE_ISSUES_CHECKLIST.md) - 🆕 问题清单
+- [ARCHITECTURE_QUICK_REFERENCE.md](ARCHITECTURE_QUICK_REFERENCE.md) - 🆕 快速参考卡
+
+---
+
+## 📑 新增文档说明 (2025-10-23)
+
+### 🔍 ARCHITECTURE_ANALYSIS.md
+**全面的系统架构分析报告**
+
+- **目的**: 评估项目的高内聚低耦合实现情况
+- **内容**:
+  - 后端架构分析 (Rust Axum)
+  - 前端架构分析 (Vite + React 18)
+  - 数据库设计评估
+  - 13个具体架构问题识别
+  - 优先级分类 (高/中/低)
+  - 详细优化路线图 (5周计划)
+- **适用对象**: 架构师、技术负责人、代码审查者
+- **更新频率**: 重大架构变更后更新
+
+### ✅ ARCHITECTURE_ISSUES_CHECKLIST.md
+**架构问题追踪清单**
+
+- **目的**: 提供可执行的问题清单和进度追踪
+- **内容**:
+  - 13个问题的详细列表
+  - 优先级标注 (🔴高 🟡中 🟢低)
+  - 工作量估算
+  - 状态追踪 (待处理/进行中/已完成)
+  - 4阶段优化路线图
+- **适用对象**: 项目经理、开发团队、需求跟进者
+- **更新频率**: 每周更新进度
+
+### ⚡ ARCHITECTURE_QUICK_REFERENCE.md
+**架构优化快速参考卡**
+
+- **目的**: 为开发者提供即用即查的架构指南
+- **内容**:
+  - 3个立即行动项
+  - 代码检查清单
+  - 代码模板 (Repository/Hook/Store)
+  - 重构前后对比
+  - 常见问题解答
+- **适用对象**: 一线开发者、快速参考场景
+- **更新频率**: 随最佳实践演进更新
 
 ---
 

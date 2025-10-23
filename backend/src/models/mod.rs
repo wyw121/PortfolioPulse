@@ -14,7 +14,7 @@ pub use activity::*;
 mod commit;
 pub use commit::*;
 
-// 博客领域
+// 博客领域 (Markdown 方案)
 mod blog;
 pub use blog::*;
 
