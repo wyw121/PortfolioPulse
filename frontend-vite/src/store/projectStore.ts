@@ -6,7 +6,7 @@
 
 import { create } from 'zustand';
 import { devtools } from 'zustand/middleware';
-import type { Project } from '@/lib/api';
+import type { Project } from '@/types';
 
 interface ProjectState {
   // 状态

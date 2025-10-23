@@ -2,35 +2,10 @@
  * API客户端 - 用于与后端服务通信
  */
 
+import type { Project, BlogPost } from '@/types';
+
 // 在生产环境中，API 和前端在同一个域名下
 const API_BASE_URL = import.meta.env.VITE_API_URL || "";
-
-export interface Project {
-  id: string;
-  name: string;
-  description: string;
-  html_url: string;
-  homepage?: string;
-  language: string;
-  stargazers_count: number;
-  forks_count: number;
-  topics: string[];
-  updated_at: string;
-}
-
-export interface BlogPost {
-  id: string;
-  title: string;
-  excerpt: string;
-  content: string;
-  published_at: string;
-  tags: string[];
-  slug: string;
-}
-
-export interface ApiError {
-  error: string;
-}
 
 /**
  * 获取所有项目
