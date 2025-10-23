@@ -4,6 +4,7 @@ use tower_http::services::{ServeDir, ServeFile};
 use tracing::info;
 use std::sync::Arc;
 
+mod config;
 mod error;
 mod handlers;
 mod models;
@@ -12,10 +13,11 @@ mod routes;
 mod services;
 
 use services::traits::*;
+use config::Config;
 
 #[derive(Clone)]
 pub struct AppState {
-    pub github_token: String,
+    pub config: Arc<Config>,
     pub project_service: Arc<dyn ProjectService>,
     pub blog_service: Arc<dyn BlogService>,
     pub activity_service: Arc<dyn ActivityService>,
@@ -25,13 +27,20 @@ pub struct AppState {
 
 #[tokio::main]
 async fn main() -> Result<(), anyhow::Error> {
-    // 初始化日志
-    tracing_subscriber::fmt::init();
-
     // 加载环境变量
     dotenvy::dotenv().ok();
 
-    let github_token = std::env::var("GITHUB_TOKEN").unwrap_or_default();
+    // 加载应用配置
+    let config = Arc::new(Config::from_env().map_err(|e| {
+        eprintln!("配置加载失败: {}", e);
+        std::process::exit(1);
+    }).unwrap());
+
+    // 初始化日志
+    init_logging(&config.log)?;
+
+    // 打印配置摘要
+    config.print_summary();
 
     // 初始化 Service 实例
     let project_service: Arc<dyn ProjectService> = Arc::new(services::project_markdown::MarkdownProjectService::new());
@@ -41,7 +50,7 @@ async fn main() -> Result<(), anyhow::Error> {
     let stats_service: Arc<dyn StatsService> = Arc::new(services::stats::StatsService::new());
 
     let app_state = AppState {
-        github_token,
+        config: config.clone(),
         project_service,
         blog_service,
         activity_service,
@@ -53,8 +62,11 @@ async fn main() -> Result<(), anyhow::Error> {
     let api_routes = routes::create_api_routes(app_state.clone());
 
     // 静态文件服务 - 为 SPA 应用提供 fallback
-    let static_files_service =
-        ServeDir::new("static").not_found_service(ServeFile::new("static/index.html"));
+    let static_files_service = ServeDir::new(&config.server.static_dir)
+        .not_found_service(ServeFile::new(format!("{}/index.html", config.server.static_dir)));
+
+    // 构建 CORS 层
+    let cors_layer = build_cors_layer(&config.security.cors_origins);
 
     // 构建完整应用路由
     let app = Router::new()
@@ -62,17 +74,56 @@ async fn main() -> Result<(), anyhow::Error> {
         .nest("/api", api_routes)
         // 静态文件服务（处理所有非 API 路径）
         .fallback_service(static_files_service)
-        .layer(
-            CorsLayer::new()
-                .allow_origin(Any)
-                .allow_methods(Any)
-                .allow_headers(Any),
-        );
+        .layer(cors_layer);
 
-    let listener = tokio::net::TcpListener::bind("0.0.0.0:8000").await?;
-    info!("服务器启动在 http://0.0.0.0:8000");
+    // 启动服务器
+    let server_address = config.server_address();
+    let listener = tokio::net::TcpListener::bind(&server_address).await?;
+    info!("服务器启动在 http://{}", server_address);
 
     axum::serve(listener, app).await?;
 
     Ok(())
+}
+
+/// 初始化日志系统
+fn init_logging(log_config: &config::LogConfig) -> Result<(), anyhow::Error> {
+    // 简化的日志初始化
+    match log_config.format.as_str() {
+        "json" => {
+            // 对于 JSON 格式，使用基础初始化
+            tracing_subscriber::fmt()
+                .with_target(true)
+                .init();
+        }
+        _ => {
+            // 默认使用 pretty 格式
+            tracing_subscriber::fmt()
+                .with_target(true)
+                .pretty()
+                .init();
+        }
+    }
+
+    info!("日志系统初始化完成，级别: {}", log_config.level);
+    Ok(())
+}
+
+/// 构建 CORS 层
+fn build_cors_layer(origins: &[String]) -> CorsLayer {
+    let mut cors = CorsLayer::new()
+        .allow_methods(Any)
+        .allow_headers(Any);
+
+    if origins.len() == 1 && origins[0] == "*" {
+        cors = cors.allow_origin(Any);
+    } else {
+        for origin in origins {
+            if let Ok(origin_header) = origin.parse::<axum::http::HeaderValue>() {
+                cors = cors.allow_origin(origin_header);
+            }
+        }
+    }
+
+    cors
 }

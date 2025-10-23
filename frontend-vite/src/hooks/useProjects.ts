@@ -7,6 +7,7 @@
 import { useEffect } from 'react';
 import { useProjectStore } from '@/store/projectStore';
 import { getProjects, getProjectBySlug } from '@/lib/api';
+import { useAsyncError } from './useErrorHandler';
 
 /**
  * Hook: 获取所有项目
@@ -15,17 +16,16 @@ import { getProjects, getProjectBySlug } from '@/lib/api';
  * - 自动缓存,避免重复请求
  * - 统一的加载和错误状态
  * - 5分钟缓存有效期
+ * - 集成统一错误处理
  */
 export function useProjects() {
   const { 
     projects, 
-    isLoading, 
-    error,
     setProjects,
-    setLoading,
-    setError,
     shouldRefetch
   } = useProjectStore();
+
+  const { execute, isLoading, error, retry, canRetry } = useAsyncError();
 
   useEffect(() => {
     // 如果有缓存且未过期,不重新获取
@@ -34,22 +34,22 @@ export function useProjects() {
     }
 
     // 获取项目列表
-    const fetchProjects = async () => {
-      setLoading(true);
-      try {
-        const data = await getProjects();
-        setProjects(data);
-      } catch (err) {
-        setError(err instanceof Error ? err.message : '获取项目列表失败');
-      } finally {
-        setLoading(false);
+    execute(
+      () => getProjects(),
+      {
+        onSuccess: (data) => setProjects(data),
+        enableRetry: true
       }
-    };
+    );
+  }, [projects.length, shouldRefetch, execute, setProjects]);
 
-    fetchProjects();
-  }, [projects.length, shouldRefetch, setProjects, setLoading, setError]);
-
-  return { projects, isLoading, error };
+  return { 
+    projects, 
+    isLoading, 
+    error, 
+    retry, 
+    canRetry 
+  };
 }
 
 /**
@@ -65,13 +65,11 @@ export function useProjects() {
 export function useProject(slug: string | undefined) {
   const {
     projects,
-    isLoading,
-    error,
     getProjectDetail,
-    setProjectDetail,
-    setLoading,
-    setError
+    setProjectDetail
   } = useProjectStore();
+
+  const { execute, isLoading, error, retry, canRetry } = useAsyncError();
 
   useEffect(() => {
     if (!slug) return;
@@ -88,24 +86,18 @@ export function useProject(slug: string | undefined) {
     }
 
     // 3. 单独请求详情
-    const fetchProject = async () => {
-      setLoading(true);
-      try {
-        const data = await getProjectBySlug(slug);
-        setProjectDetail(slug, data);
-      } catch (err) {
-        setError(err instanceof Error ? err.message : '获取项目详情失败');
-      } finally {
-        setLoading(false);
+    execute(
+      () => getProjectBySlug(slug),
+      {
+        onSuccess: (data) => setProjectDetail(slug, data),
+        enableRetry: true
       }
-    };
-
-    fetchProject();
-  }, [slug, projects, getProjectDetail, setProjectDetail, setLoading, setError]);
+    );
+  }, [slug, projects, getProjectDetail, setProjectDetail, execute]);
 
   const project = slug ? getProjectDetail(slug) : undefined;
   
-  return { project, isLoading, error };
+  return { project, isLoading, error, retry, canRetry };
 }
 
 /**

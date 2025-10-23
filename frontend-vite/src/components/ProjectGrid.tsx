@@ -2,16 +2,18 @@ import { useProjects } from "@/hooks/useProjects";
 import { useProjectStore } from "@/store/projectStore";
 
 export function ProjectGrid() {
-  // 使用 Zustand hook 获取项目数据
-  const { projects, isLoading, error } = useProjects();
+  // 使用升级后的 hook，包含错误处理
+  const { projects, isLoading, error, retry } = useProjects();
   
-  // 获取清除缓存的方法(用于重试)
+  // 获取清除缓存的方法
   const clearCache = useProjectStore(state => state.clearCache);
   
   // 重试函数
   const handleRetry = () => {
     clearCache();
-    // 清除缓存后,useProjects hook 会自动重新获取
+    if (retry) {
+      retry();
+    }
   };
 
   if (isLoading) {
@@ -25,7 +27,7 @@ export function ProjectGrid() {
   if (error) {
     return (
       <div className="flex flex-col items-center justify-center py-12">
-        <div className="text-red-600 mb-4">加载失败: {error}</div>
+        <div className="text-red-600 mb-4">加载失败: {error?.message || '未知错误'}</div>
         <button
           onClick={handleRetry}
           className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700"
