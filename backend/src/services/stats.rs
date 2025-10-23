@@ -3,8 +3,9 @@
 //! 采用结构体封装 + 依赖注入模式
 
 use anyhow::Result;
-
+use async_trait::async_trait;
 use crate::models::{StatsResponse, LanguageStat};
+use crate::services::traits::StatsService as StatsServiceTrait;
 
 /// 统计数据服务
 pub struct StatsService;
@@ -56,6 +57,13 @@ impl StatsService {
 
         Ok(stats)
     }
+}
 
+// ============= Trait 实现 =============
 
+#[async_trait]
+impl StatsServiceTrait for StatsService {
+    async fn get_overall(&self) -> Result<StatsResponse> {
+        self.get_overall().await
+    }
 }

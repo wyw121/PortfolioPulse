@@ -25,6 +25,9 @@ yaml-rust = "0.4"
 thiserror = "1.0"
 anyhow = "1.0"
 
+# 异步 trait 支持
+async-trait = "0.1"
+
 # 编码
 base64 = "0.22"
 

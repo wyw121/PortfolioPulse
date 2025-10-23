@@ -1,5 +1,7 @@
 use crate::models::*;
+use crate::services::traits::ProjectService;
 use anyhow::{Context, Result};
+use async_trait::async_trait;
 use chrono::{DateTime, NaiveDate, Utc};
 use pulldown_cmark::{html, Parser};
 use std::fs;
@@ -234,4 +236,21 @@ struct ProjectMetadata {
     featured: bool,
     created_at: DateTime<Utc>,
     updated_at: DateTime<Utc>,
+}
+
+// ============= Trait 实现 =============
+
+#[async_trait]
+impl ProjectService for MarkdownProjectService {
+    async fn get_all_projects(&self) -> Result<Vec<ProjectResponse>> {
+        self.get_all_projects().await
+    }
+    
+    async fn get_project_by_slug(&self, slug: &str) -> Result<Option<ProjectResponse>> {
+        self.get_project_by_slug(slug).await
+    }
+    
+    async fn get_featured_projects(&self) -> Result<Vec<ProjectResponse>> {
+        self.get_featured_projects().await
+    }
 }

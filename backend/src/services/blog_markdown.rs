@@ -1,5 +1,7 @@
 use crate::models::*;
+use crate::services::traits::BlogService;
 use anyhow::{Context, Result};
+use async_trait::async_trait;
 use chrono::{DateTime, Utc};
 use pulldown_cmark::{html, Parser};
 use std::fs;
@@ -191,4 +193,21 @@ struct BlogMetadata {
     description: String,
     published_at: DateTime<Utc>,
     tags: String,
+}
+
+// ============= Trait 实现 =============
+
+#[async_trait]
+impl BlogService for MarkdownBlogService {
+    async fn get_published_posts(&self, page: u32, page_size: u32) -> Result<Vec<BlogPost>> {
+        self.get_published_posts(page, page_size).await
+    }
+    
+    async fn get_post_by_slug(&self, slug: &str) -> Result<Option<BlogPost>> {
+        self.get_post_by_slug(slug).await
+    }
+    
+    async fn get_featured_posts(&self, limit: usize) -> Result<Vec<BlogPost>> {
+        self.get_featured_posts(limit as u32).await
+    }
 }
