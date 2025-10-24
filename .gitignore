@@ -94,9 +94,15 @@ coverage/
 # Deployment documentation with sensitive info
 DEPLOYMENT.md
 
-# Vite 分支遗留文件（Next.js 分支不需要）
+# Deployment packages and builds
 /deploy-package/
 /deploy-backup-*/
+/deploy-server/
+/build/
+*.exe
+rustup-init.exe
+
+# Legacy scripts (removed)
 /one-click-deploy.ps1
 /build.sh
 /scripts/setup-ubuntu-server.sh

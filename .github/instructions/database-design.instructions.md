@@ -2,9 +2,18 @@
 applyTo: "database/**/*"
 ---
 
-# 数据库设计指引 - MySQL
+# ⚠️ 已弃用 - 数据库设计指引
 
-## 数据库架构设计
+> **注意**: 本项目已移除数据库依赖，改用以下架构：
+> - **博客系统**: Git + Markdown 文件 (`frontend/content/blog/*.md`)
+> - **数据存储**: 前端静态数据或 Rust API 硬编码数据
+> - **状态管理**: 前端 Zustand 或 React Context
+>
+> 此文件保留仅供历史参考，不再适用于当前项目。
+
+---
+
+## 原数据库架构设计 (已废弃)
 
 ### 表结构规范
 - 表名使用复数形式 (`users`, `projects`, `commits`)

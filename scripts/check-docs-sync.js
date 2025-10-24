@@ -20,8 +20,8 @@ const DOC_MAPPING = {
     "docs/TECHNICAL_IMPLEMENTATION_GUIDE.md",
   ".github/instructions/ui-style-system.instructions.md":
     "docs/PROJECT_STYLE_GUIDE.md",
-  ".github/instructions/database-design.instructions.md":
-    "docs/BUSINESS_LOGIC_DESIGN.md",
+  // 数据库设计已废弃,不再检查
+  // ".github/instructions/database-design.instructions.md": "docs/BUSINESS_LOGIC_DESIGN.md",
   ".github/instructions/deployment-guide.instructions.md":
     "docs/BINARY_DEPLOYMENT_GUIDE.md",
   ".github/instructions/binary-deployment.instructions.md":
