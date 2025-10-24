@@ -11,7 +11,7 @@ interface ProjectCardProps {
 }
 
 export const ProjectCard = ({ project, index }: ProjectCardProps) => {
-  const { dict } = useTranslation();
+  const { dict, locale } = useTranslation();
 
   const statusColors = {
     active: "bg-green-500",
@@ -41,7 +41,7 @@ export const ProjectCard = ({ project, index }: ProjectCardProps) => {
             </h3>
 
             <p className="text-gray-600 dark:text-gray-300 mb-4 line-clamp-3">
-              {project.description}
+              {project.description[locale]}
             </p>
 
             {/* 技术栈 */}

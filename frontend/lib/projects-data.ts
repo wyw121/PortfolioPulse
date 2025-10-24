@@ -6,7 +6,10 @@
 export interface Project {
   id: number;
   title: string;
-  description: string;
+  description: {
+    zh: string;
+    en: string;
+  };
   technologies: string[];
   status: "active" | "completed" | "planning";
   github: string;
@@ -17,8 +20,10 @@ export const projects: Project[] = [
   {
     id: 1,
     title: "PortfolioPulse",
-    description:
-      "现代化的个人项目展示和动态追踪平台,集成博客、项目管理和动态展示功能。采用 Next.js 15 SSG 架构,无需后端服务。",
+    description: {
+      zh: "现代化的个人项目展示和动态追踪平台,集成博客、项目管理和动态展示功能。采用 Next.js 15 SSG 架构,无需后端服务。",
+      en: "Modern personal project showcase and tracking platform with integrated blog, project management, and activity display. Built with Next.js 15 SSG architecture, no backend required."
+    },
     technologies: ["Next.js 15", "TypeScript", "Tailwind CSS", "shadcn/ui"],
     status: "active",
     github: "https://github.com/wyw121/PortfolioPulse",
@@ -27,7 +32,10 @@ export const projects: Project[] = [
   {
     id: 2,
     title: "Web Components Library",
-    description: "基于现代Web标准的可复用组件库,支持React、Vue等多框架集成。",
+    description: {
+      zh: "基于现代Web标准的可复用组件库,支持React、Vue等多框架集成。",
+      en: "Reusable component library based on modern Web standards, supporting multi-framework integration including React and Vue."
+    },
     technologies: ["TypeScript", "Storybook", "Rollup", "CSS Variables"],
     status: "completed",
     github: "https://github.com/username/web-components",
@@ -36,8 +44,10 @@ export const projects: Project[] = [
   {
     id: 3,
     title: "AI Code Assistant",
-    description:
-      "基于大语言模型的代码辅助工具,支持代码生成、重构和文档自动生成。",
+    description: {
+      zh: "基于大语言模型的代码辅助工具,支持代码生成、重构和文档自动生成。",
+      en: "LLM-based code assistance tool supporting code generation, refactoring, and automatic documentation generation."
+    },
     technologies: ["Python", "FastAPI", "OpenAI API", "Docker"],
     status: "planning",
     github: "https://github.com/username/ai-code-assistant",
