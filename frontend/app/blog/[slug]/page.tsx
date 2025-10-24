@@ -4,6 +4,9 @@ import { RelatedPosts } from "@/components/sections/related-posts";
 import { getPostBySlug, getAllPosts } from "@/lib/blog-loader";
 import { notFound } from "next/navigation";
 
+// 启用 ISR: 每 3600 秒 (1小时) 重新验证一次
+export const revalidate = 3600;
+
 interface BlogPostPageProps {
   params: Promise<{
     slug: string;

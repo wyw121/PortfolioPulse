@@ -4,7 +4,7 @@ import { AnimatedContainer } from "@/components/ui/effects";
 import { motion } from "framer-motion";
 import Link from "next/link";
 import type { BlogPostMeta } from "@/lib/blog-loader";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 
 const categories = [
   "全部",
@@ -16,39 +16,18 @@ const categories = [
   "开源文化",
 ];
 
-export function BlogGrid() {
-  const [posts, setPosts] = useState<BlogPostMeta[]>([]);
-  const [loading, setLoading] = useState(true);
+interface BlogGridProps {
+  initialPosts: BlogPostMeta[];
+}
+
+export function BlogGrid({ initialPosts }: BlogGridProps) {
   const [selectedCategory, setSelectedCategory] = useState("全部");
 
-  useEffect(() => {
-    fetch("/api/blog/posts")
-      .then((res) => res.json())
-      .then((data: BlogPostMeta[]) => {
-        setPosts(data);
-        setLoading(false);
-      })
-      .catch((error) => {
-        console.error("获取博客文章失败:", error);
-        setLoading(false);
-      });
-  }, []);
-
-  const filteredPosts = posts.filter(
+  const filteredPosts = initialPosts.filter(
     (post) => selectedCategory === "全部" || post.category === selectedCategory
   );
 
   const featuredPosts = filteredPosts.filter((post) => post.featured);
-
-  if (loading) {
-    return (
-      <div className="max-w-6xl mx-auto px-6 pb-20">
-        <div className="text-center text-gray-600 dark:text-gray-400">
-          加载中...
-        </div>
-      </div>
-    );
-  }
 
   return (
     <div className="max-w-6xl mx-auto px-6 pb-20">

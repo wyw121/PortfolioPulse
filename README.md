@@ -27,8 +27,8 @@
 
 ## ✨ 主要特性
 
-- 🚀 **现代技术栈**: Next.js 15 + Tailwind CSS + shadcn/ui + Rust API
-- 📊 **实时动态展示**: 硬编码数据展示项目和活动统计
+- 🚀 **现代技术栈**: Next.js 15 + Tailwind CSS + shadcn/ui
+- 📊 **静态数据展示**: 项目和活动统计
 - 📝 **Markdown博客**: 使用 Git + Markdown 管理博客内容,无需数据库
 - 🎨 **项目展示**: 项目卡片展示、实时状态更新
 - 🌙 **主题切换**: 支持明暗主题无缝切换
@@ -37,23 +37,17 @@
 ## 🛠️ 技术架构
 
 ### 前端技术栈
-- **Next.js 15**: React 全栈框架，App Router
+- **Next.js 15**: React 全栈框架，App Router，SSG/ISR
 - **TypeScript**: 类型安全的 JavaScript
 - **Tailwind CSS**: 实用优先的 CSS 框架
 - **shadcn/ui**: 现代化组件库
 - **gray-matter + remark**: Markdown 解析和渲染
-
-### 后端技术栈
-- **Rust**: 高性能系统级编程语言
-- **Axum**: Web 框架
-- **Tokio**: 异步运行时
 
 ## 🚀 快速开始
 
 ### 环境要求
 
 - Node.js >= 18.17.0
-- Rust >= 1.75.0
 - Git
 
 ### 安装和运行
@@ -64,28 +58,18 @@
    cd PortfolioPulse
    ```
 
-2. **安装前端依赖**
+2. **安装依赖**
    ```bash
    cd frontend
    npm install
    ```
 
-3. **安装后端依赖**
+3. **启动开发服务器**
    ```bash
-   cd backend
-   cargo build --release
+   npm run dev
    ```
 
-4. **启动开发服务器**
-   ```bash
-   # 启动后端服务 (端口 8000)
-   cd backend && cargo run
-
-   # 启动前端服务 (端口 3000)
-   cd frontend && npm run dev
-   ```
-
-7. **访问应用**
+4. **访问应用**
 
    打开浏览器访问 `http://localhost:3000`
 
@@ -108,12 +92,6 @@ PortfolioPulse/
 │   ├── lib/                  # 工具库和配置
 │   ├── hooks/                # 自定义 React Hooks
 │   └── types/                # TypeScript 类型定义
-├── backend/                   # Rust 后端服务
-│   ├── src/                  # Rust 源码
-│   │   ├── main.rs           # 主入口
-│   │   ├── handlers.rs       # API 处理器
-│   │   └── models.rs         # 数据模型
-│   └── Cargo.toml           # Rust 项目配置
 ├── docs/                     # 项目文档
 │   ├── api/                  # API 文档
 │   ├── deployment/           # 部署文档
@@ -126,7 +104,6 @@ PortfolioPulse/
 ### 代码规范
 
 - **前端**: ESLint + Prettier，TypeScript 严格模式
-- **后端**: rustfmt + clippy，Rust 官方编码规范
 - **Git**: Conventional Commits 提交规范
 
 ### 测试策略
@@ -136,11 +113,6 @@ PortfolioPulse/
 cd frontend
 npm run test        # 单元测试
 npm run test:e2e    # 端到端测试
-
-# 后端测试
-cd backend
-cargo test          # Rust 单元测试
-cargo test --integration  # 集成测试
 ```
 
 ### 代码检查
@@ -149,10 +121,6 @@ cargo test --integration  # 集成测试
 # 前端代码检查
 npm run lint
 npm run type-check
-
-# 后端代码检查
-cargo clippy
-cargo fmt --check
 ```
 
 ## 📊 核心功能
@@ -191,13 +159,7 @@ cargo fmt --check
 # 构建前端
 cd frontend
 npm run build
-
-# 构建后端
-cd backend
-cargo build --release
-
-# 运行生产服务
-./target/release/portfolio-pulse-backend
+npm run start
 ```
 
 ## 🤝 贡献指南
@@ -231,7 +193,6 @@ cargo build --release
 - [Next.js](https://nextjs.org/) - React 全栈框架
 - [Tailwind CSS](https://tailwindcss.com/) - CSS 框架
 - [shadcn/ui](https://ui.shadcn.com/) - 组件库
-- [Rust](https://www.rust-lang.org/) - 系统编程语言
 - [Vercel](https://vercel.com/) - 部署平台
 
 ---

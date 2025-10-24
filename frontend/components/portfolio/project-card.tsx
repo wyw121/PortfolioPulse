@@ -2,17 +2,7 @@
 
 import { AnimatedContainer, GradientBorderCard } from "@/components/ui/effects";
 import { motion } from "framer-motion";
-
-interface Project {
-  id: number;
-  title: string;
-  description: string;
-  technologies: string[];
-  status: "active" | "completed" | "planning";
-  image?: string;
-  github?: string;
-  demo?: string;
-}
+import type { Project } from "@/lib/projects-data";
 
 interface ProjectCardProps {
   project: Project;

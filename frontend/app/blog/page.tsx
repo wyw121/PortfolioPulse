@@ -1,8 +1,16 @@
 import { BlogGrid } from "@/components/blog";
 import { Navigation } from "@/components/layout";
 import { AnimatedContainer } from "@/components/ui/effects";
+import { getAllPosts } from "@/lib/blog-loader";
 
-export default function BlogPage() {
+// 启用 ISR: 每 60 秒重新验证一次
+export const revalidate = 60;
+
+// 改为 Server Component，服务端获取数据
+export default async function BlogPage() {
+  // 服务端直接获取博客文章
+  const posts = await getAllPosts();
+
   return (
     <div className="min-h-screen bg-white dark:bg-gray-900">
       {/* 背景渐变效果 */}
@@ -24,7 +32,8 @@ export default function BlogPage() {
           </AnimatedContainer>
         </div>
 
-        <BlogGrid />
+        {/* 将数据通过 props 传递给客户端组件 */}
+        <BlogGrid initialPosts={posts} />
       </main>
     </div>
   );

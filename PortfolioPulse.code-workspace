@@ -9,20 +9,8 @@
       "path": "./frontend"
     },
     {
-      "name": "⚙️ 后端服务 (Rust)",
-      "path": "./backend"
-    },
-    {
-      "name": " 部署脚本",
-      "path": "./scripts"
-    },
-    {
       "name": "📚 项目文档",
       "path": "./docs"
-    },
-    {
-      "name": "⚙️ 配置文件",
-      "path": "./configs"
     }
   ],
   "settings": {

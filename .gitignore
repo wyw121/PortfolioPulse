@@ -59,30 +59,6 @@ Thumbs.db
 logs
 *.log
 
-# Rust specific
-**/target/
-**/*.rs.bk
-Cargo.lock
-**/debug/
-**/release/
-
-# Database
-*.db
-*.sqlite
-*.sqlite3
-
-# Backup files
-*.bak
-*.tmp
-
-# Local development
-.env.example
-docker-compose.override.yml
-
-# Test outputs
-test-results/
-coverage/
-
 # Cache
 .cache/
 *.tsbuildinfo
