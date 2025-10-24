@@ -15,7 +15,7 @@ export default async function BlogPage() {
       {/* 背景渐变效果 */}
       <div className="fixed inset-0 -z-10 bg-gradient-to-br from-blue-50/30 via-purple-50/20 to-pink-50/30 dark:from-gray-900/90 dark:via-gray-800/80 dark:to-gray-900/90" />
 
-      <main className="pt-20">
+      <main className="pt-24">
         <BlogPageHeader />
 
         {/* 将数据通过 props 传递给客户端组件 */}
