@@ -1,8 +1,8 @@
 ---
 title: 现代前端架构设计思考
-description: 从单体应用到微前端，探讨现代前端架构的演进路径和设计原则
+description: 从单体应用到微前端,探讨现代前端架构的演进路径和设计原则
 date: 2025-01-05
-category: 架构设计
+category: architecture
 tags:
   - 架构
   - 微前端

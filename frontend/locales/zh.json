@@ -53,16 +53,96 @@
     "bio": "热衷于为复杂问题创造优雅解决方案的全栈开发者",
     "introduction": "个人简介",
     "skills": "技能专长",
+    "skillsSubtitle": "在多个技术领域积累了丰富的经验",
     "experience": "工作经验",
+    "experienceSubtitle": "在不同阶段的学习和实践经历",
     "education": "教育背景",
     "contact": "联系方式",
+    "contactSubtitle": "很高兴能与您交流,期待我们的合作机会",
+    "interests": "兴趣爱好",
     "downloadCV": "下载简历",
     "email": "邮箱",
     "location": "所在地",
     "github": "GitHub",
     "linkedin": "LinkedIn",
     "getInTouch": "联系我",
-    "sendMessage": "发送消息"
+    "sendMessage": "发送消息",
+    "quote": "代码改变世界,创新驱动未来",
+    "closing": "期待与您的交流合作,一起创造更多可能!",
+    "contactMethods": {
+      "email": {
+        "label": "邮箱",
+        "description": "随时欢迎技术交流和合作咨询"
+      },
+      "wechat": {
+        "label": "微信",
+        "description": "添加微信,获取更及时的回复"
+      },
+      "github": {
+        "label": "GitHub",
+        "description": "查看我的开源项目和代码"
+      },
+      "twitter": {
+        "label": "Twitter",
+        "description": "关注我的技术动态和思考"
+      }
+    },
+    "interestsList": {
+      "programming": "编程与技术",
+      "reading": "阅读与学习",
+      "gaming": "游戏与娱乐",
+      "music": "音乐与艺术",
+      "fitness": "运动健身",
+      "travel": "旅行探索"
+    },
+    "experiences": [
+      {
+        "period": "2023 - 至今",
+        "title": "全栈开发者",
+        "company": "个人项目",
+        "description": "专注于现代Web技术栈的探索,开发多个开源项目,包括PortfolioPulse个人作品展示平台。",
+        "highlights": [
+          "设计并开发了完整的全栈应用架构",
+          "实现了高性能的后端API服务",
+          "优化前端性能,提升用户体验"
+        ]
+      },
+      {
+        "period": "2022 - 2023",
+        "title": "前端工程师",
+        "company": "科技创业公司",
+        "description": "负责公司核心产品的前端开发,参与产品架构设计和技术选型。",
+        "highlights": [
+          "重构了老旧的前端架构,提升开发效率50%",
+          "实现了响应式设计,适配多种设备",
+          "建立了完善的组件库和开发规范"
+        ]
+      },
+      {
+        "period": "2021 - 2022",
+        "title": "Web开发实习生",
+        "company": "互联网公司",
+        "description": "参与多个Web项目的开发,学习现代前端框架和后端技术。",
+        "highlights": [
+          "完成了多个功能模块的开发",
+          "学习了敏捷开发和团队协作",
+          "积极参与代码review和技术分享"
+        ]
+      }
+    ],
+    "educationList": [
+      {
+        "period": "2018 - 2022",
+        "degree": "计算机科学与技术",
+        "school": "某知名大学",
+        "description": "系统学习了计算机科学基础知识,包括数据结构、算法、数据库等。",
+        "achievements": [
+          "获得优秀学生奖学金",
+          "参与多个校内外编程竞赛",
+          "完成毕业设计项目获得优秀评价"
+        ]
+      }
+    ]
   },
   "footer": {
     "rights": "版权所有",

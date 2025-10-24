@@ -53,16 +53,96 @@
     "bio": "Full-stack developer passionate about creating elegant solutions to complex problems",
     "introduction": "Introduction",
     "skills": "Skills & Expertise",
+    "skillsSubtitle": "Rich experience accumulated across multiple technical domains",
     "experience": "Work Experience",
+    "experienceSubtitle": "Learning and practical experience at different stages",
     "education": "Education",
     "contact": "Contact",
+    "contactSubtitle": "I'd love to hear from you and explore collaboration opportunities",
+    "interests": "Interests & Hobbies",
     "downloadCV": "Download CV",
     "email": "Email",
     "location": "Location",
     "github": "GitHub",
     "linkedin": "LinkedIn",
     "getInTouch": "Get in Touch",
-    "sendMessage": "Send Message"
+    "sendMessage": "Send Message",
+    "quote": "Code changes the world, innovation drives the future",
+    "closing": "Looking forward to connecting with you and creating more possibilities together!",
+    "contactMethods": {
+      "email": {
+        "label": "Email",
+        "description": "Always welcome technical exchanges and collaboration inquiries"
+      },
+      "wechat": {
+        "label": "WeChat",
+        "description": "Add me on WeChat for faster responses"
+      },
+      "github": {
+        "label": "GitHub",
+        "description": "Check out my open-source projects and code"
+      },
+      "twitter": {
+        "label": "Twitter",
+        "description": "Follow my tech updates and thoughts"
+      }
+    },
+    "interestsList": {
+      "programming": "Programming & Tech",
+      "reading": "Reading & Learning",
+      "gaming": "Gaming & Entertainment",
+      "music": "Music & Arts",
+      "fitness": "Sports & Fitness",
+      "travel": "Travel & Exploration"
+    },
+    "experiences": [
+      {
+        "period": "2023 - Present",
+        "title": "Full-Stack Developer",
+        "company": "Personal Projects",
+        "description": "Focused on exploring modern web technology stacks, developing multiple open-source projects including PortfolioPulse portfolio showcase platform.",
+        "highlights": [
+          "Designed and developed complete full-stack application architecture",
+          "Implemented high-performance backend API services",
+          "Optimized frontend performance to enhance user experience"
+        ]
+      },
+      {
+        "period": "2022 - 2023",
+        "title": "Frontend Engineer",
+        "company": "Tech Startup",
+        "description": "Responsible for frontend development of core products, participated in product architecture design and technology selection.",
+        "highlights": [
+          "Refactored legacy frontend architecture, improving development efficiency by 50%",
+          "Implemented responsive design for multiple devices",
+          "Established comprehensive component library and development standards"
+        ]
+      },
+      {
+        "period": "2021 - 2022",
+        "title": "Web Development Intern",
+        "company": "Internet Company",
+        "description": "Participated in multiple web projects, learning modern frontend frameworks and backend technologies.",
+        "highlights": [
+          "Completed development of multiple functional modules",
+          "Learned agile development and team collaboration",
+          "Actively participated in code reviews and technical sharing"
+        ]
+      }
+    ],
+    "educationList": [
+      {
+        "period": "2018 - 2022",
+        "degree": "Computer Science and Technology",
+        "school": "Prestigious University",
+        "description": "Systematically studied computer science fundamentals including data structures, algorithms, and databases.",
+        "achievements": [
+          "Received Outstanding Student Scholarship",
+          "Participated in multiple programming competitions on and off campus",
+          "Completed graduation project with excellent evaluation"
+        ]
+      }
+    ]
   },
   "footer": {
     "rights": "All rights reserved",

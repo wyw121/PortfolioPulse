@@ -1,52 +1,90 @@
 "use client";
 
 import { AnimatedContainer } from "@/components/ui/effects";
+import { useTranslation } from "@/hooks/use-translation";
 import { motion } from "framer-motion";
 
-const skills = [
-  {
-    category: "前端技术",
-    items: [
-      { name: "React", level: 90, icon: "⚛️" },
-      { name: "Next.js", level: 85, icon: "▲" },
-      { name: "TypeScript", level: 88, icon: "📘" },
-      { name: "Tailwind CSS", level: 92, icon: "🎨" },
-      { name: "Vue.js", level: 75, icon: "💚" },
-    ],
-  },
-  {
-    category: "后端技术",
-    items: [
-      { name: "Rust", level: 80, icon: "🦀" },
-      { name: "Node.js", level: 85, icon: "🟢" },
-      { name: "Python", level: 78, icon: "🐍" },
-      { name: "PostgreSQL", level: 82, icon: "🐘" },
-      { name: "MySQL", level: 88, icon: "🗃️" },
-    ],
-  },
-  {
-    category: "工具与平台",
-    items: [
-      { name: "Docker", level: 85, icon: "🐳" },
-      { name: "Git", level: 90, icon: "📚" },
-      { name: "Linux", level: 83, icon: "🐧" },
-      { name: "AWS", level: 70, icon: "☁️" },
-      { name: "Figma", level: 75, icon: "🎯" },
-    ],
-  },
-];
+const skillsData = {
+  zh: [
+    {
+      category: "前端技术",
+      items: [
+        { name: "React", level: 90, icon: "⚛️" },
+        { name: "Next.js", level: 85, icon: "▲" },
+        { name: "TypeScript", level: 88, icon: "📘" },
+        { name: "Tailwind CSS", level: 92, icon: "🎨" },
+        { name: "Vue.js", level: 75, icon: "💚" },
+      ],
+    },
+    {
+      category: "后端技术",
+      items: [
+        { name: "Rust", level: 80, icon: "🦀" },
+        { name: "Node.js", level: 85, icon: "🟢" },
+        { name: "Python", level: 78, icon: "🐍" },
+        { name: "PostgreSQL", level: 82, icon: "🐘" },
+        { name: "MySQL", level: 88, icon: "🗃️" },
+      ],
+    },
+    {
+      category: "工具与平台",
+      items: [
+        { name: "Docker", level: 85, icon: "🐳" },
+        { name: "Git", level: 90, icon: "📚" },
+        { name: "Linux", level: 83, icon: "🐧" },
+        { name: "AWS", level: 70, icon: "☁️" },
+        { name: "Figma", level: 75, icon: "🎯" },
+      ],
+    },
+  ],
+  en: [
+    {
+      category: "Frontend",
+      items: [
+        { name: "React", level: 90, icon: "⚛️" },
+        { name: "Next.js", level: 85, icon: "▲" },
+        { name: "TypeScript", level: 88, icon: "📘" },
+        { name: "Tailwind CSS", level: 92, icon: "🎨" },
+        { name: "Vue.js", level: 75, icon: "💚" },
+      ],
+    },
+    {
+      category: "Backend",
+      items: [
+        { name: "Rust", level: 80, icon: "🦀" },
+        { name: "Node.js", level: 85, icon: "🟢" },
+        { name: "Python", level: 78, icon: "🐍" },
+        { name: "PostgreSQL", level: 82, icon: "🐘" },
+        { name: "MySQL", level: 88, icon: "🗃️" },
+      ],
+    },
+    {
+      category: "Tools & Platforms",
+      items: [
+        { name: "Docker", level: 85, icon: "🐳" },
+        { name: "Git", level: 90, icon: "📚" },
+        { name: "Linux", level: 83, icon: "🐧" },
+        { name: "AWS", level: 70, icon: "☁️" },
+        { name: "Figma", level: 75, icon: "🎯" },
+      ],
+    },
+  ],
+};
 
 export function AboutSkills() {
+  const { dict, locale } = useTranslation();
+  const skills = skillsData[locale];
+
   return (
     <section className="py-20 px-6 bg-gray-50/50 dark:bg-gray-800/50">
       <div className="max-w-6xl mx-auto">
         <AnimatedContainer direction="up" duration={350} fastResponse={true}>
           <div className="text-center mb-16">
             <h2 className="text-3xl md:text-4xl font-bold mb-4 text-gray-900 dark:text-white">
-              技能专长
+              {dict.about.skills}
             </h2>
             <p className="text-lg text-gray-600 dark:text-gray-300">
-              在多个技术领域积累了丰富的经验
+              {dict.about.skillsSubtitle}
             </p>
           </div>
         </AnimatedContainer>

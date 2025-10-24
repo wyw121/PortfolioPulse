@@ -30,23 +30,28 @@ const BLOG_DIRECTORY = path.join(process.cwd(), "content", "blog");
 /**
  * 计算文章阅读时长
  * @param content Markdown 内容
+ * @param locale 语言代码
  * @returns 阅读时长字符串
  */
-function calculateReadTime(content: string): string {
-  const wordsPerMinute = 200; // 中文约 200 字/分钟
+function calculateReadTime(content: string, locale: string = "zh"): string {
+  const wordsPerMinute = locale === "zh" ? 200 : 250; // 中文 200 字/分钟,英文 250 词/分钟
   const wordCount = content.length;
   const minutes = Math.ceil(wordCount / wordsPerMinute);
-  return `${minutes} 分钟`;
+  return locale === "zh" ? `${minutes} 分钟` : `${minutes} min`;
 }
 
 /**
  * 从文件名提取 slug
- * @param fileName 文件名（如：2025-01-15-nextjs-15-features.md）
+ * @param fileName 文件名（如：2025-01-15-nextjs-15-features.md 或 2025-01-15-nextjs-15-features.en.md）
  * @returns slug（如：nextjs-15-features）
  */
 function extractSlug(fileName: string): string {
-  // 移除 .md 扩展名
-  const withoutExt = fileName.replace(/\.md$/, "");
+  // 移除语言后缀和 .md 扩展名 (如 .en.md, .zh.md)
+  let withoutExt = fileName.replace(/\.(en|zh|ja|ko)\.md$/, "");
+  // 如果没有语言后缀,只移除 .md
+  if (withoutExt === fileName) {
+    withoutExt = fileName.replace(/\.md$/, "");
+  }
   
   // 如果文件名以日期开头（YYYY-MM-DD-），则移除日期部分
   const datePattern = /^\d{4}-\d{2}-\d{2}-/;
@@ -59,12 +64,21 @@ function extractSlug(fileName: string): string {
 
 /**
  * 获取所有博客文章文件名
+ * @param locale 语言代码
  * @returns 文件名数组
  */
-function getBlogFileNames(): string[] {
+function getBlogFileNames(locale: string = "zh"): string[] {
   try {
     const files = fs.readdirSync(BLOG_DIRECTORY);
-    return files.filter((file) => file.endsWith(".md") && file !== "README.md");
+    const allFiles = files.filter((file) => file.endsWith(".md") && file !== "README.md");
+    
+    if (locale === "zh") {
+      // 中文:排除 .en.md 等其他语言文件
+      return allFiles.filter(file => !file.match(/\.(en|ja|ko)\.md$/));
+    }
+    
+    // 其他语言:只返回对应语言的文件
+    return allFiles.filter(file => file.includes(`.${locale}.md`));
   } catch (error) {
     console.warn("博客目录不存在或读取失败:", error);
     return [];
@@ -73,10 +87,11 @@ function getBlogFileNames(): string[] {
 
 /**
  * 获取所有博客文章元数据（按日期排序）
+ * @param locale 语言代码（默认为中文）
  * @returns 博客文章元数据数组
  */
-export async function getAllPosts(): Promise<BlogPostMeta[]> {
-  const fileNames = getBlogFileNames();
+export async function getAllPosts(locale: string = "zh"): Promise<BlogPostMeta[]> {
+  const fileNames = getBlogFileNames(locale);
 
   const posts = await Promise.all(
     fileNames.map(async (fileName) => {
@@ -84,6 +99,7 @@ export async function getAllPosts(): Promise<BlogPostMeta[]> {
       const fileContents = fs.readFileSync(filePath, "utf8");
       const { data, content } = matter(fileContents);
 
+      // 从文件名提取 slug (extractSlug 会自动处理语言后缀)
       const slug = extractSlug(fileName);
 
       // 确保 date 是字符串格式
@@ -104,7 +120,7 @@ export async function getAllPosts(): Promise<BlogPostMeta[]> {
         category: data.category || "未分类",
         tags: data.tags || [],
         featured: data.featured || false,
-        readTime: data.readTime || calculateReadTime(content),
+        readTime: data.readTime || calculateReadTime(content, locale),
         cover: data.cover,
       } as BlogPostMeta;
     })
@@ -118,43 +134,51 @@ export async function getAllPosts(): Promise<BlogPostMeta[]> {
 
 /**
  * 获取特色博客文章
+ * @param locale 语言代码
  * @returns 特色文章数组
  */
-export async function getFeaturedPosts(): Promise<BlogPostMeta[]> {
-  const allPosts = await getAllPosts();
+export async function getFeaturedPosts(locale: string = "zh"): Promise<BlogPostMeta[]> {
+  const allPosts = await getAllPosts(locale);
   return allPosts.filter((post) => post.featured);
 }
 
 /**
  * 根据分类获取博客文章
  * @param category 分类名称
+ * @param locale 语言代码
  * @returns 该分类下的文章数组
  */
 export async function getPostsByCategory(
-  category: string
+  category: string,
+  locale: string = "zh"
 ): Promise<BlogPostMeta[]> {
-  const allPosts = await getAllPosts();
+  const allPosts = await getAllPosts(locale);
   return allPosts.filter((post) => post.category === category);
 }
 
 /**
  * 根据标签获取博客文章
  * @param tag 标签名称
+ * @param locale 语言代码
  * @returns 包含该标签的文章数组
  */
-export async function getPostsByTag(tag: string): Promise<BlogPostMeta[]> {
-  const allPosts = await getAllPosts();
+export async function getPostsByTag(
+  tag: string,
+  locale: string = "zh"
+): Promise<BlogPostMeta[]> {
+  const allPosts = await getAllPosts(locale);
   return allPosts.filter((post) => post.tags?.includes(tag));
 }
 
 /**
  * 获取所有分类及其文章数量
+ * @param locale 语言代码
  * @returns 分类统计对象
  */
-export async function getAllCategories(): Promise<
-  Record<string, number>
-> {
-  const allPosts = await getAllPosts();
+export async function getAllCategories(
+  locale: string = "zh"
+): Promise<Record<string, number>> {
+  const allPosts = await getAllPosts(locale);
   const categories: Record<string, number> = {};
 
   for (const post of allPosts) {
@@ -166,10 +190,13 @@ export async function getAllCategories(): Promise<
 
 /**
  * 获取所有标签及其文章数量
+ * @param locale 语言代码
  * @returns 标签统计对象
  */
-export async function getAllTags(): Promise<Record<string, number>> {
-  const allPosts = await getAllPosts();
+export async function getAllTags(
+  locale: string = "zh"
+): Promise<Record<string, number>> {
+  const allPosts = await getAllPosts(locale);
   const tags: Record<string, number> = {};
 
   for (const post of allPosts) {
@@ -186,12 +213,14 @@ export async function getAllTags(): Promise<Record<string, number>> {
 /**
  * 根据 slug 获取博客文章完整数据
  * @param slug 文章 slug
+ * @param locale 语言代码
  * @returns 博客文章数据或 null
  */
 export async function getPostBySlug(
-  slug: string
+  slug: string,
+  locale: string = "zh"
 ): Promise<BlogPostData | null> {
-  const fileNames = getBlogFileNames();
+  const fileNames = getBlogFileNames(locale);
 
   // 查找匹配的文件（支持带日期和不带日期的文件名）
   const fileName = fileNames.find((file) => {
@@ -233,7 +262,7 @@ export async function getPostBySlug(
     category: data.category || "未分类",
     tags: data.tags || [],
     featured: data.featured || false,
-    readTime: data.readTime || calculateReadTime(content),
+    readTime: data.readTime || calculateReadTime(content, locale),
     cover: data.cover,
     content,
     htmlContent,
@@ -244,15 +273,17 @@ export async function getPostBySlug(
  * 获取相关文章（同分类的其他文章）
  * @param currentSlug 当前文章 slug
  * @param category 分类名称
+ * @param locale 语言代码
  * @param limit 返回数量限制
  * @returns 相关文章数组
  */
 export async function getRelatedPosts(
   currentSlug: string,
   category: string,
+  locale: string = "zh",
   limit = 3
 ): Promise<BlogPostMeta[]> {
-  const categoryPosts = await getPostsByCategory(category);
+  const categoryPosts = await getPostsByCategory(category, locale);
   
   // 过滤掉当前文章
   const relatedPosts = categoryPosts.filter((post) => post.slug !== currentSlug);
@@ -264,10 +295,14 @@ export async function getRelatedPosts(
 /**
  * 搜索博客文章（标题、描述、内容）
  * @param query 搜索关键词
+ * @param locale 语言代码
  * @returns 匹配的文章数组
  */
-export async function searchPosts(query: string): Promise<BlogPostMeta[]> {
-  const allPosts = await getAllPosts();
+export async function searchPosts(
+  query: string,
+  locale: string = "zh"
+): Promise<BlogPostMeta[]> {
+  const allPosts = await getAllPosts(locale);
   const lowerQuery = query.toLowerCase();
 
   return allPosts.filter((post) => {

@@ -37,9 +37,12 @@ export function getPreferredLocale(): Locale {
   return locales.includes(browserLang as Locale) ? (browserLang as Locale) : 'zh'
 }
 
-// 保存语言偏好
+// 保存语言偏好 (localStorage + cookie 双重同步)
 export function saveLocalePreference(locale: Locale) {
   if (typeof window !== 'undefined') {
     localStorage.setItem('locale', locale)
+    // 同时设置 cookie 供服务端读取 (过期时间1年)
+    document.cookie = `locale=${locale}; path=/; max-age=31536000; SameSite=Lax`
   }
 }
+

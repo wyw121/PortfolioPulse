@@ -1,8 +1,8 @@
 ---
 title: Next.js 15 新特性深度解析
-description: 探索 Next.js 15 带来的革命性变化，包括新的 App Router、Server Components 等核心功能的深度分析
+description: 探索 Next.js 15 带来的革命性变化,包括新的 App Router、Server Components 等核心功能的深度分析
 date: 2025-01-15
-category: 前端开发
+category: frontend
 tags:
   - Next.js
   - React

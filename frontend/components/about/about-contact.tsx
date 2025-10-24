@@ -1,49 +1,48 @@
 "use client";
 
 import { AnimatedContainer } from "@/components/ui/effects";
+import { useTranslation } from "@/hooks/use-translation";
 import { motion } from "framer-motion";
 
-const contactMethods = [
+const contactMethodsData = [
   {
     icon: "📧",
-    label: "邮箱",
     value: "contact@example.com",
     href: "mailto:contact@example.com",
-    description: "随时欢迎技术交流和合作咨询",
+    key: "email" as const,
   },
   {
     icon: "💬",
-    label: "微信",
     value: "WeChat ID",
     href: "#",
-    description: "添加微信，获取更及时的回复",
+    key: "wechat" as const,
   },
   {
     icon: "🐙",
-    label: "GitHub",
     value: "github.com/wyw121",
     href: "https://github.com/wyw121",
-    description: "查看我的开源项目和代码",
+    key: "github" as const,
   },
   {
     icon: "🐦",
-    label: "Twitter",
     value: "@wywyw12121",
     href: "https://twitter.com/wywyw12121",
-    description: "关注我的技术动态和思考",
+    key: "twitter" as const,
   },
 ];
 
-const interests = [
-  { icon: "💻", text: "编程与技术" },
-  { icon: "📚", text: "阅读与学习" },
-  { icon: "🎮", text: "游戏与娱乐" },
-  { icon: "🎵", text: "音乐与艺术" },
-  { icon: "🏃", text: "运动健身" },
-  { icon: "🌍", text: "旅行探索" },
+const interestsData = [
+  { icon: "💻", key: "programming" as const },
+  { icon: "📚", key: "reading" as const },
+  { icon: "🎮", key: "gaming" as const },
+  { icon: "🎵", key: "music" as const },
+  { icon: "🏃", key: "fitness" as const },
+  { icon: "🌍", key: "travel" as const },
 ];
 
 export function AboutContact() {
+  const { dict } = useTranslation();
+
   return (
     <section
       id="contact"
@@ -53,21 +52,21 @@ export function AboutContact() {
         <AnimatedContainer direction="up" duration={350} fastResponse={true}>
           <div className="text-center mb-16">
             <h2 className="text-3xl md:text-4xl font-bold mb-4 text-gray-900 dark:text-white">
-              联系方式
+              {dict.about.contact}
             </h2>
             <p className="text-lg text-gray-600 dark:text-gray-300">
-              很高兴能与您交流，期待我们的合作机会
+              {dict.about.contactSubtitle}
             </p>
           </div>
         </AnimatedContainer>
 
         <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6 mb-16">
-          {contactMethods.map((contact, index) => (
+          {contactMethodsData.map((contact, index) => (
             <AnimatedContainer
-              key={contact.label}
+              key={contact.key}
               direction="up"
               duration={350}
-              delay={100 + index * 60} // 减少延迟间隔
+              delay={100 + index * 60}
               fastResponse={true}
             >
               <motion.a
@@ -85,13 +84,13 @@ export function AboutContact() {
                     {contact.icon}
                   </div>
                   <h3 className="font-semibold text-gray-900 dark:text-white mb-1">
-                    {contact.label}
+                    {dict.about.contactMethods[contact.key].label}
                   </h3>
                   <p className="text-blue-600 dark:text-blue-400 text-sm font-medium mb-2">
                     {contact.value}
                   </p>
                   <p className="text-xs text-gray-500 dark:text-gray-400">
-                    {contact.description}
+                    {dict.about.contactMethods[contact.key].description}
                   </p>
                 </div>
               </motion.a>
@@ -99,16 +98,15 @@ export function AboutContact() {
           ))}
         </div>
 
-        {/* 兴趣爱好 */}
         <AnimatedContainer direction="up" duration={600} delay={600}>
           <div className="bg-white dark:bg-gray-800 rounded-2xl p-8 shadow-sm border border-gray-200 dark:border-gray-700">
             <h3 className="text-2xl font-bold mb-6 text-gray-900 dark:text-white text-center">
-              兴趣爱好
+              {dict.about.interests}
             </h3>
             <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
-              {interests.map((interest, index) => (
+              {interestsData.map((interest, index) => (
                 <motion.div
-                  key={interest.text}
+                  key={interest.key}
                   className="flex items-center space-x-3 p-3 rounded-lg bg-gray-50 dark:bg-gray-700/50"
                   initial={{ opacity: 0, scale: 0.8 }}
                   animate={{ opacity: 1, scale: 1 }}
@@ -117,7 +115,7 @@ export function AboutContact() {
                 >
                   <span className="text-xl">{interest.icon}</span>
                   <span className="text-gray-700 dark:text-gray-300 font-medium">
-                    {interest.text}
+                    {dict.about.interestsList[interest.key]}
                   </span>
                 </motion.div>
               ))}
@@ -125,14 +123,13 @@ export function AboutContact() {
           </div>
         </AnimatedContainer>
 
-        {/* 底部信息 */}
         <AnimatedContainer direction="up" duration={600} delay={800}>
           <div className="text-center mt-12 p-6 bg-gradient-to-r from-blue-50 to-purple-50 dark:from-gray-800 dark:to-gray-900 rounded-xl">
             <p className="text-gray-600 dark:text-gray-300 mb-4">
-              &ldquo;代码改变世界，创新驱动未来&rdquo;
+              &ldquo;{dict.about.quote}&rdquo;
             </p>
             <p className="text-sm text-gray-500 dark:text-gray-400">
-              期待与您的交流合作，一起创造更多可能！
+              {dict.about.closing}
             </p>
           </div>
         </AnimatedContainer>

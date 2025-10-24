@@ -1,8 +1,8 @@
 ---
 title: Rust 异步编程实战指南
-description: 从 tokio 到 async/await，全面掌握 Rust 异步编程的核心概念和最佳实践
+description: 从 tokio 到 async/await,全面掌握 Rust 异步编程的核心概念和最佳实践
 date: 2024-12-20
-category: 后端开发
+category: backend
 tags:
   - Rust
   - 异步编程

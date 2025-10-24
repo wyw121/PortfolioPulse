@@ -1,14 +1,19 @@
 import { BlogGrid } from "@/components/blog";
 import { BlogPageHeader } from "@/components/blog/blog-page-header";
 import { getAllPosts } from "@/lib/blog-loader";
+import { cookies } from "next/headers";
 
 // 启用 ISR: 每 60 秒重新验证一次
 export const revalidate = 60;
 
-// 改为 Server Component，服务端获取数据
+// 改为 Server Component,服务端获取数据
 export default async function BlogPage() {
-  // 服务端直接获取博客文章
-  const posts = await getAllPosts();
+  // 从 cookie 获取用户语言偏好(现在已同步)
+  const cookieStore = await cookies();
+  const locale = cookieStore.get("locale")?.value || "zh";
+  
+  // 服务端直接获取博客文章(根据语言)
+  const posts = await getAllPosts(locale as "en" | "zh");
 
   return (
     <div className="min-h-screen bg-white dark:bg-gray-900">

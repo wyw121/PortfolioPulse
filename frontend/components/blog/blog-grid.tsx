@@ -5,22 +5,39 @@ import { useTranslation } from "@/hooks/use-translation";
 import { motion } from "framer-motion";
 import Link from "next/link";
 import type { BlogPostMeta } from "@/lib/blog-loader";
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { useRouter } from "next/navigation";
 
 interface BlogGridProps {
   initialPosts: BlogPostMeta[];
 }
 
 export function BlogGrid({ initialPosts }: BlogGridProps) {
-  const { locale } = useTranslation();
-  const [selectedCategory, setSelectedCategory] = useState(locale === 'zh' ? "全部" : "All");
+  const { locale, dict } = useTranslation();
+  const router = useRouter();
+  const [selectedCategory, setSelectedCategory] = useState("all");
 
-  const categories = locale === 'zh' 
-    ? ["全部", "前端开发", "后端开发", "架构设计", "编程语言", "性能优化", "开源文化"]
-    : ["All", "Frontend", "Backend", "Architecture", "Languages", "Performance", "Open Source"];
+  // 语言切换时刷新页面以获取新语言的文章
+  useEffect(() => {
+    router.refresh();
+  }, [locale, router]);
+
+  // 统一的分类 key (存储在文章中)
+  const categoryKeys = ["all", "frontend", "backend", "architecture", "languages", "performance", "opensource"];
+  
+  // 分类显示名称(根据语言翻译)
+  const categoryNames: Record<string, Record<string, string>> = {
+    all: { zh: "全部", en: "All" },
+    frontend: { zh: "前端开发", en: "Frontend" },
+    backend: { zh: "后端开发", en: "Backend" },
+    architecture: { zh: "架构设计", en: "Architecture" },
+    languages: { zh: "编程语言", en: "Languages" },
+    performance: { zh: "性能优化", en: "Performance" },
+    opensource: { zh: "开源文化", en: "Open Source" }
+  };
 
   const filteredPosts = initialPosts.filter(
-    (post) => selectedCategory === (locale === 'zh' ? "全部" : "All") || post.category === selectedCategory
+    (post) => selectedCategory === "all" || post.category === selectedCategory
   );
 
   const featuredPosts = filteredPosts.filter((post) => post.featured);
@@ -65,17 +82,17 @@ export function BlogGrid({ initialPosts }: BlogGridProps) {
       >
         <div className="mb-8">
           <div className="flex flex-wrap gap-3 justify-center">
-            {categories.map((category) => (
+            {categoryKeys.map((key) => (
               <button
-                key={category}
-                onClick={() => setSelectedCategory(category)}
+                key={key}
+                onClick={() => setSelectedCategory(key)}
                 className={`px-4 py-2 rounded-full text-sm font-medium transition-all duration-200 ${
-                  selectedCategory === category
+                  selectedCategory === key
                     ? "bg-blue-500 text-white"
                     : "bg-gray-100 hover:bg-gray-200 dark:bg-gray-800 dark:hover:bg-gray-700 text-gray-700 dark:text-gray-300"
                 }`}
               >
-                {category}
+                {categoryNames[key][locale]}
               </button>
             ))}
           </div>
@@ -90,7 +107,7 @@ export function BlogGrid({ initialPosts }: BlogGridProps) {
       >
         {filteredPosts.length === 0 ? (
           <div className="text-center text-gray-600 dark:text-gray-400 py-12">
-            暂无文章
+            {dict.blog.noPostsFound}
           </div>
         ) : (
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
