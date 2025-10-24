@@ -1,24 +1,23 @@
 "use client";
 
+import { LanguageSwitcher } from "@/components/language-switcher";
+import { ThemeToggle } from "@/components/theme-toggle";
+import { useTranslation } from "@/hooks/use-translation";
 import { motion } from "framer-motion";
 import Link from "next/link";
 import { useEffect, useState } from "react";
 
-interface NavItem {
-  name: string;
-  href: string;
-}
-
-const navItems: NavItem[] = [
-  { name: "首页", href: "/" },
-  { name: "项目", href: "/projects" },
-  { name: "博客", href: "/blog" },
-  { name: "关于", href: "/about" },
-];
-
 export const Navigation = () => {
+  const { dict } = useTranslation();
   const [scrolled, setScrolled] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+
+  const navItems = [
+    { name: dict.nav.home, href: "/" },
+    { name: dict.nav.projects, href: "/projects" },
+    { name: dict.nav.blog, href: "/blog" },
+    { name: dict.nav.about, href: "/about" },
+  ];
 
   useEffect(() => {
     const handleScroll = () => {
@@ -42,12 +41,18 @@ export const Navigation = () => {
     >
       <div className="max-w-7xl mx-auto px-6">
         <div className="flex items-center justify-between h-16">
-          {/* Logo */}
-          <Link href="/" className="flex items-center space-x-2">
-            <div className="text-2xl">
-              🔮
+          {/* Logo + Theme/Language Switches */}
+          <div className="flex items-center space-x-4">
+            <Link href="/" className="flex items-center space-x-2">
+              <div className="text-2xl">🔮</div>
+            </Link>
+            
+            {/* Theme and Language Switchers - Desktop */}
+            <div className="hidden sm:flex items-center space-x-3">
+              <ThemeToggle />
+              <LanguageSwitcher />
             </div>
-          </Link>
+          </div>
 
           {/* Desktop Navigation */}
           <div className="hidden md:flex items-center space-x-8">
@@ -111,6 +116,12 @@ export const Navigation = () => {
                   {item.name}
                 </Link>
               ))}
+              
+              {/* Mobile Theme/Language Switches */}
+              <div className="flex items-center justify-center space-x-4 pt-4 pb-2 border-t border-gray-200 dark:border-gray-700">
+                <ThemeToggle />
+                <LanguageSwitcher />
+              </div>
             </div>
           </motion.div>
         )}

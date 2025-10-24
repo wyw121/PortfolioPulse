@@ -1,0 +1,63 @@
+{
+  "common": {
+    "siteName": "PortfolioPulse",
+    "siteDescription": "Dynamic Project Portfolio Platform"
+  },
+  "nav": {
+    "home": "Home",
+    "projects": "Projects",
+    "blog": "Blog",
+    "activity": "Activity",
+    "about": "About"
+  },
+  "hero": {
+    "greeting": "Hi, I'm",
+    "title": "Full-Stack Developer",
+    "subtitle": "Building modern, high-performance web applications with passion and precision",
+    "cta": "View Projects"
+  },
+  "projects": {
+    "title": "Featured Projects",
+    "subtitle": "Explore my latest work and technical achievements",
+    "viewAll": "View All Projects",
+    "liveDemo": "Live Demo",
+    "sourceCode": "Source Code",
+    "techStack": "Tech Stack",
+    "status": {
+      "active": "Active",
+      "completed": "Completed",
+      "inProgress": "In Progress"
+    }
+  },
+  "blog": {
+    "title": "Blog",
+    "subtitle": "Thoughts on technology, development, and innovation",
+    "readMore": "Read More",
+    "readTime": "min read",
+    "publishedOn": "Published on"
+  },
+  "about": {
+    "title": "About Me",
+    "subtitle": "Learn more about my background and expertise",
+    "bio": "Full-stack developer passionate about creating elegant solutions to complex problems",
+    "skills": "Skills",
+    "experience": "Experience",
+    "education": "Education"
+  },
+  "footer": {
+    "rights": "All rights reserved",
+    "builtWith": "Built with",
+    "and": "and"
+  },
+  "theme": {
+    "toggle": "Toggle theme",
+    "light": "Light",
+    "dark": "Dark",
+    "system": "System"
+  },
+  "language": {
+    "toggle": "Switch language",
+    "en": "English",
+    "zh": "中文"
+  }
+}

@@ -1,0 +1,63 @@
+{
+  "common": {
+    "siteName": "PortfolioPulse",
+    "siteDescription": "动态项目集展示平台"
+  },
+  "nav": {
+    "home": "首页",
+    "projects": "项目",
+    "blog": "博客",
+    "activity": "动态",
+    "about": "关于"
+  },
+  "hero": {
+    "greeting": "你好,我是",
+    "title": "全栈开发者",
+    "subtitle": "用热情和精准构建现代化、高性能的 Web 应用",
+    "cta": "查看项目"
+  },
+  "projects": {
+    "title": "精选项目",
+    "subtitle": "探索我的最新作品和技术成果",
+    "viewAll": "查看所有项目",
+    "liveDemo": "在线演示",
+    "sourceCode": "源代码",
+    "techStack": "技术栈",
+    "status": {
+      "active": "活跃",
+      "completed": "已完成",
+      "inProgress": "进行中"
+    }
+  },
+  "blog": {
+    "title": "博客",
+    "subtitle": "关于技术、开发和创新的思考",
+    "readMore": "阅读更多",
+    "readTime": "分钟阅读",
+    "publishedOn": "发布于"
+  },
+  "about": {
+    "title": "关于我",
+    "subtitle": "了解更多关于我的背景和专业技能",
+    "bio": "热衷于为复杂问题创造优雅解决方案的全栈开发者",
+    "skills": "技能",
+    "experience": "经验",
+    "education": "教育"
+  },
+  "footer": {
+    "rights": "版权所有",
+    "builtWith": "构建于",
+    "and": "和"
+  },
+  "theme": {
+    "toggle": "切换主题",
+    "light": "亮色",
+    "dark": "暗色",
+    "system": "跟随系统"
+  },
+  "language": {
+    "toggle": "切换语言",
+    "en": "English",
+    "zh": "中文"
+  }
+}
