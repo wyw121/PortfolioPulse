@@ -1,3 +1,4 @@
+import { Navigation } from '@/components/layout'
 import { PerformanceMonitor } from '@/components/performance-monitor'
 import { ThemeProvider } from '@/components/theme-provider'
 import { siteConfig } from '@/lib/config'
@@ -99,6 +100,7 @@ export default function RootLayout({
           enableSystem
           disableTransitionOnChange
         >
+          <Navigation />
           {children}
           <PerformanceMonitor />
         </ThemeProvider>

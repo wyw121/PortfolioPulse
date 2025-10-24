@@ -29,15 +29,12 @@ export const Navigation = () => {
   }, []);
 
   return (
-    <motion.nav
+    <nav
       className={`fixed top-0 w-full z-50 transition-all duration-300 ${
         scrolled
           ? "bg-white/90 dark:bg-gray-900/90 backdrop-blur-md shadow-lg"
           : "bg-transparent"
       }`}
-      initial={{ y: -100 }}
-      animate={{ y: 0 }}
-      transition={{ duration: 0.5 }}
     >
       <div className="max-w-7xl mx-auto px-6">
         <div className="flex items-center justify-between h-16">
@@ -126,6 +123,6 @@ export const Navigation = () => {
           </motion.div>
         )}
       </div>
-    </motion.nav>
+    </nav>
   );
 };
