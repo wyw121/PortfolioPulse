@@ -48,7 +48,7 @@ export const HeroSection = () => {
               技术栈:
             </div>
             <div className="flex space-x-4">
-              {["Next.js", "Rust", "MySQL", "Tailwind"].map((tech, index) => (
+              {["Next.js", "TypeScript", "Tailwind"].map((tech, index) => (
                 <motion.span
                   key={tech}
                   className="px-3 py-1 bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300 rounded-full text-sm font-medium"
