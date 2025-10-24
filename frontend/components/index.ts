@@ -12,3 +12,9 @@ export * from "./layout";
 
 // 页面区块组件
 export * from "./sections";
+
+// 博客组件
+export { BlogPost } from "./sections/blog-post";
+export { BlogPostMeta } from "./sections/blog-post-meta";
+export { BlogPostTags } from "./sections/blog-post-tags";
+export { RelatedPosts } from "./sections/related-posts";

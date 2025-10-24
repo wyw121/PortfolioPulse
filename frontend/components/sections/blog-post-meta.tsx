@@ -1,90 +1,82 @@
 'use client'
 
-import { Badge } from '@/components/ui/badge'
 import type { BlogPostData } from '@/lib/blog-loader'
-import { CalendarIcon, TagIcon, ClockIcon } from 'lucide-react'
+import { useTranslation } from '@/hooks/use-translation'
+import { Calendar, Clock, FileText } from 'lucide-react'
 
 interface BlogPostMetaProps {
   post: BlogPostData
 }
 
+// 计算阅读时间 (假设平均阅读速度: 中文300字/分钟, 英文200词/分钟)
+function calculateReadingTime(content: string): number {
+  const chineseChars = (content.match(/[\u4e00-\u9fa5]/g) || []).length
+  const englishWords = content.split(/\s+/).filter(w => /[a-zA-Z]/.test(w)).length
+  
+  const chineseTime = chineseChars / 300
+  const englishTime = englishWords / 200
+  
+  return Math.ceil(chineseTime + englishTime) || 1
+}
+
+// 计算字数
+function countWords(content: string): number {
+  const chineseChars = (content.match(/[\u4e00-\u9fa5]/g) || []).length
+  const englishWords = content.split(/\s+/).filter(w => /[a-zA-Z]/.test(w)).length
+  return chineseChars + englishWords
+}
+
 export function BlogPostMeta({ post }: BlogPostMetaProps) {
+  const { locale } = useTranslation()
+  
   const formatDate = (dateString: string) => {
-    return new Date(dateString).toLocaleDateString('zh-CN', {
+    return new Date(dateString).toLocaleDateString(locale === 'zh' ? 'zh-CN' : 'en-US', {
       year: 'numeric',
       month: 'long',
-      day: 'numeric',
-      weekday: 'long'
+      day: 'numeric'
     })
   }
 
-  return (
-    <div className="mb-8">
-      {/* 文章标题 */}
-      <h1 className="text-4xl font-bold mb-6 leading-tight">{post.title}</h1>
+  const readingTime = calculateReadingTime(post.htmlContent)
+  const wordCount = countWords(post.htmlContent)
 
-      {/* 文章摘要 */}
+  return (
+    <header className="mb-12">
+      {/* 标题 - 保持渐变科技风格 */}
+      <h1 className="text-4xl md:text-5xl font-bold mb-6 leading-tight tracking-tight
+        bg-gradient-to-r from-blue-600 via-purple-600 to-pink-600 bg-clip-text text-transparent">
+        {post.title}
+      </h1>
+
+      {/* 元数据行 - PaperMod风格: 日期、阅读时间、字数统计在一行 */}
+      <div className="flex flex-wrap items-center gap-4 text-sm text-gray-600 dark:text-gray-400 mb-6">
+        {/* 发布日期 */}
+        <div className="flex items-center gap-1.5">
+          <Calendar className="w-4 h-4" />
+          <time dateTime={post.date}>
+            {formatDate(post.date)}
+          </time>
+        </div>
+        
+        {/* 阅读时间 */}
+        <div className="flex items-center gap-1.5">
+          <Clock className="w-4 h-4" />
+          <span>{readingTime} min read</span>
+        </div>
+        
+        {/* 字数统计 */}
+        <div className="flex items-center gap-1.5">
+          <FileText className="w-4 h-4" />
+          <span>{wordCount.toLocaleString()} {locale === 'zh' ? '字' : 'words'}</span>
+        </div>
+      </div>
+
+      {/* 副标题/描述 */}
       {post.description && (
-        <p className="text-lg text-muted-foreground mb-6 leading-relaxed">
+        <p className="text-lg text-gray-600 dark:text-gray-400 leading-relaxed">
           {post.description}
         </p>
       )}
-
-      {/* 封面图片 */}
-      {post.cover && (
-        <div className="mb-8">
-          <img
-            src={post.cover}
-            alt={post.title}
-            className="w-full max-h-96 object-cover rounded-lg shadow-sm"
-          />
-        </div>
-      )}
-
-      {/* 元数据信息 */}
-      <div className="flex flex-wrap items-center gap-6 text-sm text-muted-foreground mb-8 pb-6 border-b">
-        {/* 发布时间 */}
-        <div className="flex items-center space-x-2">
-          <CalendarIcon className="w-4 h-4" />
-          <span>{formatDate(post.date)}</span>
-        </div>
-
-        {/* 阅读时长 */}
-        {post.readTime && (
-          <div className="flex items-center space-x-2">
-            <TagIcon className="w-4 h-4" />
-            <span>{post.readTime}</span>
-          </div>
-        )}
-
-        {/* 分类 */}
-        {post.category && (
-          <Badge variant="secondary">
-            {post.category}
-          </Badge>
-        )}
-
-        {/* 精选标记 */}
-        {post.featured && (
-          <Badge className="bg-yellow-500 hover:bg-yellow-600">
-            精选文章
-          </Badge>
-        )}
-      </div>
-
-      {/* 标签 */}
-      {post.tags && post.tags.length > 0 && (
-        <div className="flex items-center space-x-2 mb-8">
-          <TagIcon className="w-4 h-4 text-muted-foreground" />
-          <div className="flex flex-wrap gap-2">
-            {post.tags.map((tag) => (
-              <Badge key={tag} variant="outline" className="text-xs">
-                {tag}
-              </Badge>
-            ))}
-          </div>
-        </div>
-      )}
-    </div>
+    </header>
   )
 }

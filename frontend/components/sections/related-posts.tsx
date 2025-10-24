@@ -3,35 +3,20 @@
 import { Badge } from '@/components/ui/badge'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import type { BlogPostMeta } from '@/lib/blog-loader'
+import { useTranslation } from '@/hooks/use-translation'
 import Link from 'next/link'
-import { useEffect, useState } from 'react'
+import { motion } from 'framer-motion'
 
 interface RelatedPostsProps {
-  currentSlug: string
-  category: string
+  posts: BlogPostMeta[]
 }
 
-export function RelatedPosts({ currentSlug, category }: RelatedPostsProps) {
-  const [relatedPosts, setRelatedPosts] = useState<BlogPostMeta[]>([])
-  const [loading, setLoading] = useState(true)
+export function RelatedPosts({ posts }: RelatedPostsProps) {
+  const { dict } = useTranslation()
 
-  useEffect(() => {
-    const loadData = async () => {
-      try {
-        const response = await fetch(
-          `/api/blog/related?slug=${encodeURIComponent(currentSlug)}&category=${encodeURIComponent(category)}&limit=3`
-        )
-        if (!response.ok) throw new Error('获取相关文章失败')
-        const posts = await response.json()
-        setRelatedPosts(posts)
-      } catch (error) {
-        console.error('获取相关文章失败:', error)
-      } finally {
-        setLoading(false)
-      }
-    }
-    loadData()
-  }, [currentSlug, category])
+  if (posts.length === 0) {
+    return null
+  }
 
   const formatDate = (dateString: string) => {
     return new Date(dateString).toLocaleDateString('zh-CN', {
@@ -40,67 +25,46 @@ export function RelatedPosts({ currentSlug, category }: RelatedPostsProps) {
     })
   }
 
-  if (loading) {
-    return (
-      <div>
-        <h3 className="text-xl font-bold mb-6">相关文章</h3>
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-          {[...Array(3)].map((_, i) => (
-            <Card key={i}>
-              <CardHeader>
-                <div className="h-5 bg-muted rounded animate-pulse"></div>
-                <div className="h-4 bg-muted rounded w-3/4 animate-pulse"></div>
-              </CardHeader>
-              <CardContent>
-                <div className="space-y-2">
-                  <div className="h-3 bg-muted rounded animate-pulse"></div>
-                  <div className="h-3 bg-muted rounded w-5/6 animate-pulse"></div>
-                </div>
-              </CardContent>
-            </Card>
-          ))}
-        </div>
-      </div>
-    )
-  }
-
-  if (relatedPosts.length === 0) {
-    return null
-  }
-
   return (
     <div>
-      <h3 className="text-xl font-bold mb-6">相关文章</h3>
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-        {relatedPosts.map((post) => (
-          <Card key={post.slug} className="hover:shadow-md transition-shadow">
-            <CardHeader>
-              <CardTitle className="text-base">
-                <Link
-                  href={`/blog/${post.slug}`}
-                  className="hover:text-primary transition-colors line-clamp-2"
-                >
-                  {post.title}
-                </Link>
-              </CardTitle>
-              <div className="flex items-center space-x-2 text-sm text-muted-foreground">
-                <span>{formatDate(post.date)}</span>
-                {post.category && (
-                  <Badge variant="outline" className="text-xs">
-                    {post.category}
-                  </Badge>
-                )}
-              </div>
-            </CardHeader>
-
-            {post.description && (
-              <CardContent>
-                <CardDescription className="text-sm line-clamp-2">
-                  {post.description}
-                </CardDescription>
-              </CardContent>
-            )}
-          </Card>
+      <h3 className="text-2xl font-bold mb-6 text-gray-900 dark:text-white">
+        {dict.blog.relatedPosts || '相关文章'}
+      </h3>
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+        {posts.map((post, index) => (
+          <motion.div
+            key={post.slug}
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: index * 0.1, duration: 0.3 }}
+          >
+            <Link href={`/blog/${post.slug}`}>
+              <Card className="h-full hover:shadow-xl transition-all duration-300 border-gray-200/50 dark:border-gray-700/50 bg-white/50 dark:bg-gray-900/50 backdrop-blur-sm group">
+                <CardHeader>
+                  <div className="flex items-center justify-between mb-2">
+                    <Badge variant="secondary" className="text-xs">
+                      {post.category}
+                    </Badge>
+                    <span className="text-xs text-gray-500 dark:text-gray-400">
+                      {post.readTime}
+                    </span>
+                  </div>
+                  <CardTitle className="text-base group-hover:text-blue-500 dark:group-hover:text-blue-400 transition-colors">
+                    {post.title}
+                  </CardTitle>
+                  <CardDescription className="line-clamp-2">
+                    {post.description}
+                  </CardDescription>
+                </CardHeader>
+                <CardContent>
+                  <div className="flex items-center gap-2 text-sm text-gray-500 dark:text-gray-400">
+                    <span>📅</span>
+                    <time dateTime={post.date}>{formatDate(post.date)}</time>
+                  </div>
+                </CardContent>
+              </Card>
+            </Link>
+          </motion.div>
         ))}
       </div>
     </div>

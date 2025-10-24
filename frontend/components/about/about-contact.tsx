@@ -7,13 +7,13 @@ import { motion } from "framer-motion";
 const contactMethodsData = [
   {
     icon: "📧",
-    value: "contact@example.com",
-    href: "mailto:contact@example.com",
+    value: "wywyw12121@gmail.com",
+    href: "mailto:wywyw12121@gmail.com",
     key: "email" as const,
   },
   {
     icon: "💬",
-    value: "WeChat ID",
+    value: "w3148468612",
     href: "#",
     key: "wechat" as const,
   },
