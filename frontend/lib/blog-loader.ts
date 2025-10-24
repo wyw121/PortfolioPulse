@@ -86,11 +86,21 @@ export async function getAllPosts(): Promise<BlogPostMeta[]> {
 
       const slug = extractSlug(fileName);
 
+      // 确保 date 是字符串格式
+      let dateString: string;
+      if (data.date instanceof Date) {
+        dateString = data.date.toISOString().split("T")[0];
+      } else if (typeof data.date === "string") {
+        dateString = data.date;
+      } else {
+        dateString = new Date().toISOString().split("T")[0];
+      }
+
       return {
         slug,
         title: data.title || "无标题",
         description: data.description || "",
-        date: data.date || new Date().toISOString().split("T")[0],
+        date: dateString,
         category: data.category || "未分类",
         tags: data.tags || [],
         featured: data.featured || false,
@@ -205,11 +215,21 @@ export async function getPostBySlug(
 
   const htmlContent = processedContent.toString();
 
+  // 确保 date 是字符串格式
+  let dateString: string;
+  if (data.date instanceof Date) {
+    dateString = data.date.toISOString().split("T")[0];
+  } else if (typeof data.date === "string") {
+    dateString = data.date;
+  } else {
+    dateString = new Date().toISOString().split("T")[0];
+  }
+
   return {
     slug,
     title: data.title || "无标题",
     description: data.description || "",
-    date: data.date || new Date().toISOString().split("T")[0],
+    date: dateString,
     category: data.category || "未分类",
     tags: data.tags || [],
     featured: data.featured || false,
