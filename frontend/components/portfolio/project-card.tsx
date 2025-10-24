@@ -1,6 +1,7 @@
 "use client";
 
 import { AnimatedContainer, GradientBorderCard } from "@/components/ui/effects";
+import { useTranslation } from "@/hooks/use-translation";
 import { motion } from "framer-motion";
 import type { Project } from "@/lib/projects-data";
 
@@ -10,16 +11,12 @@ interface ProjectCardProps {
 }
 
 export const ProjectCard = ({ project, index }: ProjectCardProps) => {
+  const { dict } = useTranslation();
+
   const statusColors = {
     active: "bg-green-500",
     completed: "bg-blue-500",
     planning: "bg-yellow-500",
-  };
-
-  const statusText = {
-    active: "进行中",
-    completed: "已完成",
-    planning: "计划中",
   };
 
   return (
@@ -33,7 +30,7 @@ export const ProjectCard = ({ project, index }: ProjectCardProps) => {
                 statusColors[project.status]
               }`}
             >
-              {statusText[project.status]}
+              {dict.projects.status[project.status]}
             </span>
           </div>
 
@@ -71,7 +68,7 @@ export const ProjectCard = ({ project, index }: ProjectCardProps) => {
                 whileHover={{ scale: 1.02 }}
                 whileTap={{ scale: 0.98 }}
               >
-                代码
+                {dict.projects.sourceCode}
               </motion.a>
             )}
             {project.demo && (
@@ -83,7 +80,7 @@ export const ProjectCard = ({ project, index }: ProjectCardProps) => {
                 whileHover={{ scale: 1.02 }}
                 whileTap={{ scale: 0.98 }}
               >
-                演示
+                {dict.projects.liveDemo}
               </motion.a>
             )}
           </div>

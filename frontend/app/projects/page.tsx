@@ -1,7 +1,12 @@
+"use client";
+
 import { ProjectGrid } from "@/components/portfolio";
 import { AnimatedContainer } from "@/components/ui/effects";
+import { useTranslation } from "@/hooks/use-translation";
 
 export default function ProjectsPage() {
+  const { dict } = useTranslation();
+
   return (
     <div className="min-h-screen bg-white dark:bg-gray-900">
       {/* 背景渐变效果 */}
@@ -12,10 +17,10 @@ export default function ProjectsPage() {
           <AnimatedContainer direction="up" duration={600}>
             <div className="text-center mb-12">
               <h1 className="text-4xl md:text-5xl font-bold mb-6 bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500 bg-clip-text text-transparent">
-                我的项目
+                {dict.projects.title}
               </h1>
               <p className="text-lg text-gray-600 dark:text-gray-300 max-w-3xl mx-auto">
-                这里展示了我在不同技术领域的探索和实践，从Web应用到开源工具，每个项目都代表着一次学习和成长的经历。
+                {dict.projects.subtitle}
               </p>
             </div>
           </AnimatedContainer>

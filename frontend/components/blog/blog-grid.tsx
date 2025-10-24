@@ -1,30 +1,26 @@
 "use client";
 
 import { AnimatedContainer } from "@/components/ui/effects";
+import { useTranslation } from "@/hooks/use-translation";
 import { motion } from "framer-motion";
 import Link from "next/link";
 import type { BlogPostMeta } from "@/lib/blog-loader";
 import { useState } from "react";
-
-const categories = [
-  "全部",
-  "前端开发",
-  "后端开发",
-  "架构设计",
-  "编程语言",
-  "性能优化",
-  "开源文化",
-];
 
 interface BlogGridProps {
   initialPosts: BlogPostMeta[];
 }
 
 export function BlogGrid({ initialPosts }: BlogGridProps) {
-  const [selectedCategory, setSelectedCategory] = useState("全部");
+  const { locale } = useTranslation();
+  const [selectedCategory, setSelectedCategory] = useState(locale === 'zh' ? "全部" : "All");
+
+  const categories = locale === 'zh' 
+    ? ["全部", "前端开发", "后端开发", "架构设计", "编程语言", "性能优化", "开源文化"]
+    : ["All", "Frontend", "Backend", "Architecture", "Languages", "Performance", "Open Source"];
 
   const filteredPosts = initialPosts.filter(
-    (post) => selectedCategory === "全部" || post.category === selectedCategory
+    (post) => selectedCategory === (locale === 'zh' ? "全部" : "All") || post.category === selectedCategory
   );
 
   const featuredPosts = filteredPosts.filter((post) => post.featured);
@@ -40,7 +36,7 @@ export function BlogGrid({ initialPosts }: BlogGridProps) {
         >
           <div className="mb-16">
             <h2 className="text-2xl font-bold mb-8 text-gray-900 dark:text-white">
-              特色文章
+              {locale === 'zh' ? '特色文章' : 'Featured Articles'}
             </h2>
             <div className="grid md:grid-cols-2 gap-8">
               {featuredPosts.map((post, index) => (

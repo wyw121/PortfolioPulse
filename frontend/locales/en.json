@@ -12,42 +12,63 @@
   },
   "hero": {
     "greeting": "Hi, I'm",
+    "name": "Yuwei Wang",
     "title": "Full-Stack Developer",
     "subtitle": "Building modern, high-performance web applications with passion and precision",
-    "cta": "View Projects"
+    "cta": "View Projects",
+    "scrollDown": "Scroll Down"
   },
   "projects": {
-    "title": "Featured Projects",
-    "subtitle": "Explore my latest work and technical achievements",
+    "title": "My Projects",
+    "subtitle": "Here's a showcase of my exploration and practice in different technical domains, from web applications to open-source tools. Each project represents a learning and growth journey.",
+    "featured": "Featured Projects",
     "viewAll": "View All Projects",
     "liveDemo": "Live Demo",
     "sourceCode": "Source Code",
+    "viewProject": "View Project",
     "techStack": "Tech Stack",
+    "description": "Description",
     "status": {
-      "active": "Active",
+      "active": "Active Development",
       "completed": "Completed",
-      "inProgress": "In Progress"
+      "inProgress": "In Progress",
+      "planning": "Planning",
+      "archived": "Archived"
     }
   },
   "blog": {
-    "title": "Blog",
-    "subtitle": "Thoughts on technology, development, and innovation",
+    "title": "Tech Blog",
+    "subtitle": "Recording my technical learning journey, sharing development experiences and thoughts, exploring cutting-edge technology trends.",
     "readMore": "Read More",
     "readTime": "min read",
-    "publishedOn": "Published on"
+    "publishedOn": "Published on",
+    "tags": "Tags",
+    "backToBlog": "Back to Blog",
+    "relatedPosts": "Related Posts",
+    "noPostsFound": "No blog posts found"
   },
   "about": {
     "title": "About Me",
     "subtitle": "Learn more about my background and expertise",
     "bio": "Full-stack developer passionate about creating elegant solutions to complex problems",
-    "skills": "Skills",
-    "experience": "Experience",
-    "education": "Education"
+    "introduction": "Introduction",
+    "skills": "Skills & Expertise",
+    "experience": "Work Experience",
+    "education": "Education",
+    "contact": "Contact",
+    "downloadCV": "Download CV",
+    "email": "Email",
+    "location": "Location",
+    "github": "GitHub",
+    "linkedin": "LinkedIn",
+    "getInTouch": "Get in Touch",
+    "sendMessage": "Send Message"
   },
   "footer": {
     "rights": "All rights reserved",
     "builtWith": "Built with",
-    "and": "and"
+    "and": "and",
+    "madeWith": "Made with ❤️"
   },
   "theme": {
     "toggle": "Toggle theme",
@@ -59,5 +80,15 @@
     "toggle": "Switch language",
     "en": "English",
     "zh": "中文"
+  },
+  "actions": {
+    "learnMore": "Learn More",
+    "viewDetails": "View Details",
+    "close": "Close",
+    "back": "Back",
+    "next": "Next",
+    "previous": "Previous",
+    "submit": "Submit",
+    "cancel": "Cancel"
   }
 }
