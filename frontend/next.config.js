@@ -1,5 +1,6 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
+  output: 'standalone', // 启用独立输出模式，用于服务器部署
   images: {
     domains: ["avatars.githubusercontent.com", "github.com"],
   },
