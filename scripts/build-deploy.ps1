@@ -9,8 +9,9 @@ Write-Host ""
 # 设置错误处理
 $ErrorActionPreference = "Stop"
 
-# 项目路径
-$ProjectRoot = $PSScriptRoot
+# 项目路径（脚本在 scripts/ 目录下，需要返回上一级）
+$ScriptDir = $PSScriptRoot
+$ProjectRoot = Split-Path -Parent $ScriptDir
 $FrontendDir = Join-Path $ProjectRoot "frontend"
 $DeployDir = Join-Path $ProjectRoot "deploy"
 $ZipFile = Join-Path $ProjectRoot "portfoliopulse.zip"
