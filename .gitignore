@@ -71,10 +71,13 @@ logs
 DEPLOYMENT.md
 
 # Deployment packages and builds
+/deploy/
 /deploy-package/
 /deploy-backup-*/
 /deploy-server/
 /build/
+*.zip
+portfoliopulse*.zip
 *.exe
 rustup-init.exe
 
