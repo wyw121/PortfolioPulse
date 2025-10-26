@@ -26,18 +26,18 @@ module.exports = {
         },
         // 背景色系 - 支持亮暗主题
         'bg': {
-          'primary': '#f1f1f1',
-          'secondary': '#fafafa', 
-          'tertiary': '#e5e5e5',
+          'primary': '#fafafa',
+          'secondary': '#ffffff', 
+          'tertiary': '#f3f4f6',
           'dark-primary': '#0f0f0f',
           'dark-secondary': '#1e1e1e',
           'dark-tertiary': '#2a2a2a',
         },
         // 文字色系 - 支持亮暗主题
         'text': {
-          'primary': '#0f0f0f',
-          'secondary': '#64748b',
-          'muted': '#94a3b8',
+          'primary': '#111827',
+          'secondary': '#6b7280',
+          'muted': '#9ca3af',
           'dark-primary': '#ffffff',
           'dark-secondary': '#a3a3a3',
           'dark-muted': '#6b7280',

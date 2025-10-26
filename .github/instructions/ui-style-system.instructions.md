@@ -28,30 +28,31 @@ applyTo: "frontend/**/*,components/**/*,app/**/*,styles/**/*"
 --primary-pink: #ec4899; /* 主粉色 */
 ```
 
-### 明亮模式配色（参考微信设计规范）
+### 明亮模式配色（GitHub/Vercel 现代风格）
 
 ```css
 :root {
-  /* 背景色系 - 微信风格白色系统 */
-  --bg-primary: #f1f1f1; /* 主背景 - 浅灰 */
-  --bg-secondary: #fafafa; /* 卡片背景 - 极浅灰 */
-  --bg-tertiary: #e5e5e5; /* 悬停背景 - 中浅灰 */
+  /* 背景色系 - 现代极简风格 */
+  --bg-primary: #fafafa; /* 主背景 - 极浅灰，专业且柔和 */
+  --bg-secondary: #ffffff; /* 卡片背景 - 纯白，提供层级对比 */
+  --bg-tertiary: #f3f4f6; /* 悬停背景 - 微灰 */
 
-  /* 文字色系 - 层级清晰 */
-  --text-primary: #0f0f0f; /* 主文字 - 深黑 */
-  --text-secondary: #64748b; /* 辅助文字 - 中灰蓝 */
-  --text-muted: #94a3b8; /* 弱化文字 - 浅灰蓝 */
+  /* 文字色系 - 高对比度且柔和 */
+  --text-primary: #111827; /* 主文字 - 深灰黑（比纯黑更柔和） */
+  --text-secondary: #6b7280; /* 辅助文字 - 中性灰 */
+  --text-muted: #9ca3af; /* 弱化文字 - 浅灰 */
 
   /* 边框和分割线 */
-  --border-light: #e2e8f0; /* 浅色边框 */
-  --border-lighter: #f1f5f9; /* 更浅的边框 */
+  --border-light: #e5e7eb; /* 浅色边框 */
+  --border-lighter: #f3f4f6; /* 更浅的边框 */
 }
 ```
 
 **设计原则**:
-- 主背景使用浅灰 `#f1f1f1`，避免纯白的刺眼感，更柔和舒适
-- 次级背景使用极浅灰 `#fafafa`，提供层级感
-- 文字色采用高对比度，确保可读性
+- 主背景使用 `#fafafa` - 极浅灰，比纯白更柔和，比深灰更明亮，完美平衡
+- 卡片使用纯白 `#ffffff` - 提供清晰的层级对比和视觉焦点
+- 文字色采用 `#111827` - 深灰黑，高对比度但比纯黑 #000000 更柔和
+- 参考 GitHub、Vercel、Linear 等现代网站的配色标准
 - 保持蓝紫粉渐变作为强调色和交互元素
 
 ### 暗色模式配色（主要）

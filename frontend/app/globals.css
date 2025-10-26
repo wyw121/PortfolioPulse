@@ -8,8 +8,8 @@
 /* 防止主题切换时的闪烁 */
 html {
   /* 设置初始背景色，在 CSS 变量加载前提供默认样式 */
-  background-color: #f1f1f1;
-  color: #0f0f0f;
+  background-color: #fafafa;
+  color: #111827;
   color-scheme: light dark;
   font-family: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
     sans-serif;
@@ -55,13 +55,13 @@ html.dark {
     --primary-purple: #8b5cf6;
     --primary-pink: #ec4899;
 
-    /* 背景色系统 - 亮色模式 */
-    --bg-primary: #f1f1f1;
-    --bg-secondary: #fafafa;
-    --bg-tertiary: #e5e5e5;
-    --text-primary: #0f0f0f;
-    --text-secondary: #64748b;
-    --text-muted: #94a3b8;
+    /* 背景色系统 - 亮色模式 (GitHub/Vercel 风格) */
+    --bg-primary: #fafafa; /* 主背景 - 极浅灰 */
+    --bg-secondary: #ffffff; /* 卡片背景 - 纯白 */
+    --bg-tertiary: #f3f4f6; /* 悬停背景 - 微灰 */
+    --text-primary: #111827; /* 主文字 - 深灰黑 */
+    --text-secondary: #6b7280; /* 辅助文字 - 中性灰 */
+    --text-muted: #9ca3af; /* 弱化文字 - 浅灰 */
 
     /* shadcn/ui 兼容变量 - 亮色模式 */
     --background: 0 0% 94.5%;
