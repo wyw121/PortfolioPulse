@@ -36,8 +36,8 @@ module.exports = {
         // 文字色系 - 支持亮暗主题
         'text': {
           'primary': '#0f0f0f',
-          'secondary': '#4a5568',
-          'muted': '#9ca3af',
+          'secondary': '#64748b',
+          'muted': '#94a3b8',
           'dark-primary': '#ffffff',
           'dark-secondary': '#a3a3a3',
           'dark-muted': '#6b7280',
