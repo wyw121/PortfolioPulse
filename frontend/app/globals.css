@@ -56,19 +56,19 @@ html.dark {
     --primary-pink: #ec4899;
 
     /* 背景色系统 - 亮色模式 */
-    --bg-primary: #ffffff;
-    --bg-secondary: #f8fafc;
-    --bg-tertiary: #e2e8f0;
+    --bg-primary: #f1f1f1;
+    --bg-secondary: #fafafa;
+    --bg-tertiary: #e5e5e5;
     --text-primary: #0f0f0f;
     --text-secondary: #64748b;
     --text-muted: #94a3b8;
 
     /* shadcn/ui 兼容变量 - 亮色模式 */
-    --background: 0 0% 100%;
+    --background: 0 0% 94.5%;
     --foreground: 240 10% 3.9%;
-    --card: 0 0% 100%;
+    --card: 0 0% 98%;
     --card-foreground: 240 10% 3.9%;
-    --popover: 0 0% 100%;
+    --popover: 0 0% 98%;
     --popover-foreground: 240 10% 3.9%;
     --primary: 217 91% 60%;
     --primary-foreground: 0 0% 98%;

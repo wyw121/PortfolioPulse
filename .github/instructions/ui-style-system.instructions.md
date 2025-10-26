@@ -33,9 +33,9 @@ applyTo: "frontend/**/*,components/**/*,app/**/*,styles/**/*"
 ```css
 :root {
   /* 背景色系 - 微信风格白色系统 */
-  --bg-primary: #ffffff; /* 主背景 - 纯白 */
-  --bg-secondary: #f8fafc; /* 卡片背景 - 极浅蓝灰 */
-  --bg-tertiary: #e2e8f0; /* 悬停背景 - 浅蓝灰 */
+  --bg-primary: #f1f1f1; /* 主背景 - 浅灰 */
+  --bg-secondary: #fafafa; /* 卡片背景 - 极浅灰 */
+  --bg-tertiary: #e5e5e5; /* 悬停背景 - 中浅灰 */
 
   /* 文字色系 - 层级清晰 */
   --text-primary: #0f0f0f; /* 主文字 - 深黑 */
@@ -49,8 +49,8 @@ applyTo: "frontend/**/*,components/**/*,app/**/*,styles/**/*"
 ```
 
 **设计原则**:
-- 主背景使用纯白 `#ffffff`，保持最大清爽感
-- 次级背景使用极浅的蓝灰色调，与品牌蓝色呼应
+- 主背景使用浅灰 `#f1f1f1`，避免纯白的刺眼感，更柔和舒适
+- 次级背景使用极浅灰 `#fafafa`，提供层级感
 - 文字色采用高对比度，确保可读性
 - 保持蓝紫粉渐变作为强调色和交互元素
 
@@ -193,9 +193,9 @@ transition: all 500ms cubic-bezier(0.25, 0.8, 0.25, 1);
   --primary-pink: #ec4899;
   
   /* 亮色模式 */
-  --bg-primary: #ffffff;
-  --bg-secondary: #f8fafc;
-  --bg-tertiary: #e2e8f0;
+  --bg-primary: #f1f1f1;
+  --bg-secondary: #fafafa;
+  --bg-tertiary: #e5e5e5;
   --text-primary: #0f0f0f;
   --text-secondary: #64748b;
   --text-muted: #94a3b8;

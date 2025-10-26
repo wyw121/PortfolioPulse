@@ -26,9 +26,9 @@ module.exports = {
         },
         // 背景色系 - 支持亮暗主题
         'bg': {
-          'primary': '#ffffff',
-          'secondary': '#f8fafc', 
-          'tertiary': '#e2e8f0',
+          'primary': '#f1f1f1',
+          'secondary': '#fafafa', 
+          'tertiary': '#e5e5e5',
           'dark-primary': '#0f0f0f',
           'dark-secondary': '#1e1e1e',
           'dark-tertiary': '#2a2a2a',
