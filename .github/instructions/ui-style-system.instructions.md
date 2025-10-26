@@ -13,10 +13,10 @@ applyTo: "frontend/**/*,components/**/*,app/**/*,styles/**/*"
 
 ## 核心色彩系统
 
-### 品牌主色调
+### 品牌主色调（全局通用）
 
 ```css
-/* 蓝紫粉渐变主题 */
+/* 蓝紫粉渐变主题 - 保持不变 */
 --primary-gradient: linear-gradient(
   135deg,
   #3b82f6 0%,
@@ -27,6 +27,32 @@ applyTo: "frontend/**/*,components/**/*,app/**/*,styles/**/*"
 --primary-purple: #8b5cf6; /* 主紫色 */
 --primary-pink: #ec4899; /* 主粉色 */
 ```
+
+### 明亮模式配色（参考微信设计规范）
+
+```css
+:root {
+  /* 背景色系 - 微信风格白色系统 */
+  --bg-primary: #ffffff; /* 主背景 - 纯白 */
+  --bg-secondary: #f8fafc; /* 卡片背景 - 极浅蓝灰 */
+  --bg-tertiary: #e2e8f0; /* 悬停背景 - 浅蓝灰 */
+
+  /* 文字色系 - 层级清晰 */
+  --text-primary: #0f0f0f; /* 主文字 - 深黑 */
+  --text-secondary: #64748b; /* 辅助文字 - 中灰蓝 */
+  --text-muted: #94a3b8; /* 弱化文字 - 浅灰蓝 */
+
+  /* 边框和分割线 */
+  --border-light: #e2e8f0; /* 浅色边框 */
+  --border-lighter: #f1f5f9; /* 更浅的边框 */
+}
+```
+
+**设计原则**:
+- 主背景使用纯白 `#ffffff`，保持最大清爽感
+- 次级背景使用极浅的蓝灰色调，与品牌蓝色呼应
+- 文字色采用高对比度，确保可读性
+- 保持蓝紫粉渐变作为强调色和交互元素
 
 ### 暗色模式配色（主要）
 
@@ -66,8 +92,24 @@ applyTo: "frontend/**/*,components/**/*,app/**/*,styles/**/*"
 #### 2. 标准悬停效果
 
 - `translateY(-4px)` 标准提升
-- 300ms 过渡动画
-- 发光阴影效果
+- 500ms 过渡动画（缓慢优雅）
+- 发光阴影效果（自适应主题）
+
+#### 3. 主题自适应阴影
+
+**亮色模式**:
+```css
+box-shadow: 0 20px 40px -12px rgba(59, 130, 246, 0.3),
+            0 8px 16px -4px rgba(59, 130, 246, 0.1),
+            0 0 0 1px rgba(59, 130, 246, 0.05);
+```
+
+**暗色模式**:
+```css
+box-shadow: 0 20px 40px -12px rgba(59, 130, 246, 0.5),
+            0 8px 16px -4px rgba(59, 130, 246, 0.2),
+            0 0 0 1px rgba(59, 130, 246, 0.1);
+```
 
 ## 字体系统
 
@@ -117,9 +159,86 @@ applyTo: "frontend/**/*,components/**/*,app/**/*,styles/**/*"
 - **位置**: 顶部居中对齐
 - **样式**: 透明背景 + 渐变科技感效果
 
+## 动画性能优化
+
+### 快速响应原则
+
+- **初始动画**: 350-400ms（快速反馈）
+- **悬停动画**: 400-500ms（优雅过渡）
+- **交错延迟**: 50-100ms（避免过长等待）
+
+### 标准动画时长
+
+```css
+/* 快速交互 */
+transition: all 300ms cubic-bezier(0.4, 0, 0.2, 1);
+
+/* 标准交互 */
+transition: all 400ms cubic-bezier(0.25, 0.1, 0.25, 1);
+
+/* 优雅悬停 */
+transition: all 500ms cubic-bezier(0.25, 0.8, 0.25, 1);
+```
+
+## 实际应用的CSS变量（当前项目）
+
+### 基础变量
+
+```css
+:root {
+  /* 品牌渐变 */
+  --primary-gradient: linear-gradient(135deg, #3b82f6 0%, #8b5cf6 50%, #ec4899 100%);
+  --primary-blue: #3b82f6;
+  --primary-purple: #8b5cf6;
+  --primary-pink: #ec4899;
+  
+  /* 亮色模式 */
+  --bg-primary: #ffffff;
+  --bg-secondary: #f8fafc;
+  --bg-tertiary: #e2e8f0;
+  --text-primary: #0f0f0f;
+  --text-secondary: #64748b;
+  --text-muted: #94a3b8;
+}
+
+.dark {
+  /* 暗色模式 */
+  --bg-primary: #0f0f0f;
+  --bg-secondary: #1e1e1e;
+  --bg-tertiary: #2a2a2a;
+  --text-primary: #ffffff;
+  --text-secondary: #a3a3a3;
+  --text-muted: #6b7280;
+}
+```
+
+### 实用组件类
+
+```css
+/* 渐变边框 */
+.gradient-border { ... }
+
+/* 悬停提升 */
+.hover-lift { ... }
+
+/* 科技卡片 */
+.tech-card { ... }
+
+/* 渐变文字 */
+.text-gradient { ... }
+
+/* Vercel容器 */
+.vercel-container { ... }
+```
+
+## 开发规范
+
 使用这些设计规范时，请确保：
 
-- 优先使用 CSS 变量而非硬编码颜色
-- 保持动画效果的一致性 (300ms)
-- 遵循无障碍访问标准
-- 色彩对比度符合 WCAG AA 标准
+- ✅ **优先使用 CSS 变量**而非硬编码颜色
+- ✅ **保持动画效果的一致性** (300-500ms)
+- ✅ **遵循无障碍访问标准**
+- ✅ **色彩对比度符合 WCAG AA 标准**
+- ✅ **主题色（蓝紫粉渐变）仅用于强调和交互元素**
+- ✅ **背景色保持简洁中性，突出内容**
+
