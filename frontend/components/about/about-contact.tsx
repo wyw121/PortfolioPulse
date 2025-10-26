@@ -12,10 +12,10 @@ const contactMethodsData = [
     key: "email" as const,
   },
   {
-    icon: "💬",
-    value: "w3148468612",
-    href: "#",
-    key: "wechat" as const,
+    icon: "💼",
+    value: "linkedin.com/in/wyw121",
+    href: "https://www.linkedin.com/in/wyw121",
+    key: "linkedin" as const,
   },
   {
     icon: "🐙",

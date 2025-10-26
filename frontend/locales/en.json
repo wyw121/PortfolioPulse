@@ -74,9 +74,9 @@
         "label": "Email",
         "description": "Always welcome technical exchanges and collaboration inquiries"
       },
-      "wechat": {
-        "label": "WeChat",
-        "description": "Add me on WeChat for faster responses"
+      "linkedin": {
+        "label": "LinkedIn",
+        "description": "Check out my professional background and experience"
       },
       "github": {
         "label": "GitHub",

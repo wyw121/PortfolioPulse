@@ -74,9 +74,9 @@
         "label": "邮箱",
         "description": "随时欢迎技术交流和合作咨询"
       },
-      "wechat": {
-        "label": "微信",
-        "description": "添加微信,获取更及时的回复"
+      "linkedin": {
+        "label": "LinkedIn",
+        "description": "查看我的职业经历和专业背景"
       },
       "github": {
         "label": "GitHub",
