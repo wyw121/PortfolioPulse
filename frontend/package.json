@@ -22,10 +22,8 @@
     "@radix-ui/react-switch": "^1.0.3",
     "@radix-ui/react-tabs": "^1.0.4",
     "@radix-ui/react-toast": "^1.1.5",
-    "axios": "^1.6.0",
     "class-variance-authority": "^0.7.0",
     "clsx": "^2.0.0",
-    "date-fns": "^2.30.0",
     "framer-motion": "^10.16.5",
     "gray-matter": "^4.0.3",
     "lucide-react": "^0.292.0",
@@ -37,8 +35,7 @@
     "remark-gfm": "^4.0.1",
     "remark-html": "^16.0.1",
     "tailwind-merge": "^2.0.0",
-    "tailwindcss-animate": "^1.0.7",
-    "zustand": "^4.4.7"
+    "tailwindcss-animate": "^1.0.7"
   },
   "devDependencies": {
     "@types/node": "^20.9.0",

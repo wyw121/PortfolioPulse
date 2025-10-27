@@ -1,10 +1,14 @@
 "use client";
 
+import { AnimatedContainer } from "@/components/ui/effects";
+import { useSiteConfig } from "@/contexts/site-config-context";
+import { useTranslation } from "@/hooks/use-translation";
 import { useState } from "react";
-import { AnimatedContainer } from "../animations/animated-container";
 
 export const Footer = () => {
   const [isJapanese, setIsJapanese] = useState(false);
+  const { dict } = useTranslation();
+  const config = useSiteConfig();
 
   const toggleLanguage = () => {
     setIsJapanese(!isJapanese);

@@ -5,7 +5,7 @@ import { useTranslation } from "@/hooks/use-translation";
 import { motion } from "framer-motion";
 
 export function AboutHero() {
-  const { dict, locale } = useTranslation();
+  const { dict } = useTranslation();
 
   return (
     <section className="py-20 px-6">
@@ -43,18 +43,8 @@ export function AboutHero() {
               fastResponse={true}
             >
               <div className="space-y-4 text-gray-600 dark:text-gray-300">
-                <p>
-                  {locale === 'zh' 
-                    ? '拥有多年的前端和后端开发经验，熟练掌握React、Next.js、TypeScript、Rust等技术栈。热衷于开源项目，致力于构建高质量、高性能的Web应用。'
-                    : 'With years of frontend and backend development experience, proficient in React, Next.js, TypeScript, Rust and other tech stacks. Passionate about open source projects and dedicated to building high-quality, high-performance web applications.'
-                  }
-                </p>
-                <p>
-                  {locale === 'zh'
-                    ? '除了技术开发，我还喜欢写作分享，通过博客记录学习过程和技术思考，希望能够帮助更多的开发者成长。'
-                    : 'Besides technical development, I also enjoy writing and sharing. Through my blog, I document learning processes and technical thoughts, hoping to help more developers grow.'
-                  }
-                </p>
+                <p>{dict.about.experienceDescription}</p>
+                <p>{dict.about.sharingDescription}</p>
               </div>
             </AnimatedContainer>
 
@@ -73,7 +63,7 @@ export function AboutHero() {
                   whileHover={{ scale: 1.05 }}
                   whileTap={{ scale: 0.95 }}
                 >
-                  {locale === 'zh' ? '查看GitHub' : 'View GitHub'}
+                  {dict.about.viewGithub}
                 </motion.a>
                 <motion.a
                   href="#contact"

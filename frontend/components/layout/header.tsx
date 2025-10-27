@@ -1,14 +1,15 @@
 "use client";
 
-import { AnimatedContainer } from "@/components/animations/animated-container";
+import { AnimatedContainer } from "@/components/ui/effects";
 import { LanguageSwitcher } from "@/components/language-switcher";
 import { ThemeToggle } from "@/components/theme-toggle";
+import { useSiteConfig } from "@/contexts/site-config-context";
 import { useTranslation } from "@/hooks/use-translation";
-import { siteConfig } from "@/lib/config";
 import Link from "next/link";
 
 export function Header() {
-  const { dict } = useTranslation()
+  const { dict } = useTranslation();
+  const config = useSiteConfig();
 
   return (
     <AnimatedContainer
@@ -23,9 +24,9 @@ export function Header() {
             <Link 
               href="/" 
               className="mr-3 text-xl font-bold text-gray-900 dark:text-white hover:opacity-80 transition-opacity"
-              title={siteConfig.name}
+              title={config.name}
             >
-              {siteConfig.name}
+              {config.name}
             </Link>
             
             {/* Logo Switches - 紧跟 Logo 右侧 */}
@@ -59,14 +60,6 @@ export function Header() {
                 className="text-sm font-medium text-gray-600 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white transition-colors"
               >
                 <span>{dict.nav.blog}</span>
-              </Link>
-            </li>
-            <li>
-              <Link
-                href="/activity"
-                className="text-sm font-medium text-gray-600 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white transition-colors"
-              >
-                <span>{dict.nav.activity}</span>
               </Link>
             </li>
             <li>

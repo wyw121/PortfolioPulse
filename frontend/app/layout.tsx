@@ -1,6 +1,6 @@
 import { Navigation } from "@/components/layout";
-import { PerformanceMonitor } from "@/components/performance-monitor";
 import { ThemeProvider } from "@/components/theme-provider";
+import { SiteConfigProvider } from "@/contexts/site-config-context";
 import { siteConfig } from "@/lib/config";
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
@@ -105,16 +105,17 @@ export default function RootLayout({
         />
       </head>
       <body className={inter.className} suppressHydrationWarning>
-        <ThemeProvider
-          attribute="class"
-          defaultTheme="system"
-          enableSystem
-          disableTransitionOnChange
-        >
-          <Navigation />
-          {children}
-          <PerformanceMonitor />
-        </ThemeProvider>
+        <SiteConfigProvider>
+          <ThemeProvider
+            attribute="class"
+            defaultTheme="system"
+            enableSystem
+            disableTransitionOnChange
+          >
+            <Navigation />
+            {children}
+          </ThemeProvider>
+        </SiteConfigProvider>
       </body>
     </html>
   );

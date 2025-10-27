@@ -1,7 +1,9 @@
-import { BlogPost } from "@/components/sections/blog-post";
-import { BlogPostMeta } from "@/components/sections/blog-post-meta";
-import { BlogPostTags } from "@/components/sections/blog-post-tags";
-import { RelatedPosts } from "@/components/sections/related-posts";
+import {
+  BlogPost,
+  BlogPostMeta,
+  BlogPostTags,
+  RelatedPosts,
+} from "@/components";
 import { getPostBySlug, getAllPosts } from "@/lib/blog-loader";
 import { notFound } from "next/navigation";
 import { cookies } from "next/headers";
