@@ -60,32 +60,6 @@
       "*.css": "tailwindcss"
     },
 
-    // === Rust 开发环境优化 ===
-    "rust-analyzer.cargo.buildScripts.enable": true,
-    "rust-analyzer.check.command": "clippy",
-    "rust-analyzer.cargo.features": "all",
-    "rust-analyzer.checkOnSave.enable": true,
-    "rust-analyzer.checkOnSave.allTargets": false,
-    "rust-analyzer.procMacro.enable": true,
-    "rust-analyzer.completion.limit": 100,
-    "rust-analyzer.imports.granularity.group": "module",
-    "rust-analyzer.imports.prefix": "crate",
-    "rust-analyzer.inlayHints.parameterHints.enable": true,
-    "rust-analyzer.inlayHints.typeHints.enable": true,
-    "rust-analyzer.lens.enable": true,
-
-    // === SQL 和数据库设置 ===
-    "sqltools.connections": [
-      {
-        "name": "PortfolioPulse MySQL",
-        "driver": "MySQL",
-        "server": "localhost",
-        "port": 3306,
-        "database": "portfoliopulse",
-        "username": "root"
-      }
-    ],
-
     // === 文件监听和性能优化 ===
     "files.watcherExclude": {
       "**/target/**": true,
@@ -142,13 +116,6 @@
     "[jsonc]": {
       "editor.defaultFormatter": "esbenp.prettier-vscode"
     },
-    "[rust]": {
-      "editor.defaultFormatter": "rust-lang.rust-analyzer",
-      "editor.formatOnSave": true
-    },
-    "[sql]": {
-      "editor.formatOnSave": true
-    },
     "[markdown]": {
       "editor.formatOnSave": false,
       "editor.wordWrap": "on"
@@ -165,16 +132,6 @@
       "esbenp.prettier-vscode",
       "dbaeumer.vscode-eslint",
       "ms-vscode.vscode-typescript-next",
-
-      // === Rust 开发必备 ===
-      "rust-lang.rust-analyzer",
-      "vadimcn.vscode-lldb",
-      "serayuzgur.crates",
-      "tamasfe.even-better-toml",
-
-      // === 数据库相关 ===
-      "mtxr.sqltools",
-      "mtxr.sqltools-driver-mysql",
 
       // === Git 和版本控制 ===
       "eamodio.gitlens",

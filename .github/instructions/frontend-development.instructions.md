@@ -38,7 +38,7 @@ npm run lint        # 代码检查
 │   └── github/            # GitHub 相关组件
 ├── lib/                   # 工具库和配置
 ├── hooks/                 # 自定义 React Hooks
-├── store/                 # Zustand 状态管理
+├── contexts/              # React Context 状态管理
 └── types/                 # TypeScript 类型定义
 ```
 
@@ -158,32 +158,59 @@ interface ProjectCardProps {
 }
 ```
 
-## 状态管理 - Zustand
+## 状态管理 - React Context
 
-### Store 结构
+### Context 结构
 
 ```typescript
-interface AppStore {
+// contexts/site-config-context.tsx
+interface SiteConfig {
+  // 站点配置
+  title: string;
+  description: string;
+  url: string;
+  
   // 用户状态
   user: User | null;
-  setUser: (user: User | null) => void;
-
+  
   // 项目数据
   projects: Project[];
-  setProjects: (projects: Project[]) => void;
-
+  
   // GitHub 数据
   githubData: GitHubData | null;
-  setGitHubData: (data: GitHubData) => void;
-
+  
   // UI 状态
   theme: "light" | "dark";
-  toggleTheme: () => void;
+  locale: "zh" | "en";
+}
 
-  // 访问控制
-  accessToken: string | null;
-  userType: "owner" | "friend" | "visitor";
-  setAccessToken: (token: string | null) => void;
+const SiteConfigContext = createContext<SiteConfig | null>(null);
+
+export function useSiteConfig() {
+  const context = useContext(SiteConfigContext);
+  if (!context) {
+    throw new Error('useSiteConfig must be used within SiteConfigProvider');
+  }
+  return context;
+}
+```
+
+### Custom Hooks
+
+```typescript
+// hooks/use-translation.ts
+export function useTranslation() {
+  const [lang, setLang] = useState<'zh' | 'en'>('zh');
+  const dict = getDictionary(lang);
+  return { dict, lang, setLang };
+}
+
+// hooks/use-theme.ts
+import { useTheme } from 'next-themes';
+
+export function useAppTheme() {
+  const { theme, setTheme } = useTheme();
+  return { theme, setTheme };
 }
 ```
 

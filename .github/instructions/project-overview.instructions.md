@@ -12,61 +12,57 @@ applyTo: "**"
 
 ## 技术栈要求
 
-### 前端 (端口 3000)
+### 前端技术栈
 
-- **Next.js 15**: App Router + TypeScript 严格模式
+- **Next.js 15**: App Router + TypeScript 严格模式 + SSG/ISR
 - **Tailwind CSS**: 原子化 CSS，配合自定义 CSS 变量
 - **shadcn/ui**: 现代组件库，统一设计语言
 - **Inter 字体**: 主字体，搭配 JetBrains Mono 代码字体
-
-### 后端 (端口 8000)
-
-- **Rust**: Axum 框架，异步编程模式
-- **MySQL**: 数据库 (端口 3306)
-- **Diesel ORM**: 数据库迁移和操作
+- **React Context**: 轻量级状态管理
+- **Markdown**: Git 作为 CMS，内容版本控制
 
 ## 部署策略（重要）
 
-**部署模式**: 二进制部署（无 Docker）
+**部署模式**: 纯前端静态部署
 
-- **前端**: Next.js Standalone 输出 + Node.js 运行时
-- **后端**: Rust 编译的原生二进制文件
-- **数据库**: 独立 MySQL 服务
-- **代理**: Nginx 负责路由分发
+- **渲染策略**: SSG (静态生成) + ISR (增量静态再生)
+- **内容管理**: Git + Markdown 文件（无数据库）
+- **托管平台**: Vercel / Netlify / Cloudflare Pages
+- **博客更新**: ISR 60秒自动重新验证
+- **无服务器**: 零后端依赖，纯静态网站
 
 ## 开发规范
 
 ### 编码标准
 
 - **TypeScript**: 严格模式，绝对路径导入 `@/components/ui/button`
-- **Rust**: 使用 `rustfmt` + `clippy`，优先 `Result<T, E>` 错误处理
 - **命名约定**:
   - 组件: PascalCase
   - 文件: kebab-case
-  - 数据库: snake_case
+  - Markdown: YYYY-MM-DD-title.md
 
 ### 构建命令
 
 ```bash
 # 前端开发
-cd frontend && npm run dev
-
-# 后端开发
-cd backend && cargo run --release
+cd frontend && npm run dev        # 开发服务器 (端口 3000)
 
 # 生产构建
-cd backend && cargo build --release
-cd frontend && npm run build
+cd frontend && npm run build      # 静态网站构建
+cd frontend && npm run start      # 预览构建结果
+
+# 代码检查
+npm run lint                      # ESLint 检查
+npm run type-check                # TypeScript 类型检查
 ```
 
-### 数据库操作
+### 内容管理
 
 ```bash
-# 运行迁移
-cd backend && diesel migration run
-
-# 创建新迁移
-diesel migration generate <name>
+# 博客管理
+# 在 frontend/content/blog/ 目录创建 .md 文件
+# 文件名格式: YYYY-MM-DD-title.md
+# 双语支持: title.md (中文) + title.en.md (英文)
 ```
 
 ## 设计系统集成
@@ -93,10 +89,10 @@ diesel migration generate <name>
 
 ### 核心功能
 
-1. **项目展示**: 卡片式展示，实时状态更新
-2. **动态追踪**: Git 提交历史，代码统计
+1. **项目展示**: 卡片式展示，Markdown 内容管理
+2. **博客系统**: Markdown 文件 + ISR，双语支持
 3. **学习记录**: 进度追踪，知识标签
-4. **用户认证**: GitHub OAuth 集成
+4. **国际化**: 中英文切换 (i18n)
 
 ### 导航结构
 
@@ -109,23 +105,24 @@ diesel migration generate <name>
 2. **代码审查**: 所有 PR 需要审查
 3. **Git 规范**: 使用 Conventional Commits
 4. **性能优先**:
-   - Next.js 图片优化
-   - 组件懒加载
-   - 数据库查询优化
+   - Next.js 图片优化 (next/image)
+   - 组件懒加载 (Dynamic Import)
+   - 静态生成 (SSG)
+   - 增量静态再生 (ISR)
 
 ## 故障排查
 
 ### 常见问题
 
-- **端口冲突**: 检查 3000、8000、3306 端口
-- **依赖问题**: 清除缓存重装 (node_modules + Cargo)
-- **构建失败**: 检查 TypeScript 类型错误和 Rust 编译
+- **端口冲突**: 检查 3000 端口 (仅前端开发服务器)
+- **依赖问题**: 清除缓存重装 (`rm -rf node_modules && npm install`)
+- **构建失败**: 检查 TypeScript 类型错误 (`npm run type-check`)
 
 ### 调试工具
 
 - 前端: 浏览器开发者工具
-- 后端: `cargo test` + `println!` 调试
-- 部署: 查看构建日志
+- 构建: Next.js 构建日志分析
+- 部署: 查看 Vercel/Netlify 部署日志
 
 ## 项目状态
 
