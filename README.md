@@ -1,206 +1,329 @@
-# PortfolioPulse - 个人项目集动态平台
+# PortfolioPulse
 
 <div align="center">
 
-![PortfolioPulse Logo](./docs/assets/logo.png)
+**现代化个人作品集 · 纯前端静态网站**
 
-一个集成多个个人项目的动态展示平台，让访问者能够实时查看开发动态、学习进展和项目访问。
-
-[![Build Status](https://github.com/wyw121/PortfolioPulse/workflows/CI/badge.svg)](https://github.com/wyw121/PortfolioPulse/actions)
+[![Next.js](https://img.shields.io/badge/Next.js-15.0-black?logo=next.js)](https://nextjs.org/)
+[![TypeScript](https://img.shields.io/badge/TypeScript-5.2-blue?logo=typescript)](https://www.typescriptlang.org/)
+[![Tailwind CSS](https://img.shields.io/badge/Tailwind-3.3-38bdf8?logo=tailwind-css)](https://tailwindcss.com/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
-[![TypeScript](https://img.shields.io/badge/TypeScript-5.0-blue)](https://www.typescriptlang.org/)
-[![Next.js](https://img.shields.io/badge/Next.js-15-black)](https://nextjs.org/)
-[![Rust](https://img.shields.io/badge/Rust-1.75-orange)](https://www.rust-lang.org/)
+
+受 [sindresorhus.com](https://sindresorhus.com) 启发的极简个人主页
+
+[在线演示](#) · [查看文档](docs/) · [报告问题](https://github.com/wyw121/PortfolioPulse/issues)
 
 </div>
 
-## 📚 文档导航
+---
 
-> 📋 **完整文档索引**: [docs/DOCUMENTATION_INDEX.md](docs/DOCUMENTATION_INDEX.md)
+## ✨ 项目特色
 
-### 🔗 快速链接
-- **🤖 AI开发指令**: [.github/copilot-instructions.md](.github/copilot-instructions.md) - GitHub Copilot 开发指南
-- **🏗️ 系统架构**: [docs/SYSTEM_ARCHITECTURE_ANALYSIS.md](docs/SYSTEM_ARCHITECTURE_ANALYSIS.md) - 架构设计详解
-- **🛠️ 技术实现**: [docs/TECHNICAL_IMPLEMENTATION_GUIDE.md](docs/TECHNICAL_IMPLEMENTATION_GUIDE.md) - 技术栈指南
-- **🚀 部署指南**: [docs/BINARY_DEPLOYMENT_GUIDE.md](docs/BINARY_DEPLOYMENT_GUIDE.md) - 二进制部署方案
-- **🎨 设计规范**: [docs/PROJECT_STYLE_GUIDE.md](docs/PROJECT_STYLE_GUIDE.md) - UI/UX设计系统
+### 🎯 核心理念
 
-## ✨ 主要特性
+> **极简主义 · 内容优先 · 性能至上**
 
-- 🚀 **现代技术栈**: Next.js 15 + Tailwind CSS + shadcn/ui
-- 📊 **静态数据展示**: 项目和活动统计
-- 📝 **Markdown博客**: 使用 Git + Markdown 管理博客内容,无需数据库
-- 🎨 **项目展示**: 项目卡片展示、实时状态更新
-- 🌙 **主题切换**: 支持明暗主题无缝切换
-- 📱 **响应式设计**: 完美适配桌面和移动设备
+- **🚀 零服务器** - 纯静态网站，无需后端，部署到任意静态托管平台
+- **� Git 即 CMS** - Markdown 文件管理内容，Git 作为版本控制系统
+- **🎨 渐变科技风** - 蓝紫粉渐变主题，现代化设计语言
+- **🌍 国际化就绪** - 完整中英双语支持，98% i18n 覆盖率
+- **⚡ 极速加载** - SSG + ISR 策略，首屏秒开，SEO 友好
 
-## 🛠️ 技术架构
+### 💡 技术亮点
 
-### 前端技术栈
-- **Next.js 15**: React 全栈框架，App Router，SSG/ISR
-- **TypeScript**: 类型安全的 JavaScript
-- **Tailwind CSS**: 实用优先的 CSS 框架
-- **shadcn/ui**: 现代化组件库
-- **gray-matter + remark**: Markdown 解析和渲染
+```
+纯前端架构 = Next.js 15 SSG + TypeScript + Tailwind CSS
+无数据库 = Markdown 文件 + Git 版本控制
+无状态管理库 = React Context + Custom Hooks
+代码使用率 = 100% (零冗余)
+```
+
+---
+
+## 🛠️ 技术栈
+
+### 核心框架
+- **[Next.js 15](https://nextjs.org/)** - App Router + React Server Components
+- **[TypeScript 5.2](https://www.typescriptlang.org/)** - 严格模式，全链路类型安全
+- **[Tailwind CSS 3.3](https://tailwindcss.com/)** - 原子化 CSS + 自定义设计系统
+
+### UI 组件
+- **[shadcn/ui](https://ui.shadcn.com/)** - 现代组件库（按需使用）
+- **[Radix UI](https://www.radix-ui.com/)** - 无障碍组件基础
+- **[Framer Motion](https://www.framer.com/motion/)** - 流畅动画效果
+- **[Lucide Icons](https://lucide.dev/)** - 一致的图标系统
+
+### 内容管理
+- **[gray-matter](https://github.com/jonschlinkert/gray-matter)** - Markdown Front Matter 解析
+- **[remark](https://remark.js.org/)** - Markdown 转 HTML
+- **[remark-gfm](https://github.com/remarkjs/remark-gfm)** - GitHub 风格 Markdown
+
+### 开发工具
+- **[ESLint](https://eslint.org/)** - 代码质量检查
+- **[next-themes](https://github.com/pacocoursey/next-themes)** - 主题切换系统
+
+
+---
 
 ## 🚀 快速开始
 
-### 环境要求
+### 前置要求
 
-- Node.js >= 18.17.0
-- Git
+```bash
+Node.js >= 18.17.0
+npm >= 9.0.0
+```
 
-### 安装和运行
+### 本地运行
 
-1. **克隆仓库**
-   ```bash
-   git clone https://github.com/wyw121/PortfolioPulse.git
-   cd PortfolioPulse
-   ```
+```bash
+# 1. 克隆仓库
+git clone https://github.com/wyw121/PortfolioPulse.git
+cd PortfolioPulse
 
-2. **安装依赖**
-   ```bash
-   cd frontend
-   npm install
-   ```
+# 2. 安装依赖
+cd frontend
+npm install
 
-3. **启动开发服务器**
-   ```bash
-   npm run dev
-   ```
+# 3. 启动开发服务器
+npm run dev
 
-4. **访问应用**
+# 4. 打开浏览器访问
+# http://localhost:3000
+```
 
-   打开浏览器访问 `http://localhost:3000`
+### 生产构建
+
+```bash
+# 构建静态网站
+npm run build
+
+# 本地预览构建结果
+npm run start
+```
+
+---
 
 ## 📁 项目结构
 
 ```
 PortfolioPulse/
-├── .github/                    # GitHub 配置和 Copilot 指令
-│   ├── workflows/             # CI/CD 工作流
-│   ├── instructions/          # 模块化开发指令
-│   ├── prompts/              # 项目提示模板
-│   └── copilot-instructions.md
-├── frontend/                   # Next.js 前端应用
+├── frontend/                   # Next.js 应用
 │   ├── app/                   # App Router 页面
-│   ├── components/            # React 组件
-│   │   ├── ui/               # shadcn/ui 基础组件
-│   │   └── custom/           # 自定义业务组件
-│   ├── content/              # Markdown 内容
-│   │   └── blog/             # 博客文章 (.md 文件)
-│   ├── lib/                  # 工具库和配置
-│   ├── hooks/                # 自定义 React Hooks
-│   └── types/                # TypeScript 类型定义
-├── docs/                     # 项目文档
-│   ├── api/                  # API 文档
-│   ├── deployment/           # 部署文档
-│   └── development/          # 开发文档
-└── scripts/                  # 构建和部署脚本
+│   │   ├── page.tsx          # 首页
+│   │   ├── about/            # 关于页面
+│   │   ├── projects/         # 项目展示
+│   │   └── blog/             # 博客（ISR）
+│   ├── components/           # React 组件
+│   │   ├── sections/         # 页面区块
+│   │   ├── portfolio/        # 项目卡片
+│   │   ├── blog/             # 博客组件
+│   │   ├── about/            # 关于组件
+│   │   ├── layout/           # 布局组件
+│   │   └── ui/               # shadcn/ui 组件
+│   ├── content/              # 内容管理
+│   │   └── blog/            # Markdown 博客文章
+│   ├── lib/                  # 工具库
+│   │   ├── blog-loader.ts   # 博客加载器
+│   │   ├── config.ts        # 站点配置
+│   │   └── i18n.ts          # 国际化
+│   ├── locales/              # 多语言字典
+│   │   ├── zh.json          # 中文
+│   │   └── en.json          # English
+│   └── types/                # TypeScript 类型
+├── docs/                      # 项目文档
+└── .github/                   # GitHub 配置
+    └── copilot-instructions.md  # AI 开发指令
 ```
 
-## 🔧 开发指南
+---
 
-### 代码规范
+## � 博客管理
 
-- **前端**: ESLint + Prettier，TypeScript 严格模式
-- **Git**: Conventional Commits 提交规范
+### 创建新博客文章
 
-### 测试策略
+在 `frontend/content/blog/` 目录下创建 Markdown 文件：
 
-```bash
-# 前端测试
-cd frontend
-npm run test        # 单元测试
-npm run test:e2e    # 端到端测试
+```markdown
+---
+title: "文章标题"
+date: "2025-01-27"
+excerpt: "文章摘要"
+tags: ["Next.js", "TypeScript"]
+category: "技术"
+---
+
+# 正文内容
+
+这里是 Markdown 格式的文章内容...
 ```
 
-### 代码检查
+### 博客特性
 
-```bash
-# 前端代码检查
-npm run lint
-npm run type-check
+- ✅ **自动路由生成** - 文件名即 URL
+- ✅ **ISR 增量更新** - 60秒自动重新验证
+- ✅ **Front Matter** - 元数据管理
+- ✅ **GFM 支持** - GitHub 风格 Markdown
+- ✅ **双语支持** - `.md` (中文) + `.en.md` (英文)
+
+---
+
+## 🎨 设计系统
+
+### 颜色方案
+
+```css
+/* 主题色 - 蓝紫粉渐变 */
+--gradient-primary: linear-gradient(135deg, #3b82f6 → #8b5cf6 → #ec4899);
+
+/* 暗色主题 */
+--bg-primary: #0f0f0f;
+--bg-secondary: #1e1e1e;
+--text-primary: #ffffff;
+--text-secondary: #a3a3a3;
 ```
 
-## 📊 核心功能
+### 组件风格
 
-### 1. 项目动态追踪
-- Git 提交历史自动抓取
-- 代码变更统计和可视化
-- 开发活跃度分析
+- **悬停效果**: `translateY(-4px)` + 发光阴影
+- **动画时长**: 300ms cubic-bezier(0.4, 0, 0.2, 1)
+- **边框渐变**: 鼠标悬停显示渐变边框
+- **布局原则**: 大屏中心式，大量留白（Vercel 风格）
 
-### 2. 学习记录系统
-- 学习内容分类管理
-- 进度追踪和统计
-- 知识点标签化
+---
 
-### 3. 项目集成展示
-- 项目卡片动态展示
-- 实时状态更新
-- 一键跳转访问
+## 🌍 国际化
 
-### 4. 数据可视化面板
-- GitHub 风格的提交热力图
-- 学习进度图表
-- 项目统计仪表板
+### 切换语言
 
-## 🚀 部署
+项目支持中英双语：
 
-### Vercel 部署 (推荐)
+```typescript
+// 使用 useTranslation Hook
+const { dict, lang, setLang } = useTranslation();
 
-1. 连接 GitHub 仓库到 Vercel
-2. 配置环境变量
-3. 自动部署
+// 在组件中使用翻译
+<h1>{dict.home.welcome}</h1>
+```
 
-### 手动部署
+### 添加新语言
+
+1. 在 `frontend/locales/` 创建新语言文件（如 `ja.json`）
+2. 在 `lib/i18n.ts` 添加语言配置
+3. 更新语言切换器组件
+
+---
+
+## 📊 页面列表
+
+| 路由 | 页面 | 渲染方式 | 说明 |
+|------|------|---------|------|
+| `/` | 首页 | SSG | 静态生成，包含 Hero + 项目网格 |
+| `/about` | 关于 | SSG | 个人简介、技能、经验 |
+| `/projects` | 项目 | SSG | 项目展示卡片网格 |
+| `/blog` | 博客列表 | ISR | 60s 重新验证 |
+| `/blog/[slug]` | 博客详情 | ISR | 动态路由，60s 重新验证 |
+
+
+---
+
+## 🚢 部署
+
+### Vercel 一键部署（推荐）
+
+[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https://github.com/wyw121/PortfolioPulse)
+
+### 其他静态托管平台
+
+项目支持部署到任意支持 Next.js 的平台：
+
+- **Netlify**: 自动识别 Next.js 项目
+- **GitHub Pages**: 需要配置 `output: 'export'`
+- **Cloudflare Pages**: 原生 Next.js 支持
+
+### 构建输出
 
 ```bash
-# 构建前端
-cd frontend
 npm run build
-npm run start
+# 生成 .next/ 目录（Standalone 模式）
+# 或 out/ 目录（Static Export 模式）
 ```
 
-## 🤝 贡献指南
+---
+
+## 📖 核心文档
+
+| 文档 | 说明 |
+|------|------|
+| [开发指令](.github/copilot-instructions.md) | GitHub Copilot AI 开发规范 |
+| [前端架构](docs/FRONTEND_ARCHITECTURE_ANALYSIS.md) | 前端架构深度分析 |
+| [系统分析](docs/FINAL_SYSTEM_ANALYSIS_REPORT.md) | 完整系统状态报告 |
+| [项目风格](docs/PROJECT_STYLE_GUIDE.md) | UI/UX 设计系统 |
+| [主题实现](docs/THEME_AND_LANGUAGE_IMPLEMENTATION_GUIDE.md) | 主题和国际化指南 |
+| [博客使用](docs/BLOG_USAGE_GUIDE.md) | 博客系统使用说明 |
+
+---
+
+## 🤝 贡献
+
+欢迎提交 Issue 和 Pull Request！
+
+### 贡献流程
 
 1. Fork 本仓库
-2. 创建特性分支 (`git checkout -b feature/AmazingFeature`)
-3. 提交更改 (`git commit -m 'Add some AmazingFeature'`)
-4. 推送分支 (`git push origin feature/AmazingFeature`)
-5. 创建 Pull Request
+2. 创建特性分支：`git checkout -b feature/amazing-feature`
+3. 提交更改：`git commit -m 'feat: add amazing feature'`
+4. 推送分支：`git push origin feature/amazing-feature`
+5. 提交 Pull Request
 
-### 贡献规范
-- 遵循现有代码风格
-- 添加适当的测试用例
-- 更新相关文档
-- 确保 CI/CD 检查通过
+### 提交规范
 
-## 📝 许可证
+使用 [Conventional Commits](https://www.conventionalcommits.org/)：
 
-本项目采用 MIT 许可证。详见 [LICENSE](LICENSE) 文件。
+```
+feat: 新功能
+fix: 修复 Bug
+docs: 文档更新
+style: 代码格式
+refactor: 重构
+perf: 性能优化
+test: 测试
+chore: 构建/工具
+```
 
-## 💬 联系方式
+---
 
-- **作者**: wyw121
-- **GitHub**: [@wyw121](https://github.com/wyw121)
-- **项目链接**: [PortfolioPulse](https://github.com/wyw121/PortfolioPulse)
+## � 许可证
 
-## 🙏 致谢
+本项目采用 [MIT](LICENSE) 许可证。
+
+---
+
+## � 致谢
+
+### 设计灵感
+
+- [sindresorhus.com](https://sindresorhus.com) - 极简主义的完美典范
+- [Vercel](https://vercel.com) - 现代化的布局和交互
+
+### 技术栈
 
 感谢以下优秀的开源项目：
 
-- [Next.js](https://nextjs.org/) - React 全栈框架
-- [Tailwind CSS](https://tailwindcss.com/) - CSS 框架
-- [shadcn/ui](https://ui.shadcn.com/) - 组件库
-- [Vercel](https://vercel.com/) - 部署平台
+- [Next.js](https://nextjs.org/) - The React Framework
+- [Tailwind CSS](https://tailwindcss.com/) - Utility-first CSS
+- [shadcn/ui](https://ui.shadcn.com/) - Re-usable components
+- [TypeScript](https://www.typescriptlang.org/) - JavaScript with syntax for types
+- [Framer Motion](https://www.framer.com/motion/) - Production-ready motion library
 
 ---
 
 <div align="center">
 
-**⭐ 如果这个项目对你有帮助，请给个 Star！ ⭐**
+**Made with ❤️ by [wyw121](https://github.com/wyw121)**
 
-[演示地址](https://portfolio-pulse.vercel.app) · [报告 Bug](https://github.com/wyw121/PortfolioPulse/issues) · [功能建议](https://github.com/wyw121/PortfolioPulse/issues)
+⭐ **如果这个项目对你有帮助，请给个 Star！** ⭐
+
+[GitHub](https://github.com/wyw121/PortfolioPulse) · [文档](docs/) · [问题反馈](https://github.com/wyw121/PortfolioPulse/issues)
 
 </div>
